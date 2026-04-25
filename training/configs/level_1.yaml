@@ -1,0 +1,25 @@
+difficulty: 1
+facts_total: 10
+queries_total: 5
+memory_budget: 8
+batch_size: 8
+retrieval_k: 5
+embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
+embedding_dim: 128
+prefilled_memory_count: 0
+distractor_rate: 0.0
+contradiction_rate: 0.0
+adversarial_tag_rate: 0.0
+explicit_importance_tags: true
+query_distribution:
+  specific: 1.0
+reward_shaping:
+  per_fact_storage_cost: -0.02
+  store_then_retrieved_bonus: 0.2
+  skip_then_never_queried_bonus: 0.1
+  malformed_step_penalty: -0.5
+  budget_overflow_penalty: -0.1
+system_prompt_hints:
+  - "Facts marked [IMPORTANT] are likely to be queried."
+  - "Recent facts are more likely to be queried than old ones."
+  - "Anchors should be short phrases capturing the topic."
