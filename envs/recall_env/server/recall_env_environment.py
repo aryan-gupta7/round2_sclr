@@ -11,14 +11,10 @@ try:
 except (ImportError, ModuleNotFoundError):
     from models import RecallAction, RecallObservation, RecallState, FactDecision
 
-try:
-    from .memory_backend import MemoryBackend
-    from .data_generator import DataGenerator, LevelConfig, Fact, Query, GroundTruth
-    from .rewards import compute_reward, EpisodeResult
-except (ImportError, ModuleNotFoundError):
-    from memory_backend import MemoryBackend
-    from data_generator import DataGenerator, LevelConfig, Fact, Query, GroundTruth
-    from rewards import compute_reward, EpisodeResult
+from .memory_backend import MemoryBackend
+from .data_generator import DataGenerator, LevelConfig, Fact, Query, GroundTruth
+from .rewards import compute_reward, EpisodeResult
+
 
 class RecallEnvironment(Environment):
     """

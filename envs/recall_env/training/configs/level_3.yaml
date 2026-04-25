@@ -1,0 +1,27 @@
+difficulty: 3
+facts_total: 50
+queries_total: 5
+memory_budget: 25
+batch_size: 50
+retrieval_k: 5
+embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
+embedding_dim: 128
+prefilled_memory_count: 15
+distractor_rate: 0.4
+contradiction_rate: 0.0
+adversarial_tag_rate: 0.0
+explicit_importance_tags: false
+query_distribution:
+  specific: 0.5
+  aggregation: 0.2
+  rationale: 0.1
+  distractor_resistance: 0.2
+reward_shaping:
+  per_fact_storage_cost: -0.05
+  store_then_retrieved_bonus: 0.1
+  skip_then_never_queried_bonus: 0.0
+  malformed_step_penalty: -0.5
+  budget_overflow_penalty: -0.2
+system_prompt_hints:
+  - "Anchors should be short phrases capturing the topic."
+bootstrap_steps: 0

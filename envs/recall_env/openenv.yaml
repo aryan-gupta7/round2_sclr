@@ -4,7 +4,7 @@ type: space
 runtime: fastapi
 app: server.app:app
 port: 8000
-max_concurrent_envs: 8
+max_concurrent_envs: 64
 
 display_name: "RECALL — Memory-Constrained Long-Horizon Memory"
 description: >

@@ -18,13 +18,17 @@ dependencies = [
     # install from github
     # "openenv-core[core] @ git+https://github.com/meta-pytorch/OpenEnv.git",
     "openenv-core[core]>=0.2.2",
-    "sentence-transformers",
     "numpy",
     "pyyaml",
     "gradio>=4.0.0",
 ]
 
 [project.optional-dependencies]
+# sentence-transformers pulls in PyTorch (~2GB) — only install for training,
+# not for the HF Space demo. memory_backend.py has a deterministic fallback.
+embeddings = [
+    "sentence-transformers",
+]
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=4.0.0",

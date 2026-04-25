@@ -5,10 +5,11 @@ except (ImportError, ModuleNotFoundError):
 
 try:
     from ..models import RecallAction, RecallObservation
-    from .recall_env_environment import RecallEnvironment
 except (ImportError, ModuleNotFoundError):
     from models import RecallAction, RecallObservation
-    from recall_env_environment import RecallEnvironment
+
+from .recall_env_environment import RecallEnvironment
+
 
 # Create the app — pass the CLASS (not instance) so OpenEnv creates fresh
 # instances per WebSocket session, enabling concurrent sessions.
@@ -17,7 +18,7 @@ app = create_app(
     RecallAction,
     RecallObservation,
     env_name="recall",
-    max_concurrent_envs=8
+    max_concurrent_envs=64
 )
 
 def main(host: str = "0.0.0.0", port: int = 8000):
@@ -29,4 +30,4 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=8000)
     args = parser.parse_args()
-    main(port=args.port)
+    main()
