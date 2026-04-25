@@ -1,66 +1,66 @@
 from typing import Dict, Any
-try:
-    from ..models import RecallAction, RecallState
-except ImportError:
-    from models import RecallAction, RecallState
-from .data_generator import LevelConfig
+from dataclasses import dataclass
 
-def compute_step_reward(
-    action: RecallAction,
-    action_was_valid: bool,
-    new_correct: int,                     # how many correct answers this step (0 or 1 typically)
-    new_unknown_correct: int,
-    storage_attempts_during_step: int,
-    storage_attempts_rejected: int,
-    config: LevelConfig,
-) -> float:
+@dataclass
+class EpisodeResult:
+    correct_answers: int
+    stored_then_retrieved_count: int
+    memory_used: int
+    malformed_count: int
+    budget_overflow_count: int
+    queries_total: int
+
+def phase1_reward(episode_result: EpisodeResult, config: Any) -> float:
+    """
+    Phase 1 — Bootstrap (training_step < bootstrap_steps)
+    Dense shaping ONLY at L1 and L2.
+    """
     r = 0.0
-    if not action_was_valid:
-        # Get penalty from config if present, default to -0.5
-        penalty = config.reward_shaping.get("malformed_step_penalty", -0.5)
-        r += penalty
-        return r
+    # Per-query correctness — primary signal even in bootstrap
+    r += episode_result.correct_answers * 1.0
     
-    # Correct answers get +1.0 (constant across levels)
-    r += new_correct * 1.0
-    r += new_unknown_correct * 1.0
-    
-    # Budget overflow penalty
-    if storage_attempts_rejected > 0:
-        penalty = config.reward_shaping.get("budget_overflow_penalty", -0.2)
-        r += storage_attempts_rejected * penalty
+    # Mild shaping during bootstrap for L1/L2
+    if config.difficulty <= 2:
+        r += episode_result.stored_then_retrieved_count * 0.1
+        r -= episode_result.memory_used * 0.02
         
+    # Sharp penalty for malformed actions — must dominate
+    r += episode_result.malformed_count * (-0.5)
+    r += episode_result.budget_overflow_count * (-0.2)
     return r
 
-def compute_terminal_reward(
-    state: RecallState,
-    config: LevelConfig,
+def phase2_reward(episode_result: EpisodeResult, baseline_correct: int, config: Any) -> float:
+    """
+    Phase 2 — Binary baseline-comparison (training_step >= bootstrap_steps)
+    """
+    # Edge case: if agent never answered anything correctly, no reward
+    if episode_result.correct_answers == 0:
+        return 0.0
+    # Edge case: malformed-action spam → still penalize
+    if episode_result.malformed_count >= 3:
+        return -1.0
+        
+    # Primary binary signal: did agent beat FIFO baseline accuracy?
+    agent_acc = episode_result.correct_answers / episode_result.queries_total
+    baseline_acc = baseline_correct / episode_result.queries_total
+    
+    if agent_acc > baseline_acc + 0.05:    # 5pp margin → clean win
+        return 1.0
+    elif agent_acc > baseline_acc:          # narrow win → partial
+        return 0.3
+    else:
+        return 0.0
+
+def compute_reward(
+    episode_result: EpisodeResult,
+    baseline_correct: int,
+    config: Any,
+    global_step: int,
 ) -> float:
-    """Episode-end reward: storage cost + shaping bonuses."""
-    r = 0.0
-    
-    # Storage cost
-    cost_per_fact = config.reward_shaping.get("per_fact_storage_cost", -0.05)
-    r += state.memory_used * cost_per_fact
-    
-    # store_then_retrieved_bonus
-    # This requires counting how many stored facts were later retrieved AND used in correct answer.
-    # Note: RecallState.storage_decisions should track this.
-    bonus_retrieved = config.reward_shaping.get("store_then_retrieved_bonus", 0.0)
-    if bonus_retrieved > 0:
-        count = 0
-        for decision in state.storage_decisions:
-            if decision.get("decision") == "store" and decision.get("was_later_retrieved_and_correct", False):
-                count += 1
-        r += count * bonus_retrieved
-        
-    # skip_then_never_queried_bonus
-    bonus_skipped = config.reward_shaping.get("skip_then_never_queried_bonus", 0.0)
-    if bonus_skipped > 0:
-        count = 0
-        for decision in state.storage_decisions:
-            if decision.get("decision") == "skip" and not decision.get("was_queried", False):
-                count += 1
-        r += count * bonus_skipped
-        
-    return r
+    """
+    Two-phase reward — bootstrap dense, then binary baseline-comparison.
+    """
+    bootstrap_steps = getattr(config, "bootstrap_steps", 0)
+    if global_step < bootstrap_steps:
+        return phase1_reward(episode_result, config)
+    return phase2_reward(episode_result, baseline_correct, config)

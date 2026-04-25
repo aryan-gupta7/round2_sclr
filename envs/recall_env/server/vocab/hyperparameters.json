@@ -1,0 +1,282 @@
+[
+    {
+        "abbrev": "LR",
+        "full": "learning rate",
+        "value_low": 0.00001,
+        "value_high": 0.01,
+        "format": "scientific"
+    },
+    {
+        "abbrev": "WD",
+        "full": "weight decay",
+        "value_low": 0.0,
+        "value_high": 0.1,
+        "format": "float"
+    },
+    {
+        "abbrev": "momentum",
+        "full": "momentum",
+        "value_low": 0.8,
+        "value_high": 0.99,
+        "format": "float"
+    },
+    {
+        "abbrev": "beta1",
+        "full": "beta1",
+        "value_low": 0.8,
+        "value_high": 0.95,
+        "format": "float"
+    },
+    {
+        "abbrev": "beta2",
+        "full": "beta2",
+        "value_low": 0.99,
+        "value_high": 0.999,
+        "format": "float"
+    },
+    {
+        "abbrev": "eps_adam",
+        "full": "adam epsilon",
+        "value_low": 1e-10,
+        "value_high": 1e-6,
+        "format": "scientific"
+    },
+    {
+        "abbrev": "gclip",
+        "full": "gradient clipping norm",
+        "value_low": 0.5,
+        "value_high": 5.0,
+        "format": "float"
+    },
+    {
+        "abbrev": "dropout",
+        "full": "dropout rate",
+        "value_low": 0.0,
+        "value_high": 0.5,
+        "format": "float"
+    },
+    {
+        "abbrev": "label_sm",
+        "full": "label smoothing",
+        "value_low": 0.0,
+        "value_high": 0.3,
+        "format": "float"
+    },
+    {
+        "abbrev": "stoch_d",
+        "full": "stochastic depth rate",
+        "value_low": 0.0,
+        "value_high": 0.5,
+        "format": "float"
+    },
+    {
+        "abbrev": "mixup",
+        "full": "mixup alpha",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "float"
+    },
+    {
+        "abbrev": "cutmix",
+        "full": "cutmix alpha",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "float"
+    },
+    {
+        "abbrev": "warmup",
+        "full": "warmup steps",
+        "value_low": 100,
+        "value_high": 10000,
+        "format": "integer"
+    },
+    {
+        "abbrev": "w_ratio",
+        "full": "warmup ratio",
+        "value_low": 0.0,
+        "value_high": 0.5,
+        "format": "float"
+    },
+    {
+        "abbrev": "decay_st",
+        "full": "decay steps",
+        "value_low": 1000,
+        "value_high": 100000,
+        "format": "integer"
+    },
+    {
+        "abbrev": "d_factor",
+        "full": "decay factor",
+        "value_low": 0.1,
+        "value_high": 0.999,
+        "format": "float"
+    },
+    {
+        "abbrev": "BS",
+        "full": "batch size",
+        "value_low": 4,
+        "value_high": 2048,
+        "format": "integer"
+    },
+    {
+        "abbrev": "seq_len",
+        "full": "sequence length",
+        "value_low": 128,
+        "value_high": 16384,
+        "format": "integer"
+    },
+    {
+        "abbrev": "n_heads",
+        "full": "number of heads",
+        "value_low": 4,
+        "value_high": 128,
+        "format": "integer"
+    },
+    {
+        "abbrev": "n_layer",
+        "full": "number of layers",
+        "value_low": 4,
+        "value_high": 96,
+        "format": "integer"
+    },
+    {
+        "abbrev": "hid_dim",
+        "full": "hidden dimension",
+        "value_low": 256,
+        "value_high": 8192,
+        "format": "integer"
+    },
+    {
+        "abbrev": "ff_dim",
+        "full": "feed-forward dimension",
+        "value_low": 512,
+        "value_high": 32768,
+        "format": "integer"
+    },
+    {
+        "abbrev": "head_dim",
+        "full": "head dimension",
+        "value_low": 32,
+        "value_high": 256,
+        "format": "integer"
+    },
+    {
+        "abbrev": "v_size",
+        "full": "vocabulary size",
+        "value_low": 1000,
+        "value_high": 100000,
+        "format": "integer"
+    },
+    {
+        "abbrev": "max_pos",
+        "full": "max position embeddings",
+        "value_low": 512,
+        "value_high": 131072,
+        "format": "integer"
+    },
+    {
+        "abbrev": "attn_do",
+        "full": "attention dropout",
+        "value_low": 0.0,
+        "value_high": 0.5,
+        "format": "float"
+    },
+    {
+        "abbrev": "ffn_do",
+        "full": "ffn dropout",
+        "value_low": 0.0,
+        "value_high": 0.5,
+        "format": "float"
+    },
+    {
+        "abbrev": "init_rng",
+        "full": "initializer range",
+        "value_low": 0.001,
+        "value_high": 0.1,
+        "format": "scientific"
+    },
+    {
+        "abbrev": "ls_init",
+        "full": "layer scale init",
+        "value_low": 1e-6,
+        "value_high": 0.001,
+        "format": "scientific"
+    },
+    {
+        "abbrev": "rope_b",
+        "full": "rope base",
+        "value_low": 10.0,
+        "value_high": 1000000.0,
+        "format": "float"
+    },
+    {
+        "abbrev": "rot_dim",
+        "full": "rotary dimension",
+        "value_low": 32,
+        "value_high": 512,
+        "format": "integer"
+    },
+    {
+        "abbrev": "n_exp",
+        "full": "number of experts",
+        "value_low": 4,
+        "value_high": 256,
+        "format": "integer"
+    },
+    {
+        "abbrev": "top_k",
+        "full": "top-k experts",
+        "value_low": 1,
+        "value_high": 16,
+        "format": "integer"
+    },
+    {
+        "abbrev": "exp_cap",
+        "full": "expert capacity ratio",
+        "value_low": 1.0,
+        "value_high": 2.0,
+        "format": "float"
+    },
+    {
+        "abbrev": "moe_ns",
+        "full": "mixture of experts noise",
+        "value_low": 1e-6,
+        "value_high": 0.1,
+        "format": "scientific"
+    },
+    {
+        "abbrev": "gate_do",
+        "full": "gating dropout",
+        "value_low": 0.0,
+        "value_high": 0.3,
+        "format": "float"
+    },
+    {
+        "abbrev": "ls_val",
+        "full": "layer scale value",
+        "value_low": 1e-6,
+        "value_high": 0.01,
+        "format": "scientific"
+    },
+    {
+        "abbrev": "wd_decay",
+        "full": "weight decay steps",
+        "value_low": 1000,
+        "value_high": 50000,
+        "format": "integer"
+    },
+    {
+        "abbrev": "wd_end",
+        "full": "weight decay final",
+        "value_low": 0.0,
+        "value_high": 0.05,
+        "format": "float"
+    },
+    {
+        "abbrev": "grad_ac",
+        "full": "gradient accumulation",
+        "value_low": 1,
+        "value_high": 32,
+        "format": "integer"
+    }
+]

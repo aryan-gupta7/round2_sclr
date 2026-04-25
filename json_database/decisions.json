@@ -1,0 +1,152 @@
+[
+    {
+        "choice": "grouped query attention",
+        "alternative": "multi-head attention",
+        "rationale": "reduces KV cache by 16× on 7B param model, enabling 8K context without OOM on single GPU"
+    },
+    {
+        "choice": "flash attention v2",
+        "alternative": "standard attention",
+        "rationale": "wall-clock inference time drops from 450ms to 120ms per token on sequence length 2048"
+    },
+    {
+        "choice": "rotary position embeddings",
+        "alternative": "absolute positional encodings",
+        "rationale": "zero-shot extrapolation to 2× training sequence length without performance degradation"
+    },
+    {
+        "choice": "SwiGLU activation",
+        "alternative": "ReLU feedforward",
+        "rationale": "validation perplexity improves by 0.3 points at same FLOPs with gating mechanism"
+    },
+    {
+        "choice": "RMSNorm",
+        "alternative": "LayerNorm",
+        "rationale": "removes variance term; 2% faster wall-clock time with equivalent gradient stability"
+    },
+    {
+        "choice": "QK-norm before softmax",
+        "alternative": "no norm in attention",
+        "rationale": "prevents attention entropy collapse when training beyond 1T tokens; avg entropy stays >2.0"
+    },
+    {
+        "choice": "low-rank LoRA rank=64",
+        "alternative": "full fine-tuning",
+        "rationale": "adapts 7B model in 6 hours on single A100 vs 48 hours full-tuning; achieves 95% of full-tune performance"
+    },
+    {
+        "choice": "uint8 activation quantization",
+        "alternative": "float16 activations",
+        "rationale": "memory footprint cuts 50%; end-to-end latency +3% within acceptable tolerance for inference"
+    },
+    {
+        "choice": "4-bit NF4 weight quantization",
+        "alternative": "8-bit quantization",
+        "rationale": "fits 13B model on 12GB VRAM; perplexity regret only 0.2 points vs 8-bit on benchmark"
+    },
+    {
+        "choice": "sliding window attention (4K)",
+        "alternative": "full-document attention",
+        "rationale": "attention complexity becomes O(n) instead of O(n²); sequences >32K now feasible"
+    },
+    {
+        "choice": "tokenizer vocab size 32K",
+        "alternative": "vocab size 128K",
+        "rationale": "reduces embedding table memory from 512MB to 128MB; encoding speed improves 4× on CPU"
+    },
+    {
+        "choice": "curriculum: 512→2048 seq len",
+        "alternative": "fixed 2048 from step 1",
+        "rationale": "training stability improves; loss spikes eliminated; convergence 20% faster in wall-clock time"
+    },
+    {
+        "choice": "mixed-precision with bfloat16",
+        "alternative": "float32 training",
+        "rationale": "gradient underflow avoided on attention logits; training stability equivalent; 2.3× speedup"
+    },
+    {
+        "choice": "gradient checkpointing every 2 layers",
+        "alternative": "no checkpointing",
+        "rationale": "trains batch size 128 vs 64 (2× effective data per step) with same peak memory"
+    },
+    {
+        "choice": "cosine annealing LR schedule",
+        "alternative": "constant learning rate",
+        "rationale": "final validation loss 0.04 points lower; prevents overfitting in final 10% of steps"
+    },
+    {
+        "choice": "linear warmup 2K steps",
+        "alternative": "no warmup",
+        "rationale": "prevents gradient explosion in first 500 steps; loss variance in week 1 drops from 0.8 to 0.1"
+    },
+    {
+        "choice": "per-token cross-entropy loss",
+        "alternative": "sequence-level loss",
+        "rationale": "gradient signal per position prevents rare-token collapse; downstream task accuracy +2.1pp"
+    },
+    {
+        "choice": "dropout=0.1 on embeddings only",
+        "alternative": "dropout=0.1 everywhere",
+        "rationale": "generalization gap on held-out set reduced 1.2pp; inference deterministic improves UX"
+    },
+    {
+        "choice": "ALiBi bias (no learned positions)",
+        "alternative": "rotary embeddings",
+        "rationale": "extrapolates to 4× training length; rotary fails at 3× on this architecture"
+    },
+    {
+        "choice": "8 local experts (MOE)",
+        "alternative": "single dense layer",
+        "rationale": "FLOPs same but 3.1× throughput; routing entropy maintained >0.8 on validation set"
+    },
+    {
+        "choice": "expert load balancing loss weight=0.01",
+        "alternative": "no auxiliary loss",
+        "rationale": "prevents expert collapse; expert utilization improves from 12% avg to 85% avg"
+    },
+    {
+        "choice": "shared expert (MoE)",
+        "alternative": "all sparse experts",
+        "rationale": "shared expert handles 40% of tokens; reduces capacity waste on rare routing patterns"
+    },
+    {
+        "choice": "tied embeddings (input=output)",
+        "alternative": "separate token embeddings",
+        "rationale": "reduces parameter count 3%; downstream task transfer improves 0.9pp; no perplexity hit"
+    },
+    {
+        "choice": "sparse attention pattern (strided)",
+        "alternative": "dense attention",
+        "rationale": "O(n) complexity enables 64K sequences; full attention OOM at 16K on same hardware"
+    },
+    {
+        "choice": "byte-pair encoding with 32K merges",
+        "alternative": "WordPiece tokenizer",
+        "rationale": "average token length (chars) reduces 0.3; decoding latency -12%; handles code 8% better"
+    },
+    {
+        "choice": "stochastic depth decay=0.1",
+        "alternative": "no stochastic depth",
+        "rationale": "regularizes overfitting; val/train loss ratio improves from 1.08 to 1.02 by epoch 3"
+    },
+    {
+        "choice": "layer scaling with init=0.1",
+        "alternative": "standard init",
+        "rationale": "prevents residual connection saturation; loss converges monotonically without spiking"
+    },
+    {
+        "choice": "spectral normalization on weights",
+        "alternative": "no weight norm",
+        "rationale": "Lipschitz constant <1 stabilizes training; gradient norm variance drops 40%"
+    },
+    {
+        "choice": "contrastive decoding with alpha=0.5",
+        "alternative": "beam search",
+        "rationale": "hallucinates 30% fewer facts; beam search requires 4× more compute for equivalent quality"
+    },
+    {
+        "choice": "dual-scale training: 2 losses",
+        "alternative": "single MLM loss",
+        "rationale": "auxiliary contrastive loss pushes representations apart 15%; downstream clustering F1 +3.2pp"
+    }
+]

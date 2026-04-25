@@ -4,8 +4,41 @@ type: space
 runtime: fastapi
 app: server.app:app
 port: 8000
-description: RECALL - RL environment for learned memory management.
+max_concurrent_envs: 8
+
+display_name: "RECALL — Memory-Constrained Long-Horizon Memory"
+description: >
+  An OpenEnv environment in which the agent must learn what to store from a stream of
+  arriving facts under a tight budget, and answer queries that depend on retained memory.
+  The agent's actions include storing items with self-authored retrieval anchors, skipping
+  facts, retrieving from memory, and answering. Used to train memory management policies via RL.
+
+version: "0.1.0"
+license: "Apache-2.0"
+authors:
+  - name: "Suryansh"
+    affiliation: "IIT Roorkee"
+
+action_type: RecallAction
+observation_type: RecallObservation
+state_type: RecallState
+
+reset_kwargs_schema:
+  difficulty:
+    type: integer
+    minimum: 1
+    maximum: 5
+    default: 1
+  seed:
+    type: integer
+    minimum: 0
+    default: 0
+
 tags:
   - reinforcement-learning
   - memory
   - agent
+  - long-horizon
+  - llm
+  - benchmark
+  - openenv

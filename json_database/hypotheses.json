@@ -1,0 +1,162 @@
+[
+    {
+        "claim": "Rotary embeddings outperform alibi positional encodings on length extrapolation beyond 4x training length",
+        "topic": "positional encoding schemes"
+    },
+    {
+        "claim": "Scaling learning rate by sqrt(batch_size) reduces convergence time by 15-25 percent at 8B parameters",
+        "topic": "learning rate scaling"
+    },
+    {
+        "claim": "Grouped query attention reduces KV cache by 90 percent with less than 2pp accuracy drop at 7B scale",
+        "topic": "attention cache efficiency"
+    },
+    {
+        "claim": "Layer pruning from 48 to 36 layers maintains performance when combined with knowledge distillation at 13B",
+        "topic": "depth reduction via pruning"
+    },
+    {
+        "claim": "Intermediate layer fusion (combining adjacent FFN outputs) reduces compute 8 percent with 1pp loss at 3B scale",
+        "topic": "FFN layer fusion"
+    },
+    {
+        "claim": "SwiGLU activations outperform GELU by 0.5pp perplexity at sub-1B parameter counts",
+        "topic": "activation function selection"
+    },
+    {
+        "claim": "Token dropout at 10 percent rate during training improves robustness to corrupted inputs by 12 percent",
+        "topic": "token dropout regularization"
+    },
+    {
+        "claim": "Warmup duration of 1000 steps is suboptimal below 500M parameters; 200-400 steps preferred",
+        "topic": "warmup scheduling"
+    },
+    {
+        "claim": "Decaying embeddings with 0.9999 per-step factor reduces norm explosion in long sequences by 35 percent",
+        "topic": "embedding decay"
+    },
+    {
+        "claim": "Attention head dimensionality of 48 outperforms 64 in 8-head configs at sub-2B scale",
+        "topic": "attention head dimension"
+    },
+    {
+        "claim": "Gradient clipping threshold of 0.5 prevents divergence better than 1.0 on synthetic reasoning tasks",
+        "topic": "gradient clipping threshold"
+    },
+    {
+        "claim": "Mixing experts (4-to-1 MoE ratio) improves token efficiency 15 percent versus dense feedforward at equal flops",
+        "topic": "mixture of experts ratio"
+    },
+    {
+        "claim": "Pre-layernorm consistently outperforms post-layernorm in stability across depths 12-80",
+        "topic": "normalization placement"
+    },
+    {
+        "claim": "LoRA rank of 8 saturates performance gains in 7B models; rank 16 shows diminishing returns",
+        "topic": "LoRA rank selection"
+    },
+    {
+        "claim": "Entropy regularization on attention weights reduces overfitting to common tokens by 8 percent",
+        "topic": "attention entropy penalty"
+    },
+    {
+        "claim": "Staggered KV projection (separate linear layers per head) recovers 0.7pp accuracy lost to compression",
+        "topic": "KV projection architecture"
+    },
+    {
+        "claim": "Cyclic annealing of learning rate with period 5000 steps accelerates convergence 20 percent vs fixed schedule",
+        "topic": "cyclic learning rate annealing"
+    },
+    {
+        "claim": "Initialization of attention biases to -infinity (instead of 0) improves first-layer learning speed 12 percent",
+        "topic": "attention bias initialization"
+    },
+    {
+        "claim": "Shared query-key projections in cross-attention reduce parameters 25 percent with under 1pp degradation",
+        "topic": "query-key projection sharing"
+    },
+    {
+        "claim": "Flash attention with block size 128 outperforms block size 64 on sequence length generalization by 3 percent",
+        "topic": "flash attention block sizing"
+    },
+    {
+        "claim": "Freezing embeddings after 50k steps prevents catastrophic forgetting in continual pretraining scenarios",
+        "topic": "embedding freezing schedule"
+    },
+    {
+        "claim": "Auxiliary loss weight of 0.01 on load balancing recovers 2pp accuracy in 16-expert sparse models",
+        "topic": "MoE auxiliary loss weighting"
+    },
+    {
+        "claim": "Depth-wise gradient scaling (layer-dependent clip per layer) reduces instability in 64-layer configs by 40 percent",
+        "topic": "per-layer gradient clipping"
+    },
+    {
+        "claim": "Swapping attention order (key-query product first) reduces precision loss in low-precision arithmetic",
+        "topic": "attention computation order"
+    },
+    {
+        "claim": "Bias terms in feedforward layers can be pruned without loss below 7B model size",
+        "topic": "feedforward bias pruning"
+    },
+    {
+        "claim": "Exponential moving average weight decay with rate 0.999 outperforms L2 regularization on code benchmarks",
+        "topic": "weight decay formulation"
+    },
+    {
+        "claim": "Intermediate layer probing accuracy peaks at layers 40-50 percent depth; early layers are noise",
+        "topic": "intermediate layer analysis"
+    },
+    {
+        "claim": "Activation checkpointing of every third layer maintains 98 percent training speed while halving peak memory",
+        "topic": "selective checkpointing"
+    },
+    {
+        "claim": "Head-wise learning rates (scaled by head importance) improve convergence 18 percent in multi-head attention",
+        "topic": "head-wise learning rate scaling"
+    },
+    {
+        "claim": "Softmax temperature annealing from 1.5 to 1.0 over training stabilizes attention distributions by 25 percent",
+        "topic": "softmax temperature annealing"
+    },
+    {
+        "claim": "Sparse attention patterns (local + strided) reduce compute 30 percent with 0.3pp loss at 3B parameters",
+        "topic": "sparse attention patterns"
+    },
+    {
+        "claim": "Contextual embeddings (position-dependent token embeddings) improve in-context learning by 7 percent at 13B",
+        "topic": "contextual token embeddings"
+    },
+    {
+        "claim": "Layer normalization epsilon of 1e-6 is unnecessarily conservative; 1e-4 trains 12 percent faster safely",
+        "topic": "layer norm epsilon tuning"
+    },
+    {
+        "claim": "Causal masking with learnable mask sharpness parameter outperforms fixed masks by 1.2pp on autoregressive tasks",
+        "topic": "learnable attention masking"
+    },
+    {
+        "claim": "Tied embedding and output projections increase training instability but improve generalization by 0.8pp",
+        "topic": "embedding projection tying"
+    },
+    {
+        "claim": "Attention pattern variance across heads decreases with depth; average compression ratio gains 5 percent at layer 30+",
+        "topic": "attention pattern similarity"
+    },
+    {
+        "claim": "Token frequency reweighting in loss (down-weight common tokens) improves rare token prediction by 15 percent",
+        "topic": "frequency-weighted loss"
+    },
+    {
+        "claim": "Cross-layer weight sharing (every 4 layers share weights) reduces parameters 80 percent with 2.5pp drop at 7B",
+        "topic": "cross-layer weight sharing"
+    },
+    {
+        "claim": "Spectral normalization on query projections prevents attention collapse to single modes by 40 percent",
+        "topic": "spectral normalization in attention"
+    },
+    {
+        "claim": "Dynamic hidden dimension scaling (FFN width proportional to input norm) improves compute efficiency 22 percent",
+        "topic": "dynamic FFN scaling"
+    }
+]

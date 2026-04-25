@@ -1,41 +1,19 @@
-# Training Pipeline
+# Training Pipeline (REVISED)
 
-> **Scope**: Full training setup using GRPO via Hugging Face TRL.
-> **Implementation lives in**: `training/grpo_train.py`, `training/grpo_train.ipynb`, `training/eval.py`.
-> **Reference**: OpenEnv has an example at `examples/grpo_blackjack/` and the TRL docs cover GRPO with custom envs.
+> **REVISION NOTICE — supersedes prior `09_TRAINING_PIPELINE.md`.**
+> **Reason**: Adapt to new single-pass ingestion (1 turn) + binary baseline-comparison reward. Prior version assumed batched multi-step ingestion.
+> **Date**: 2026-04-25.
 
-## Model choice (locked)
+## Model and adapter (unchanged)
 
-- **Base model**: `Qwen/Qwen2.5-3B-Instruct`
+- **Base**: `Qwen/Qwen2.5-3B-Instruct`
 - **Adapter**: LoRA via PEFT
-- **Trainer**: `GRPOTrainer` from `trl` (latest)
-- **Hardware**: Colab Pro (A100 / L4) primary, HF $30 credits as fallback for longer runs
+- **Trainer**: `GRPOTrainer` from `trl`
+- **Hardware**: Colab Pro (A100 / L4) primary, HF $30 credits as fallback
 
-### Why this model
-- 3B fits comfortably with LoRA on a single A100 with sane batch sizes
-- Qwen2.5 instruct is strong at structured JSON output (critical for our action format)
-- Well-supported in TRL, no custom adaptors needed
+LoRA config unchanged from prior spec.
 
-### Why not 7B
-- $30 HF credits ÷ ~$2/hr A100 = ~15 hours total. Need 5–8 debug runs + final → 7B leaves no margin.
-- 3B with good training > 7B with one-shot training.
-
-## LoRA config (starting point)
-
-```python
-from peft import LoraConfig
-
-lora_config = LoraConfig(
-    r=16,
-    lora_alpha=32,
-    target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
-    lora_dropout=0.05,
-    bias="none",
-    task_type="CAUSAL_LM",
-)
-```
-
-## GRPO config (starting point)
+## GRPO config (REVISED for new structure)
 
 ```python
 from trl import GRPOConfig
@@ -43,192 +21,187 @@ from trl import GRPOConfig
 training_args = GRPOConfig(
     output_dir="./outputs/recall_l1",
     num_train_epochs=3,
-    per_device_train_batch_size=2,           # tight on memory; episodes are token-heavy
-    gradient_accumulation_steps=4,
-    learning_rate=1e-5,
-    num_generations=4,                        # GRPO group size
-    max_prompt_length=2048,
-    max_completion_length=512,
+    per_device_train_batch_size=4,           # increased — episodes are now ~6-8 turns, lighter
+    gradient_accumulation_steps=2,
+    learning_rate=5e-6,                      # lowered to TRL's GRPO recommendation
+    num_generations=8,                        # group size for GRPO advantage
+    max_prompt_length=4096,                   # ingestion prompt with all 50 facts
+    max_completion_length=2048,               # decision JSON for 50 facts
     logging_steps=5,
     save_steps=100,
     bf16=True,
-    report_to="wandb",                        # we want curves judges can verify
+    report_to="wandb",
     remove_unused_columns=False,
 )
 ```
 
-These are starting points. **Tune during smoke runs**, not by guessing.
+Key changes:
+- `per_device_train_batch_size`: increased 2→4 (episodes are shorter; can fit more)
+- `learning_rate`: 1e-5 → 5e-6 (TRL's GRPO recommendation, prevents instability)
+- `max_prompt_length`: 2048 → 4096 (ingestion shows all 50 facts at L3)
 
-## Connecting GRPO to OpenEnv
+## Connecting GRPO to OpenEnv (REVISED)
 
-OpenEnv's GRPO example pattern:
+OpenEnv 0.2+ supports `environment_factory` and `rollout_func` integration with TRL. We use **environment_factory** for simplicity:
 
 ```python
-import asyncio
 from envs.recall_env.client import RecallEnv
-from envs.recall_env.models import RecallAction
 
-async def rollout_episode(model, tokenizer, difficulty, seed):
-    """Run one episode, return trajectory for GRPO."""
-    async with RecallEnv(base_url=ENV_URL).sync() as env:
-        obs = env.reset(difficulty=difficulty, seed=seed)
-        prompts, completions, rewards = [], [], []
-        while not is_terminal(obs):
-            prompt = build_prompt(obs)
-            completion = generate_with_model(model, tokenizer, prompt)
-            action = parse_action(completion, obs.phase)
-            new_obs = env.step(action)
-            prompts.append(prompt)
-            completions.append(completion)
-            rewards.append(new_obs.last_reward)
-            obs = new_obs
-        return prompts, completions, rewards
+trainer = GRPOTrainer(
+    model="Qwen/Qwen2.5-3B-Instruct",
+    reward_funcs=recall_reward,
+    train_dataset=curriculum_dataset,
+    environment_factory=lambda: RecallEnv.from_docker_image("recall-env:latest"),
+    args=training_args,
+)
 ```
 
-The trick: GRPO expects (prompt, completion, reward) tuples. We treat each env step as one such tuple. Reward is the per-step reward emitted by the env. Episode-end terminal reward is added to the last step.
-
-## Reward function for GRPO
+`reward_funcs` receives `state` (which includes `global_step`) and our env's terminal reward. Implementation:
 
 ```python
-def compute_rewards_for_grpo(prompts, completions, env_states):
-    """Return per-completion reward for the GRPO group."""
-    return [env_states[i].last_step_reward for i in range(len(completions))]
+def recall_reward(completions, **kwargs):
+    """
+    Two-phase reward — bootstrap dense, then binary baseline-comparison.
+    See 06_REWARD_DESIGN.md for full formula.
+    """
+    global_step = kwargs.get("trainer_state", {}).get("global_step", 0)
+    rewards = []
+    for completion, env_result in zip(completions, kwargs["env_results"]):
+        config = env_result["config"]
+        if global_step < config["bootstrap_steps"]:
+            r = phase1_reward(env_result, config)
+        else:
+            r = phase2_reward(env_result, env_result["baseline_result"], config)
+        rewards.append(float(r))
+    return rewards
 ```
 
-GRPO computes advantage by group-normalising these rewards. The episodic structure works out as long as we're consistent about what step a completion corresponds to.
+The env's `state` field includes `baseline_correct` (precomputed at reset), so the reward function has everything it needs.
 
-## Training loop structure
+## Per-session state isolation (CRITICAL — from deep research findings)
+
+The deep research report explicitly flagged this. With `num_generations=8`, the trainer opens 8 simultaneous WebSocket connections. Each must hit a separate environment instance with separate state.
+
+**REQUIREMENTS** for `recall_environment.py`:
+1. NO class-level mutable state. Everything in instance attributes.
+2. `__init__` creates per-instance `self.memory`, `self.state`, `self.rng`.
+3. `RecallEnvironment` factory in `app.py` creates a fresh instance per session.
 
 ```python
-# training/grpo_train.py
+# server/recall_environment.py
+class RecallEnvironment(Environment):
+    def __init__(self, config_dir: str = "training/configs"):
+        self.config_dir = config_dir
+        # Per-instance state — fresh per session
+        self.memory = None
+        self._state = None
+        self.facts = None
+        self.queries = None
+        self.ground_truth = None
+        self.rng = None
+```
 
+```python
+# server/app.py
+from openenv.core.env_server import create_app
+
+def env_factory():
+    return RecallEnvironment(config_dir="training/configs")
+
+app = create_app(env_factory, RecallAction, RecallObservation, env_name="recall")
+```
+
+OpenEnv auto-routes WebSocket sessions to fresh instances when factory pattern is used. Class-level state would corrupt across sessions.
+
+`max_concurrent_envs` in `openenv.yaml` must be set to ≥8 for GRPO with `num_generations=8`. **Update from prior spec**: prior `openenv.yaml` had `max_concurrent_envs: 1` per the agent rules. We change this only if we verify our env supports it (it does — instance-level state is the only requirement). Set to 8.
+
+## Curriculum schedule (REVISED with bootstrap)
+
+```python
 LEVEL_SCHEDULE = [
-    (1, 200),    # 200 GRPO steps at L1
-    (2, 400),
-    (3, 800),
-    (4, 600),    # only if time permits
-    (5, 600),    # only if time permits
+    # (level, num_grpo_steps, bootstrap_steps_for_level)
+    (1, 200, 100),    # short bootstrap, easy level
+    (2, 400, 200),    # standard bootstrap
+    (3, 800, 0),      # binary only — rely on transfer from L2
+    (4, 600, 0),      # only if time permits
+    (5, 600, 0),      # only if time permits
 ]
-
-def main(args):
-    model, tokenizer = load_model_and_lora(args.base_model, args.lora_config)
-    env = RecallEnv(base_url=args.env_url)
-    trainer = GRPOTrainer(model=model, ...)
-
-    for level, num_steps in LEVEL_SCHEDULE:
-        if not should_train_level(level, args):
-            continue
-        config = load_level_config(level)
-        for step in range(num_steps):
-            seed = sample_seed(step)
-            traj = run_episode(model, tokenizer, env, level, seed)
-            trainer.step(traj)
-            log_metrics(step, level, traj)
-            if step % args.eval_every == 0:
-                eval_metrics = run_eval(model, tokenizer, env, level, eval_seeds)
-                wandb.log(eval_metrics)
-        save_checkpoint(model, f"checkpoints/level_{level}.pt")
 ```
 
-## Critical training conventions
+`bootstrap_steps` is loaded from level config. The training loop checks `state.global_step` against it inside the reward function.
 
-### Prompt design
+## Action parsing (REVISED for single-pass ingestion)
 
-The prompt fed to the model on each step is constructed from the observation:
-
-```
-SYSTEM: You are managing memory in a long-running session. Your goal is to store the right information so you can answer future questions correctly.
-
-Current memory anchors (8/20 used):
-1. learning rate change due to instability
-2. architecture decision: switched to attention variant
-... (compact list)
-
-[Phase: ingestion. You will be shown 8 facts. Decide which to store.]
-
-Facts:
-- fact_id 0: "..."
-- fact_id 1: "..."
-... (8 facts)
-
-[INSTRUCTION_FOR_LEVEL_2]: Facts marked [IMPORTANT] are likely to be queried. Recent facts are more likely to be queried than old ones.
-
-Respond with ONLY a JSON array of decisions:
-[{"fact_id": 0, "decision": "store"|"skip", "anchor": "<short phrase>"}, ...]
-```
-
-The instruction line is taken from the level YAML's `system_prompt_hints`. Levels 4 and 5 have empty hints.
-
-### Action parsing
-
-A separate function parses the model's text output into a `RecallAction`. **Robust to**:
-- Trailing/leading whitespace and code fences
-- Extra commentary before/after the JSON
-- Slightly malformed JSON (try-parse, fallback to extraction with regex)
+The model's completion at ingest is a JSON array of 50 objects. Parser:
 
 ```python
-def parse_action(completion: str, phase: str, batch_size: int) -> RecallAction:
-    json_block = extract_json_block(completion)
+def parse_ingest_completion(completion: str, expected_count: int) -> RecallAction:
+    json_block = extract_first_json_array(completion)
     if json_block is None:
-        return RecallAction(mode=phase_to_mode(phase))   # malformed; will be penalized
+        return malformed_action("ingest")
     try:
         data = json.loads(json_block)
-        return validate_and_construct_action(data, phase, batch_size)
+        if not isinstance(data, list) or len(data) != expected_count:
+            return malformed_action("ingest")
+        decisions = [validate_fact_decision(d) for d in data]
+        if any(d is None for d in decisions):
+            return malformed_action("ingest")
+        return RecallAction(mode="ingest", decisions=decisions)
     except (json.JSONDecodeError, ValidationError):
-        return malformed_action(phase)
+        return malformed_action("ingest")
 ```
 
-Malformed actions are NOT silently fixed. They produce malformed-step penalty so the agent learns to emit valid output.
+For query phase actions (retrieve/answer), simpler single-object JSON parse with mode dispatch.
 
 ## Smoke test before training kickoff
 
 ```bash
-# tests/smoke_train.py
 python -m training.grpo_train --level 1 --steps 5 --eval_every 999 --base_model Qwen/Qwen2.5-3B-Instruct
 ```
 
-Must succeed in <10 minutes. If it fails, fix the pipeline before launching real runs.
+Must succeed in <15 minutes (slightly longer than prior estimate due to larger ingest prompt).
 
-## Compute budget breakdown (estimate)
+## Compute budget (REVISED)
 
 | Phase | Time | Cost |
 |-------|------|------|
-| Smoke runs | ~30 min × 4 = 2 hr | Colab Pro (free tier) |
-| L1 training (200 steps) | ~1 hr | Colab Pro |
-| L2 training (400 steps) | ~3 hr | Colab Pro / HF credits |
+| Smoke runs | ~30 min × 4 = 2 hr | Colab Pro |
+| L1 training (200 steps) | ~1.5 hr | Colab Pro |
+| L2 training (400 steps) | ~3 hr | Colab Pro / HF |
 | L3 training (800 steps) | ~6 hr | HF credits ($12) |
 | L4 (optional) | ~5 hr | HF credits ($10) |
 | L5 (optional) | ~5 hr | HF credits ($10) |
-| Final eval runs | ~2 hr | Colab Pro |
+| Final eval | ~2 hr | Colab Pro |
 
-**Total**: ~24 hr training, ~$32 on HF (within budget). If we cut L4/L5, total ~$12.
+Total within budget if we cap at L3: ~$12 of $30 credits used. L4/L5 are stretch goals.
 
-## Checkpoint strategy
-
-- Save LoRA adapter only (smaller, faster)
-- Checkpoint after each level
-- Final checkpoint = best eval accuracy across L3 (or last completed level)
-- Push final to HF model hub for reproducibility
-
-## What gets logged to W&B
+## What gets logged to W&B (REVISED)
 
 Every training step:
-- Mean episode reward across the GRPO group
-- Per-component reward breakdown (correct_answer, storage_cost, shaping bonuses)
-- Memory utilization (mean used / budget)
-- Malformed-action rate
-- Per-query failure attribution counts
+- `train/episode_reward_mean` and `episode_reward_std`
+- `train/reward_std_within_group` — KEY METRIC. If zero, GRPO has no gradient signal. Catches training collapse early.
+- `train/accuracy` (correct_answers / queries_total)
+- `train/baseline_accuracy` (FIFO accuracy on this seed for comparison)
+- `train/beat_baseline_rate` (% of episodes where agent beat baseline)
+- `train/memory_utilization`
+- `train/malformed_action_rate`
+- `train/reward_phase` (1 or 2 — which phase active)
 
-Every eval pass:
-- Accuracy at current level
-- Accuracy at all previously trained levels (regression check — must not collapse)
-- Sample episode trace (3 episodes, full transcript) for human inspection
+Per eval pass:
+- `eval/accuracy_current_level`
+- `eval/accuracy_L1`, `eval/accuracy_L2`, ... (regression check)
+- `eval/accuracy_by_query_type`
+- `eval/failure_mode_breakdown`
+- `eval/sample_trajectory` (saved transcript)
 
-## Pinned dependencies
+The `reward_std_within_group` is the most important new metric. If it stays near zero for ≥30 steps, **stop training immediately** — GRPO has no signal to work with. Diagnose:
+- Is the level too hard? Drop to easier curriculum.
+- Is reward shaping flattening variance? Verify Phase 2 binary is active.
+- Is the bootstrap providing enough early signal? Extend bootstrap or simplify shaping.
+
+## Pinned dependencies (unchanged)
 
 ```toml
-# pyproject.toml (root, for training)
-[project]
 dependencies = [
     "transformers>=4.45",
     "trl>=0.12",
@@ -238,19 +211,19 @@ dependencies = [
     "openenv-core",
     "wandb",
     "pyyaml",
-    "numpy<2.0",   # some compat issues with older deps
+    "numpy<2.0",
 ]
 ```
 
-## The Colab notebook (`grpo_train.ipynb`)
+## What changed vs prior spec — quick reference
 
-Judges will re-run this. It MUST:
-
-1. Install deps in cell 1
-2. Clone the repo (with link)
-3. Set up env URL (or spin up local server)
-4. Run a small training (level 1, 50 steps) end-to-end
-5. Plot reward curve in the last cell
-6. Save trained adapter for download
-
-Keep it simple. The judges' goal is to verify training works, not to retrain from scratch.
+| Element | Prior | Revised |
+|---------|-------|---------|
+| Episode turn count | ~43 at L3 | ~8 at L3 |
+| Action parsing | Per-batch (8 facts) | Single-pass (50 facts) |
+| Reward formula | Multi-component dense | Two-phase: bootstrap dense → binary |
+| `max_prompt_length` | 2048 | 4096 |
+| `per_device_train_batch_size` | 2 | 4 |
+| `learning_rate` | 1e-5 | 5e-6 |
+| `max_concurrent_envs` | 1 | 8 |
+| Critical metric to monitor | reward_mean | reward_std_within_group |

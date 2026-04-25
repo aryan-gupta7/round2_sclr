@@ -1,42 +1,54 @@
-# Environment Specification
+# Environment Specification (REVISED)
 
-> **Scope**: This document defines the MDP, the action / observation / state types, and the episode lifecycle.
-> **Implementation lives in**: `envs/recall_env/server/recall_environment.py` and `envs/recall_env/models.py`.
+> **REVISION NOTICE — supersedes prior `03_ENVIRONMENT_SPEC.md`**
+> **Reason**: Deep research report findings on GRPO turn-count regimes. Previous spec had ~43 turns at L3, well past the 7-turn danger zone. This revision collapses to 5–8 turns per episode.
+> **Date**: 2026-04-25.
 
 ## MDP at a glance
 
 | Element | Value |
 |---------|-------|
-| Episode | Two phases: ingestion → query |
-| Observation space | Structured text (current facts batch + memory anchors + phase metadata) |
-| Action space | Structured JSON describing per-fact decisions OR query/answer |
-| Reward | Sparse at query phase + small per-step costs (see `06_REWARD_DESIGN.md`) |
-| Termination | All queries answered, OR memory budget exceeded with no recoverable action, OR hard step limit hit |
+| Episode | Two phases: single-pass ingestion → query phase |
+| Observation | Structured text (all facts at once during ingest, single query during query) |
+| Action | Structured JSON describing all-fact decisions OR retrieve OR answer |
+| Reward | Two-phase (see `06_REWARD_DESIGN.md`) |
+| Termination | All queries answered, OR 3 consecutive malformed actions, OR hard step limit |
 | Reset kwargs | `difficulty: int (1-5)`, `seed: int` |
+| Episode turn count target | 5–8 turns per episode |
 
-## Two-phase episode lifecycle
+## Two-phase episode lifecycle (REVISED)
 
-### Phase A — Ingestion phase
+### Phase A — Single-pass ingestion (1 turn)
 
-The agent receives facts in **batches of 8**. Per batch, it makes per-fact decisions in a single LLM call.
+The agent receives **all facts in one prompt** and emits a single JSON list with per-fact decisions. This is the central revision: no streaming, no batching by 8, no multi-step ingestion.
 
-**Why batched**: see `00_PROJECT_OVERVIEW.md` — one fact per LLM call is computationally infeasible at our compute budget. Batching by 8 cuts forward passes ~8x and gives the agent contextual comparison ("which of these 8 is most important").
+For an L3 episode (50 facts):
+- Single ingest turn, ~2K input tokens, ~3K output tokens
+- The agent does NOT see queries during this turn
+- Selection-under-uncertainty is preserved (queries are unknown at storage time)
 
-For a Level 3 episode (50 facts):
-- Step count during ingestion = 50 / 8 = ~7 steps
-- Plus query phase steps
+### Phase B — Query phase (1 turn per query, optionally 2)
 
-### Phase B — Query phase
+Each query is one turn by default. The agent receives the query plus current memory anchors (no full content). It can:
 
-After all facts are ingested, queries arrive **one at a time**. For each query, the agent:
-1. Issues a `retrieve(query_text)` action and receives top-k anchors+content
-2. Issues an `answer(text)` action
+- **Direct answer** (1 turn): emit `{"action": "answer", "answer": "..."}`
+- **Retrieve then answer** (2 turns): emit `{"action": "retrieve", "query": "..."}` first, get top-k full content, then answer next turn
 
-Two LLM calls per query is acceptable — query count is small (~10–20 per episode).
+For 5 queries × ~1.5 turns = ~8 turns avg. Total episode: 1 + 8 = **9 turns** at L3. We aim to push this lower at L1-L2 (fewer queries) and accept slightly higher at L4-L5 (more retrieves used).
+
+### Per-level turn budgets
+
+| Level | facts | queries | Expected turns |
+|-------|-------|---------|----------------|
+| L1 | 10 | 3 | 1 + ~3 = 4 |
+| L2 | 25 | 5 | 1 + ~5 = 6 |
+| L3 | 50 | 5 | 1 + ~7 = 8 |
+| L4 | 80 | 6 | 1 + ~9 = 10 |
+| L5 | 120 | 7 | 1 + ~10 = 11 |
+
+L4 and L5 nudge past the 7-turn comfort zone. Acceptable because we will train these last and only if L1-L3 results are strong.
 
 ## Action types (`models.py`)
-
-We define **one Action class with a discriminated union over modes**. This is cleaner than multiple Action classes for OpenEnv compliance.
 
 ```python
 from typing import Literal, Optional
@@ -44,81 +56,67 @@ from pydantic import BaseModel
 from openenv.core.env_server import Action
 
 class FactDecision(BaseModel):
-    """One per fact in the current ingestion batch."""
     fact_id: int
     decision: Literal["store", "skip"]
     anchor: Optional[str] = None  # required if decision == "store"
 
 class RecallAction(Action):
-    mode: Literal["ingest", "retrieve", "answer", "delete"]
-    # for ingest mode:
-    decisions: Optional[list[FactDecision]] = None
-    # for retrieve mode:
-    query: Optional[str] = None
-    # for answer mode:
-    answer_text: Optional[str] = None  # may be the literal "UNKNOWN"
-    # for delete mode (only allowed if budget violation):
-    slot_id: Optional[int] = None
+    mode: Literal["ingest", "retrieve", "answer"]
+    decisions: Optional[list[FactDecision]] = None  # ingest mode
+    query: Optional[str] = None                      # retrieve mode
+    answer_text: Optional[str] = None                # answer mode (may be "UNKNOWN")
 ```
 
-**Validation rules** (enforced in `recall_environment.step()`):
-- `mode` must match the current required action type. If env is in ingestion phase, only `ingest` (and optionally `delete`) is valid.
-- `decisions` length must equal the current batch size.
-- `anchor` required iff `decision == "store"`. Anchor must be a non-empty string ≤ 64 tokens. Longer anchors are truncated and logged.
-- `answer_text == "UNKNOWN"` is a valid answer for distractor-resistance queries.
-- Malformed actions: reward = 0 for the step, penalty applied (see `06_REWARD_DESIGN.md`).
+**Removed from prior spec**: `delete` mode. With single-pass ingestion the agent decides everything in one shot — no need to recover budget mid-stream. Pre-fill items still occupy budget; agent factors that into its 50-decision plan.
+
+**Validation rules** (enforced in `step()`):
+- `mode` must match phase. Only `ingest` valid in ingestion phase. Only `retrieve`/`answer` valid in query phase.
+- Ingest action: `decisions` length must equal `facts_total`. Any deviation → malformed.
+- Anchor required iff decision == "store". Non-empty, ≤ 64 tokens. Longer → truncated, logged.
+- Total stores in decisions list must respect `(memory_budget - prefilled_count)`. Excess stores are rejected in declaration order; a `budget_overflow_penalty` per excess.
 
 ## Observation type (`models.py`)
 
 ```python
-from openenv.core.env_server import Observation
-
 class RecallObservation(Observation):
     phase: Literal["ingest", "query", "done"]
-    # During ingest phase:
-    current_batch: Optional[list[dict]] = None  # [{"fact_id": int, "text": str, "tags": list[str]}, ...]
-    # During query phase:
+    # Ingestion phase:
+    all_facts: Optional[list[dict]] = None         # full list shown once
+    # Query phase:
     current_query: Optional[str] = None
-    retrieval_results: Optional[list[dict]] = None  # populated after a retrieve action
+    retrieval_results: Optional[list[dict]] = None # populated only after retrieve action
     # Always present:
-    memory_anchors: list[str]                # CURRENT anchors only, not full content
+    memory_anchors: list[str]
     memory_used: int
     memory_budget: int
-    facts_remaining: int
     queries_remaining: int
     queries_answered: int
     last_reward: float
-    instruction: str                         # phase-appropriate instruction text for the LLM
+    instruction: str
 ```
 
-The agent always sees:
-- The current memory anchors (to detect duplicates and contradictions). It does NOT see full content unless it explicitly retrieves.
-- Budget status (slots used / total).
-- A natural-language instruction telling it what to do this step.
+The agent always sees memory anchors (not full content), which lets it detect what's already stored when answering — useful for direct-answer mode at low difficulty.
 
 ## State type (`models.py`)
 
 ```python
-from openenv.core.env_server import State
-
 class RecallState(State):
     difficulty: int
     seed: int
     phase: str
     facts_total: int
-    facts_ingested: int
     queries_total: int
     queries_answered: int
     correct_answers: int
     memory_used: int
     memory_budget: int
     cumulative_reward: float
-    # For debugging / metrics:
-    storage_decisions: list[dict] = []  # per-fact: stored or not, anchor written, was-later-retrieved
-    failure_attribution: list[dict] = []  # per-query: which failure mode (storage / anchor / retrieve / reasoning)
+    storage_decisions: list[dict] = []     # per-fact log
+    failure_attribution: list[dict] = []   # per-query log
+    baseline_correct: int = 0              # FIFO baseline accuracy on this seed (computed at reset)
 ```
 
-`failure_attribution` is critical for debugging when training stalls. It is logged but does NOT contribute to reward.
+`baseline_correct` is precomputed at `reset()` time so the binary reward can compare without re-running FIFO.
 
 ## `reset(difficulty: int, seed: int)`
 
@@ -126,83 +124,88 @@ class RecallState(State):
 def reset(self, difficulty: int = 1, seed: int = 0) -> RecallObservation:
     if difficulty not in (1, 2, 3, 4, 5):
         raise ValueError(f"difficulty must be 1-5, got {difficulty}")
-    config = load_curriculum_config(difficulty)  # see 04_CURRICULUM.md
+    config = load_curriculum_config(difficulty)
     self.rng = np.random.default_rng(seed)
-    # data_generator is invoked here; STUB until 08_DATA_GENERATION.md is finalised
-    self.facts, self.queries, self.ground_truth = data_generator.generate(config, self.rng)
+    self.facts, self.queries, self.ground_truth = self.data_generator.generate(config, self.rng)
     self.memory = MemoryBackend(
         budget=config.memory_budget,
         embedding_model=config.embedding_model,
         embedding_dim=config.embedding_dim,
     )
     if config.prefilled_memory_count > 0:
-        self.memory.prefill(data_generator.generate_prefill(config, self.rng))
+        self.memory.prefill(self.data_generator.generate_prefill(config, self.rng))
+    # PRE-COMPUTE FIFO baseline accuracy on this seed for binary reward
+    self.baseline_correct = run_fifo_baseline_dry(self.facts, self.queries, self.ground_truth, config)
     self.phase = "ingest"
     self._init_state(difficulty, seed, config)
     return self._build_observation()
 ```
 
-## `step(action: RecallAction)`
+The `run_fifo_baseline_dry` is a fast (no LLM) simulation of FIFO behavior on this seed, used to define the binary reward threshold.
 
-Pseudocode:
+## `step(action)` pseudocode
 
 ```
-on action.mode == "ingest":
-    validate batch size matches current pending batch
-    for each FactDecision:
-        if decision == "skip":
-            log skip
-        elif decision == "store":
-            if memory.full: penalty, do not store
-            else: memory.store(anchor=decision.anchor, content=fact.text)
-    advance batch pointer
-    if all facts ingested: transition phase to "query"
-    return updated observation, reward = sum of per-fact contributions
+on action.mode == "ingest" (only valid at phase=="ingest"):
+    validate decisions count matches facts_total
+    apply each decision in order:
+        if skip: log skip
+        if store and budget available: memory.store(anchor, content)
+        if store and budget full: rejected, increment overflow count
+    transition phase to "query"
+    return updated obs with first query, reward = sum of step penalties
 
-on action.mode == "delete":
-    only valid during ingest phase, only if budget pressure flagged
-    memory.delete(slot_id)
-
-on action.mode == "retrieve":
+on action.mode == "retrieve" (only valid at phase=="query"):
     results = memory.retrieve(action.query, top_k=config.retrieval_k)
-    return observation with retrieval_results populated
+    populate observation.retrieval_results
+    return obs (same query, no advance)
 
-on action.mode == "answer":
-    correct = grade(action.answer_text, ground_truth[current_query_index])
-    update reward, attribution log
+on action.mode == "answer" (only valid at phase=="query"):
+    correct = grade(action.answer_text, ground_truth[current_query_idx])
+    update state, attribution
     advance query pointer
-    if all queries answered: phase = "done", return terminal obs
+    if all queries answered: phase = "done"
+    return new obs, reward
 ```
-
-The grade function uses **exact-match-after-normalization for synthetic data** (lowercase, strip punctuation, strip whitespace). For natural language answers, see deferred section in `08_DATA_GENERATION.md`.
-
-## Termination
-
-Episode ends when ANY of:
-- Phase reaches "done" (all queries answered)
-- Hard step limit hit (default: 2 × expected step count, prevents infinite loops on malformed actions)
-- Three consecutive malformed actions (the agent is stuck)
 
 ## Boundary cases the implementation MUST handle
 
-1. **Agent stores everything before query phase**: budget exhausted, must use `delete` to recover. If it doesn't, it cannot store further but episode continues.
-2. **Agent provides empty anchor on `store`**: reject the store, count as malformed, no item added.
-3. **Agent emits decisions list with wrong length**: reject entire batch, no items stored, malformed-step penalty.
-4. **Retrieve before any store**: returns empty results, no error.
-5. **Answer without preceding retrieve**: allowed (agent can answer from prompt context if env stays in context). No bonus or penalty for this beyond standard reward.
-6. **Answer is "UNKNOWN" when ground truth says "UNKNOWN"**: full credit. (Distractor-resistance queries.)
-7. **Answer is "UNKNOWN" when ground truth has a known answer**: zero reward, no penalty beyond missing the bonus.
+1. **Decisions list wrong length**: malformed action, reward = penalty, no items stored, phase stays at ingest. Three consecutive malformed → terminate episode.
+2. **Empty anchor on store**: that single store is rejected, others in the list still apply.
+3. **More stores requested than budget allows**: stores apply in order until full; remainder rejected.
+4. **Retrieve before any store**: returns empty results.
+5. **Answer without preceding retrieve**: allowed, agent answers from anchors only.
+6. **`answer_text == "UNKNOWN"` when ground truth has answer**: zero reward, no penalty.
+7. **`answer_text == "UNKNOWN"` when ground truth is UNKNOWN**: full credit.
+8. **Retrieve followed by another retrieve**: allowed, latest result replaces.
 
-## What `state` returns
+## Reset kwargs over wire
 
-`state` is a property returning a `RecallState`. It is read-only from the client side. Used for evaluation, plotting, and judges' replay.
+OpenEnv 0.2+ supports `reset(difficulty=2, seed=42)` via WebSocket. Verify in `tests/test_environment.py`.
 
-## Reset kwargs forwarded over wire
+## What changed vs prior spec — quick reference
 
-OpenEnv 0.2+ supports parameterized reset. The client must support:
+| Element | Prior | Revised |
+|---------|-------|---------|
+| Ingestion structure | 8 facts per turn × ~7 turns | All facts in 1 turn |
+| Delete action | Available mid-ingest | Removed (single-pass makes it unnecessary) |
+| Total turns at L3 | ~43 | ~8 |
+| Queries per episode at L3 | 18 | 5 |
+| Retrieve+answer | Always 2 turns | 1 turn (direct) or 2 turns (with retrieve) |
+| Baseline reward reference | None at env level | FIFO accuracy precomputed at reset for binary reward |
 
-```python
-result = await env.reset(difficulty=2, seed=42)
-```
+## Why single-pass ingestion preserves the trainable skill
 
-This is critical for curriculum training. Verify with smoke test in `tests/test_environment.py`.
+The previous concern was: "if the agent sees all facts at once, doesn't this become trivial RAG?"
+
+**No.** The skill being trained is unchanged:
+- Agent still doesn't see queries during ingestion → selection under uncertainty intact
+- Anchor authoring is still the central novel mechanism → unchanged
+- Lexical mismatch between fact and future query → unchanged
+- Importance prediction from fact content → unchanged
+
+What's lost: the *sequential* nature of streaming. The agent doesn't have to predict importance "as facts arrive." But this was a design choice, not a fundamental skill — the skill is "predict importance under uncertainty about future queries," which is preserved.
+
+What's gained: episode tractability for GRPO + faster training + cleaner credit assignment.
+
+This is the correct trade.

@@ -1,0 +1,297 @@
+[
+    {
+        "title": "Scaling Sparse Experts: Routing Without Auxiliary Loss",
+        "insight": "Aux-free routing matches top-2 expert routing while removing collapse failure modes",
+        "topic": "architecture"
+    },
+    {
+        "title": "Layer-wise Learning Rate Decay Revisited",
+        "insight": "Linear decay across layers improves fine-tuning stability by 18% on average",
+        "topic": "training"
+    },
+    {
+        "title": "Curriculum Effects in Multi-task Pretraining",
+        "insight": "Easy-to-hard curriculum gives 2.3pp accuracy gain over uniform sampling at 7B scale",
+        "topic": "training"
+    },
+    {
+        "title": "Token Compression via Learnable Quantization",
+        "insight": "Dynamic bit-width assignment reduces sequence length by 40% with <0.5pp perplexity loss",
+        "topic": "efficiency"
+    },
+    {
+        "title": "Attention Head Collapse in Deep Transformers",
+        "insight": "Head divergence penalty prevents rank collapse and improves zero-shot transfer by 7.2%",
+        "topic": "interpretability"
+    },
+    {
+        "title": "Efficient Gradient Checkpointing for Long Sequences",
+        "insight": "Selective checkpointing at every 4th layer cuts memory by 35% with 2% compute overhead",
+        "topic": "efficiency"
+    },
+    {
+        "title": "Data Quality Metrics for Language Model Training",
+        "insight": "Entropy-weighted filtering identifies top 30% of data accounting for 85% of final performance",
+        "topic": "data"
+    },
+    {
+        "title": "Convergence Rates in Mixture of Experts",
+        "insight": "Expert load imbalance increases convergence time by O(log K) where K is number of experts",
+        "topic": "training"
+    },
+    {
+        "title": "Residual Connections in Kernel Methods",
+        "insight": "Skip connections in RKHS embeddings achieve 4.1pp improvement on long-range dependencies",
+        "topic": "architecture"
+    },
+    {
+        "title": "Supervised Fine-tuning with Synthetic Data",
+        "insight": "Synthetic examples matching natural distribution entropy yield 94% of organic fine-tune performance",
+        "topic": "data"
+    },
+    {
+        "title": "Quantization-Aware Training for Vision Transformers",
+        "insight": "Per-token dynamic scaling reduces int8 accuracy drop to 0.3pp on ImageNet",
+        "topic": "efficiency"
+    },
+    {
+        "title": "Uncertainty in Causal Feature Attribution",
+        "insight": "Bayesian attribution masks reduce hallucinations by 23% compared to deterministic methods",
+        "topic": "interpretability"
+    },
+    {
+        "title": "Prompt Compression via Semantic Pooling",
+        "insight": "Learnable pooling reduces prompt tokens by 45% while maintaining 96% task accuracy",
+        "topic": "efficiency"
+    },
+    {
+        "title": "Multi-scale Attention for Variable-length Inputs",
+        "insight": "Hierarchical attention heads at 4 scales improve robustness to input length shifts by 31%",
+        "topic": "architecture"
+    },
+    {
+        "title": "Continual Learning Without Catastrophic Forgetting",
+        "insight": "Elastic weight consolidation with task-specific masks prevents >5pp performance drop per task",
+        "topic": "training"
+    },
+    {
+        "title": "Interpretable Feature Interactions in Deep Networks",
+        "insight": "Second-order interaction tensors reveal 78% of model decisions with 3-4 features",
+        "topic": "interpretability"
+    },
+    {
+        "title": "Reward Model Overoptimization in RLHF",
+        "insight": "Ensemble reward models reduce distribution shift by 0.19 nats compared to single-model optimization",
+        "topic": "alignment"
+    },
+    {
+        "title": "Scaling Laws for Mixture of Depths",
+        "insight": "Adaptive depth allocation matches uniform depth at 30% lower compute for 10B models",
+        "topic": "scaling"
+    },
+    {
+        "title": "Batch Normalization Alternatives for Transformers",
+        "insight": "RMSNorm with learned per-channel scaling stabilizes training 1.8x faster than LayerNorm",
+        "topic": "training"
+    },
+    {
+        "title": "Long-context Retrieval with Approximate Attention",
+        "insight": "Locality-sensitive hashing attention reduces complexity to O(n log n) with 2pp accuracy gap",
+        "topic": "efficiency"
+    },
+    {
+        "title": "Data Augmentation via Controlled Corruption",
+        "insight": "Scheduled masking rates increase robustness to adversarial perturbations by 12.3%",
+        "topic": "data"
+    },
+    {
+        "title": "Token Merging for Inference Speedup",
+        "insight": "Bipartite matching merges redundant tokens, achieving 2.1x speedup with 0.8pp accuracy loss",
+        "topic": "efficiency"
+    },
+    {
+        "title": "Emergent Communication in Multi-agent RL",
+        "insight": "Self-play with information bottleneck induces 94% interpretable communication protocol",
+        "topic": "interpretability"
+    },
+    {
+        "title": "Gradient Accumulation and Effective Batch Size",
+        "insight": "Effective batch size >4096 requires gradient noise scaling to prevent training instability",
+        "topic": "training"
+    },
+    {
+        "title": "Cross-lingual Transfer via Shared Subword Vocabulary",
+        "insight": "Byte-level BPE improves zero-shot transfer to unseen languages by 8.7pp",
+        "topic": "data"
+    },
+    {
+        "title": "Attention Sink Phenomenon in Transformers",
+        "insight": "Initial token receives 2-3x disproportionate attention; mitigating improves recall by 5.1%",
+        "topic": "interpretability"
+    },
+    {
+        "title": "Sparse Activation Patterns for Efficient Inference",
+        "insight": "Gating mechanism activates 12% of parameters while maintaining 99.2% task performance",
+        "topic": "efficiency"
+    },
+    {
+        "title": "Calibration Under Distribution Shift",
+        "insight": "Temperature scaling with held-out OOD data improves ECE by 0.086 over standard methods",
+        "topic": "evaluation"
+    },
+    {
+        "title": "Implicit Bias of SGD in Deep Networks",
+        "insight": "L2 margin maximization emerges after 10x overtraining with non-uniform data sampling",
+        "topic": "training"
+    },
+    {
+        "title": "Neural Architecture Search with Hardware Constraints",
+        "insight": "Latency-aware NAS discovers models 2.3x faster than greedy baselines on mobile devices",
+        "topic": "architecture"
+    },
+    {
+        "title": "Few-shot Learning via Prototype Networks",
+        "insight": "Metric learning in 5-way 1-shot achieves 76% accuracy without task-specific fine-tuning",
+        "topic": "training"
+    },
+    {
+        "title": "Adversarial Robustness via Feature Denoising",
+        "insight": "Autoencoder preprocessing increases certified robustness radius by 1.8x against L2 attacks",
+        "topic": "alignment"
+    },
+    {
+        "title": "Scaling Relations for Vision-Language Models",
+        "insight": "Image resolution scaling follows different law than text token scaling (1.2x vs 0.7x exponent)",
+        "topic": "scaling"
+    },
+    {
+        "title": "Decoupled Weight Decay Regularization",
+        "insight": "Independent L2 regularization improves generalization by 3.2% versus L2 in loss function",
+        "topic": "training"
+    },
+    {
+        "title": "Self-supervised Pretraining Objectives",
+        "insight": "Contrastive learning requires 4x larger batch sizes than masked prediction for same convergence",
+        "topic": "data"
+    },
+    {
+        "title": "Pruning Lottery Tickets at Initialization",
+        "insight": "Layer-specific pruning ratios at init achieve 87% sparsity with minimal accuracy loss",
+        "topic": "efficiency"
+    },
+    {
+        "title": "Explanation Faithfulness in Attribution Methods",
+        "insight": "Removing top-5 attributions increases loss by 0.34 nats for integrated gradients but 0.08 for attention",
+        "topic": "interpretability"
+    },
+    {
+        "title": "Adaptive Dropout for Out-of-distribution Detection",
+        "insight": "Uncertainty from dropout ensemble flags OOD samples with 91% AUROC without model retraining",
+        "topic": "evaluation"
+    },
+    {
+        "title": "Frequency-based Analysis of Attention Weights",
+        "insight": "Low-frequency patterns dominate early layers; high-frequency emerge in task-specific layers",
+        "topic": "interpretability"
+    },
+    {
+        "title": "Mixture of Depths with Dynamic Routing",
+        "insight": "Per-token compute allocation achieves 35% reduction in FLOPs for accuracy-matched models",
+        "topic": "architecture"
+    },
+    {
+        "title": "Meta-learning for Fast Adaptation",
+        "insight": "MAML-style inner loop converges in 5 steps on new tasks versus 100 steps for random init",
+        "topic": "training"
+    },
+    {
+        "title": "Distillation with Hard Negative Mining",
+        "insight": "Curriculum distillation with mined negatives improves student performance by 6.1pp",
+        "topic": "training"
+    },
+    {
+        "title": "Variance in Stochastic Gradient Descent",
+        "insight": "Learning rate linear in batch size only holds up to batch size 512; scaling breaks after",
+        "topic": "training"
+    },
+    {
+        "title": "Object Detection with Sparse Annotations",
+        "insight": "Weak supervision from image-level labels recovers 78% of fully-supervised performance",
+        "topic": "data"
+    },
+    {
+        "title": "Compositional Generalization in Language Models",
+        "insight": "Systematic length extrapolation fails when test length exceeds training by >2x",
+        "topic": "evaluation"
+    },
+    {
+        "title": "Knowledge Distillation Temperature Tuning",
+        "insight": "Optimal temperature follows inverse square root of model parameter ratio",
+        "topic": "training"
+    },
+    {
+        "title": "Temporal Consistency in Video Understanding",
+        "insight": "Optical flow regularization improves action recognition accuracy by 4.8pp on AVA",
+        "topic": "architecture"
+    },
+    {
+        "title": "Class Imbalance via Cost-sensitive Learning",
+        "insight": "Focal loss with gamma=2 outperforms weighted sampling by 3.1pp on Zipfian distributions",
+        "topic": "training"
+    },
+    {
+        "title": "Backdoor Robustness Through Model Ensembles",
+        "insight": "Ensemble averaging reduces backdoor attack success rate from 87% to 11%",
+        "topic": "alignment"
+    },
+    {
+        "title": "Hyperparameter Sensitivity Analysis",
+        "insight": "Learning rate is 8x more important than weight decay for final accuracy",
+        "topic": "evaluation"
+    },
+    {
+        "title": "Memory-augmented Neural Networks for Recall",
+        "insight": "External memory with attention retrieval improves multi-hop reasoning by 12.4pp",
+        "topic": "architecture"
+    },
+    {
+        "title": "Activation Function Choices in Modern Architectures",
+        "insight": "GELU shows 2.2% better training stability than ReLU with same compute",
+        "topic": "training"
+    },
+    {
+        "title": "Robustness to Input Perturbations",
+        "insight": "Adversarial training with 10% perturbation budget increases certified accuracy by 15pp",
+        "topic": "alignment"
+    },
+    {
+        "title": "Feature Reuse Across Tasks",
+        "insight": "Layer freezing beyond layer 8 gives 96% of multitask performance in 60% training time",
+        "topic": "efficiency"
+    },
+    {
+        "title": "Contrastive Learning in Metric Spaces",
+        "insight": "Hyperbolic embeddings improve hierarchical clustering purity by 8.3pp vs Euclidean",
+        "topic": "architecture"
+    },
+    {
+        "title": "Regularization Through Early Stopping",
+        "insight": "Validation-based early stopping prevents overfitting better than L1/L2 at scale >1B params",
+        "topic": "training"
+    },
+    {
+        "title": "Cold Start Problem in Recommendation Systems",
+        "insight": "Content-based initialization achieves 82% of warm-start collaborative filtering performance",
+        "topic": "data"
+    },
+    {
+        "title": "Interpretability Through Input Attributions",
+        "insight": "Grad-based attribution accounts for 73% of decision variance in language models",
+        "topic": "interpretability"
+    },
+    {
+        "title": "Efficient Inference via Model Quantization",
+        "insight": "Post-training int4 quantization achieves 0.2pp accuracy drop with 4x memory reduction",
+        "topic": "efficiency"
+    }
+]

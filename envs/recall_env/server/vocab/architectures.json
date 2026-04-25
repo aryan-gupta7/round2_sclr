@@ -1,0 +1,402 @@
+[
+    {
+        "abbrev": "6L-S",
+        "full": "6-layer small transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "12L-B",
+        "full": "12-layer base transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "24L-L",
+        "full": "24-layer large transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "32L-XL",
+        "full": "32-layer extra-large transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "8L-256d",
+        "full": "8-layer 256-dimension transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "16L-512d",
+        "full": "16-layer 512-dimension transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "20L-768d",
+        "full": "20-layer 768-dimension transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "36L-1024d",
+        "full": "36-layer 1024-dimension transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-causal",
+        "full": "Causal transformer decoder",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-enc",
+        "full": "Transformer encoder stack",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-2h",
+        "full": "Transformer with 2 attention heads",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-8h",
+        "full": "Transformer with 8 attention heads",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-16h",
+        "full": "Transformer with 16 attention heads",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-32h",
+        "full": "Transformer with 32 attention heads",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "ALiBi",
+        "full": "Attention with linear bias",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "RoPE-T",
+        "full": "Rotary position embedding transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-LN",
+        "full": "Transformer with layer normalization",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-RMSNorm",
+        "full": "Transformer with RMS normalization",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-2K",
+        "full": "Transformer with 2K token context",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-8K",
+        "full": "Transformer with 8K token context",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-32K",
+        "full": "Transformer with 32K token context",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "T-128K",
+        "full": "Transformer with 128K token context",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "D-T",
+        "full": "Decoder-only transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "E-D-T",
+        "full": "Encoder-decoder transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "Prefix-T",
+        "full": "Prefix-tuned transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "LoRA-T",
+        "full": "Low-rank adapted transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "Q-T",
+        "full": "Quantized transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "Sparse-T",
+        "full": "Sparse attention transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "Local-T",
+        "full": "Local attention transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "Flash-T",
+        "full": "Flash attention transformer",
+        "category": "transformer"
+    },
+    {
+        "abbrev": "MoE-4ex",
+        "full": "Mixture of 4 experts",
+        "category": "moe"
+    },
+    {
+        "abbrev": "MoE-8ex",
+        "full": "Mixture of 8 experts",
+        "category": "moe"
+    },
+    {
+        "abbrev": "MoE-16ex",
+        "full": "Mixture of 16 experts",
+        "category": "moe"
+    },
+    {
+        "abbrev": "MoE-32ex",
+        "full": "Mixture of 32 experts",
+        "category": "moe"
+    },
+    {
+        "abbrev": "T-MoE-8",
+        "full": "Transformer with 8-expert mixture",
+        "category": "moe"
+    },
+    {
+        "abbrev": "Switch-8",
+        "full": "Switching networks 8 experts",
+        "category": "moe"
+    },
+    {
+        "abbrev": "Expert-2K",
+        "full": "2048 expert sparse model",
+        "category": "moe"
+    },
+    {
+        "abbrev": "GShard",
+        "full": "Giant sparse mixture model",
+        "category": "moe"
+    },
+    {
+        "abbrev": "ST-MoE",
+        "full": "Sparse transformer mixture",
+        "category": "moe"
+    },
+    {
+        "abbrev": "Top2-MoE",
+        "full": "Top-2 expert routing",
+        "category": "moe"
+    },
+    {
+        "abbrev": "Aux-MoE",
+        "full": "Auxiliary loss MoE",
+        "category": "moe"
+    },
+    {
+        "abbrev": "Expert-Bal",
+        "full": "Load-balanced expert selection",
+        "category": "moe"
+    },
+    {
+        "abbrev": "DiT-S",
+        "full": "Diffusion transformer small",
+        "category": "diffusion"
+    },
+    {
+        "abbrev": "DiT-B",
+        "full": "Diffusion transformer base",
+        "category": "diffusion"
+    },
+    {
+        "abbrev": "DiT-L",
+        "full": "Diffusion transformer large",
+        "category": "diffusion"
+    },
+    {
+        "abbrev": "DiT-XL",
+        "full": "Diffusion transformer extra-large",
+        "category": "diffusion"
+    },
+    {
+        "abbrev": "U-DiT",
+        "full": "Unified diffusion transformer",
+        "category": "diffusion"
+    },
+    {
+        "abbrev": "Latent-DiT",
+        "full": "Latent space diffusion transformer",
+        "category": "diffusion"
+    },
+    {
+        "abbrev": "Cond-DiT",
+        "full": "Conditional diffusion transformer",
+        "category": "diffusion"
+    },
+    {
+        "abbrev": "Flow-DiT",
+        "full": "Flow-based diffusion transformer",
+        "category": "diffusion"
+    },
+    {
+        "abbrev": "ADM-DiT",
+        "full": "Adaptive diffusion model transformer",
+        "category": "diffusion"
+    },
+    {
+        "abbrev": "DiT-seq",
+        "full": "Sequential diffusion transformer",
+        "category": "diffusion"
+    },
+    {
+        "abbrev": "Mamba-70M",
+        "full": "State-space model 70 million",
+        "category": "ssm"
+    },
+    {
+        "abbrev": "Mamba-130M",
+        "full": "State-space model 130 million",
+        "category": "ssm"
+    },
+    {
+        "abbrev": "Mamba-370M",
+        "full": "State-space model 370 million",
+        "category": "ssm"
+    },
+    {
+        "abbrev": "Mamba-1B",
+        "full": "State-space model 1 billion",
+        "category": "ssm"
+    },
+    {
+        "abbrev": "S6-8L",
+        "full": "S6 state-space 8-layer",
+        "category": "ssm"
+    },
+    {
+        "abbrev": "S6-24L",
+        "full": "S6 state-space 24-layer",
+        "category": "ssm"
+    },
+    {
+        "abbrev": "HiPPO-SSM",
+        "full": "HiPPO state-space model",
+        "category": "ssm"
+    },
+    {
+        "abbrev": "Scan-SSM",
+        "full": "Scanned state-space model",
+        "category": "ssm"
+    },
+    {
+        "abbrev": "Linear-SSM",
+        "full": "Linear state-space model",
+        "category": "ssm"
+    },
+    {
+        "abbrev": "Struct-SS",
+        "full": "Structured state-space model",
+        "category": "ssm"
+    },
+    {
+        "abbrev": "T-Mamba",
+        "full": "Transformer Mamba hybrid",
+        "category": "hybrid"
+    },
+    {
+        "abbrev": "Att-SSM",
+        "full": "Attention with state-space",
+        "category": "hybrid"
+    },
+    {
+        "abbrev": "Conv-T",
+        "full": "Convolutional transformer",
+        "category": "hybrid"
+    },
+    {
+        "abbrev": "Hybrid-8",
+        "full": "8-layer hybrid architecture",
+        "category": "hybrid"
+    },
+    {
+        "abbrev": "Recur-T",
+        "full": "Recurrent transformer blocks",
+        "category": "hybrid"
+    },
+    {
+        "abbrev": "GAT-mem",
+        "full": "Graph attention with memory",
+        "category": "hybrid"
+    },
+    {
+        "abbrev": "Mem-Aug-T",
+        "full": "Memory augmented transformer",
+        "category": "hybrid"
+    },
+    {
+        "abbrev": "Seq-Par",
+        "full": "Sequential parallel hybrid",
+        "category": "hybrid"
+    },
+    {
+        "abbrev": "ViT-S",
+        "full": "Vision transformer small",
+        "category": "vision"
+    },
+    {
+        "abbrev": "ViT-B",
+        "full": "Vision transformer base",
+        "category": "vision"
+    },
+    {
+        "abbrev": "ViT-L",
+        "full": "Vision transformer large",
+        "category": "vision"
+    },
+    {
+        "abbrev": "ConvViT",
+        "full": "Convolutional vision transformer",
+        "category": "vision"
+    },
+    {
+        "abbrev": "Swin-B",
+        "full": "Swin transformer base",
+        "category": "vision"
+    },
+    {
+        "abbrev": "Patch-64",
+        "full": "Patch embedding 64-dimension",
+        "category": "vision"
+    },
+    {
+        "abbrev": "LSTM-512",
+        "full": "LSTM with 512 hidden units",
+        "category": "rnn"
+    },
+    {
+        "abbrev": "GRU-256",
+        "full": "GRU with 256 hidden units",
+        "category": "rnn"
+    },
+    {
+        "abbrev": "Bi-LSTM",
+        "full": "Bidirectional LSTM",
+        "category": "rnn"
+    },
+    {
+        "abbrev": "Stack-GRU",
+        "full": "Stacked GRU encoder",
+        "category": "rnn"
+    }
+]

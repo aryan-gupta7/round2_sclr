@@ -1,0 +1,162 @@
+[
+    {
+        "topic": "coffee machine in lab broken since Tuesday",
+        "category": "lab_life"
+    },
+    {
+        "topic": "printer on 3rd floor jammed with paper again",
+        "category": "lab_life"
+    },
+    {
+        "topic": "lab WiFi drops every afternoon around 2pm",
+        "category": "lab_life"
+    },
+    {
+        "topic": "desk fan is making strange noise",
+        "category": "lab_life"
+    },
+    {
+        "topic": "someone left dirty dishes in lab sink",
+        "category": "lab_life"
+    },
+    {
+        "topic": "HVAC system being serviced Thursday morning",
+        "category": "lab_life"
+    },
+    {
+        "topic": "lab access card not working for side entrance",
+        "category": "lab_life"
+    },
+    {
+        "topic": "whiteboard markers dried out, need new set",
+        "category": "lab_life"
+    },
+    {
+        "topic": "lighting above my desk is flickering",
+        "category": "lab_life"
+    },
+    {
+        "topic": "lab refrigerator making loud humming noise",
+        "category": "lab_life"
+    },
+    {
+        "topic": "advisor meeting moved to Friday 3pm",
+        "category": "scheduling"
+    },
+    {
+        "topic": "group meeting rescheduled for next Wednesday",
+        "category": "scheduling"
+    },
+    {
+        "topic": "committee presentation deadline is end of month",
+        "category": "scheduling"
+    },
+    {
+        "topic": "need to book conference travel by next week",
+        "category": "scheduling"
+    },
+    {
+        "topic": "dentist appointment Thursday afternoon",
+        "category": "scheduling"
+    },
+    {
+        "topic": "lab open house event is in two weeks",
+        "category": "scheduling"
+    },
+    {
+        "topic": "quarterly review scheduled for April 28",
+        "category": "scheduling"
+    },
+    {
+        "topic": "prepare slides for department seminar",
+        "category": "scheduling"
+    },
+    {
+        "topic": "tried new yoga class on Monday evening",
+        "category": "personal"
+    },
+    {
+        "topic": "need to renew gym membership soon",
+        "category": "personal"
+    },
+    {
+        "topic": "haven't gotten enough sleep this week",
+        "category": "personal"
+    },
+    {
+        "topic": "reading a mystery novel before bed",
+        "category": "personal"
+    },
+    {
+        "topic": "shoulder pain from hunching at desk",
+        "category": "personal"
+    },
+    {
+        "topic": "glasses prescription probably needs updating",
+        "category": "personal"
+    },
+    {
+        "topic": "submit reimbursement form for conference travel",
+        "category": "admin"
+    },
+    {
+        "topic": "update CV with recent publications",
+        "category": "admin"
+    },
+    {
+        "topic": "sign forms for lab safety certification renewal",
+        "category": "admin"
+    },
+    {
+        "topic": "fill out annual equipment inventory report",
+        "category": "admin"
+    },
+    {
+        "topic": "submit travel request for upcoming workshop",
+        "category": "admin"
+    },
+    {
+        "topic": "update emergency contact information with HR",
+        "category": "admin"
+    },
+    {
+        "topic": "lunch with visiting researcher tomorrow",
+        "category": "social"
+    },
+    {
+        "topic": "colleague leaving lab next month for postdoc",
+        "category": "social"
+    },
+    {
+        "topic": "group dinner planned for Friday after lab",
+        "category": "social"
+    },
+    {
+        "topic": "birthday celebration for lab member on Friday",
+        "category": "social"
+    },
+    {
+        "topic": "meet up with undergrad mentee over coffee",
+        "category": "social"
+    },
+    {
+        "topic": "end of semester potluck in department lounge",
+        "category": "social"
+    },
+    {
+        "topic": "lab printer needs new toner cartridge",
+        "category": "supplies"
+    },
+    {
+        "topic": "order more notebooks and pens for lab",
+        "category": "supplies"
+    },
+    {
+        "topic": "USB cables and adapters running low in stock",
+        "category": "supplies"
+    },
+    {
+        "topic": "thermal paste for computer maintenance needed",
+        "category": "supplies"
+    }
+]

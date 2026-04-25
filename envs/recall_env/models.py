@@ -10,48 +10,43 @@ class FactDecision(BaseModel):
 
 class RecallAction(Action):
     """
-    Action for the Recall environment.
-    One Action class with a discriminated union over modes.
+    Action for the Recall environment (REVISED).
     """
-    mode: Literal["ingest", "retrieve", "answer", "delete"]
-    # for ingest mode:
+    mode: Literal["ingest", "retrieve", "answer"]
+    # for ingest mode (all decisions at once):
     decisions: Optional[List[FactDecision]] = None
     # for retrieve mode:
     query: Optional[str] = None
     # for answer mode:
     answer_text: Optional[str] = None  # may be the literal "UNKNOWN"
-    # for delete mode (only allowed if budget violation):
-    slot_id: Optional[int] = None
 
 class RecallObservation(Observation):
     """
-    Observation from the Recall environment.
+    Observation from the Recall environment (REVISED).
     """
     phase: Literal["ingest", "query", "done"]
-    # During ingest phase:
-    current_batch: Optional[List[Dict]] = None  # [{"fact_id": int, "text": str, "tags": list[str]}, ...]
-    # During query phase:
+    # Ingestion phase:
+    all_facts: Optional[List[Dict]] = None         # full list shown once
+    # Query phase:
     current_query: Optional[str] = None
-    retrieval_results: Optional[List[Dict]] = None  # populated after a retrieve action
+    retrieval_results: Optional[List[Dict]] = None # populated only after retrieve action
     # Always present:
-    memory_anchors: List[str]                # CURRENT anchors only, not full content
+    memory_anchors: List[str]
     memory_used: int
     memory_budget: int
-    facts_remaining: int
     queries_remaining: int
     queries_answered: int
     last_reward: float
-    instruction: str                         # phase-appropriate instruction text for the LLM
+    instruction: str
 
 class RecallState(State):
     """
-    Full state of the Recall environment, used for evaluation and debugging.
+    Full state of the Recall environment (REVISED).
     """
     difficulty: int
     seed: int
     phase: str
     facts_total: int
-    facts_ingested: int
     queries_total: int
     queries_answered: int
     correct_answers: int
@@ -59,5 +54,6 @@ class RecallState(State):
     memory_budget: int
     cumulative_reward: float
     # For debugging / metrics:
-    storage_decisions: List[Dict] = Field(default_factory=list)  # per-fact: stored or not, anchor written, was-later-retrieved
-    failure_attribution: List[Dict] = Field(default_factory=list)  # per-query: which failure mode (storage / anchor / retrieve / reasoning)
+    storage_decisions: List[Dict] = Field(default_factory=list)  # per-fact log
+    failure_attribution: List[Dict] = Field(default_factory=list)  # per-query log
+    baseline_correct: int = 0              # FIFO baseline accuracy on this seed

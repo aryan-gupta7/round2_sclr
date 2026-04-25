@@ -1,0 +1,320 @@
+[
+    {
+        "symptom": "Loss NaN after 3000 steps; gradients become infinity",
+        "cause": "Exploding gradients from unbounded input range; no input normalization applied",
+        "fix": "Add LayerNorm to input embedding; reduce learning rate by 10x",
+        "category": "numerical"
+    },
+    {
+        "symptom": "Validation loss increases while training loss decreases (divergence)",
+        "cause": "Batch normalization running statistics mismatch; train vs eval mode inconsistency",
+        "fix": "Set model.eval() during validation; fix momentum in BN (0.1 was too high)",
+        "category": "loss"
+    },
+    {
+        "symptom": "OOM crash on batch 47 of epoch 2, never batch 1",
+        "cause": "Activation checkpointing disabled in transformer block; memory scales with sequence length",
+        "fix": "Wrap transformer.forward with torch.utils.checkpoint",
+        "category": "memory"
+    },
+    {
+        "symptom": "Accuracy plateaus at 0.512 (2-class), exactly random chance",
+        "cause": "Model output logits never passed through softmax; raw embeddings used in loss",
+        "fix": "Apply F.log_softmax in forward pass before loss computation",
+        "category": "loss"
+    },
+    {
+        "symptom": "Memory usage grows 2GB per epoch; no OOM but swap thrashing",
+        "cause": "Loss computation graph retained; no .detach() on accumulated embeddings",
+        "fix": "Call loss.backward() then optimizer.zero_grad() before detach",
+        "category": "memory"
+    },
+    {
+        "symptom": "Train loss is 0.001 but metric shows 15% error rate",
+        "cause": "Loss computed on logits; metric computed on probabilities; threshold mismatch",
+        "fix": "Apply softmax before computing classification metric; use consistent threshold",
+        "category": "loss"
+    },
+    {
+        "symptom": "Gradient updates apply inconsistently; some weights frozen",
+        "cause": "Parameter group learning rates set incorrectly; one group LR = 0 by mistake",
+        "fix": "Verify param_groups in optimizer; set all base_lr values to same schedule",
+        "category": "optimizer"
+    },
+    {
+        "symptom": "CUDA OOM at batch size 32 but batch size 31 works",
+        "cause": "Reserved cache + fragmentation; attention allocates full max_seq_len matrix",
+        "fix": "torch.cuda.empty_cache() between batches; use flash-attention",
+        "category": "memory"
+    },
+    {
+        "symptom": "Loss oscillates ±0.5 around mean; never converges smoothly",
+        "cause": "Learning rate 0.01 too high; AdamW beta1=0.9 too aggressive momentum",
+        "fix": "Reduce LR to 0.0001; set beta1=0.95 for slower momentum",
+        "category": "optimizer"
+    },
+    {
+        "symptom": "Model predicts same class for all samples after epoch 10",
+        "cause": "Class imbalance uncorrected; cross-entropy biased to majority class",
+        "fix": "Add class_weight parameter to CrossEntropyLoss; weight by inverse frequency",
+        "category": "loss"
+    },
+    {
+        "symptom": "Training diverges if batch size > 64; stable if < 64",
+        "cause": "Loss scaling not adjusted for batch size; gradient magnitude increases with batch",
+        "fix": "Scale learning rate proportionally: LR_new = LR_old * (batch_size_new / 64)",
+        "category": "optimizer"
+    },
+    {
+        "symptom": "Metric improves but loss increases (inverse correlation)",
+        "cause": "Metric uses raw predictions; loss computed on sigmoid output; scale mismatch",
+        "fix": "Standardize: compute both on softmax probabilities or both on logits",
+        "category": "loss"
+    },
+    {
+        "symptom": "Model loads from checkpoint but produces different predictions",
+        "cause": "Dropout not set to eval mode; random_state not seeded at inference",
+        "fix": "model.eval() before inference; set seed in torch.manual_seed()",
+        "category": "io"
+    },
+    {
+        "symptom": "Data loader returns different batch each iteration (no shuffle)",
+        "cause": "shuffle=True not set; dataset always returns samples in order",
+        "fix": "Initialize DataLoader with shuffle=True for training set",
+        "category": "data"
+    },
+    {
+        "symptom": "Gradients stuck at exactly 0 for encoder layers",
+        "cause": "Gradients blocked by detach() in forward pass; no gradient flow",
+        "fix": "Remove .detach() from encoder output; ensure requires_grad=True",
+        "category": "numerical"
+    },
+    {
+        "symptom": "Training speed drops 50% after 5000 steps",
+        "cause": "No gradient accumulation cleanup; old graphs retained in memory",
+        "fix": "Call optimizer.zero_grad() every step; free unused tensors",
+        "category": "infra"
+    },
+    {
+        "symptom": "Validation metric perfect (1.0) but test metric fails (0.15)",
+        "cause": "Data leakage; validation set contains copies of training samples",
+        "fix": "Rebuild train/val split with no overlap; shuffle before split",
+        "category": "data"
+    },
+    {
+        "symptom": "Loss is inf but no gradient overflow detected",
+        "cause": "Model output contains exp(large_number); softmax overflow before loss",
+        "fix": "Use log_softmax + NLLLoss instead of softmax + CrossEntropyLoss",
+        "category": "numerical"
+    },
+    {
+        "symptom": "GPU utilization only 20%; training takes 2x longer than expected",
+        "cause": "CPU-side data loader bottleneck; num_workers=0 (single-threaded)",
+        "fix": "Set num_workers=4; pin_memory=True in DataLoader",
+        "category": "infra"
+    },
+    {
+        "symptom": "Loss increases every epoch despite low learning rate",
+        "cause": "Weight decay applied incorrectly; regularization term grows unbounded",
+        "fix": "Check weight decay logic; reduce weight_decay from 1e-2 to 1e-4",
+        "category": "optimizer"
+    },
+    {
+        "symptom": "Model checkpoint file corrupted after save",
+        "cause": "Interrupted write; no atomic file operation (torch.save not flushed)",
+        "fix": "Save to temp file, then rename; use save_atomic or context manager",
+        "category": "io"
+    },
+    {
+        "symptom": "Batch norm statistics shift during training; eval mode differs",
+        "cause": "Momentum in BN too high (default 0.9); running_mean/var not converged",
+        "fix": "Set momentum=0.01 in BatchNorm layers; allow more warmup steps",
+        "category": "loss"
+    },
+    {
+        "symptom": "Sparse tensor gradients become dense; memory balloons",
+        "cause": "All-gather operation on sparse embeddings; no sparse optimizer step",
+        "fix": "Use sparse_adam or SparseAdam; avoid dense gradient conversion",
+        "category": "memory"
+    },
+    {
+        "symptom": "Learning rate schedule not decreasing; constant throughout",
+        "cause": "Scheduler.step() never called; LR stays at initial value",
+        "fix": "Call scheduler.step() after each epoch or batch (check scheduler type)",
+        "category": "optimizer"
+    },
+    {
+        "symptom": "Model overfits drastically; train loss 0.01, val loss 2.5",
+        "cause": "No dropout or regularization applied; model too large for data",
+        "fix": "Add Dropout(0.5); reduce hidden dim by 50%; increase weight_decay",
+        "category": "loss"
+    },
+    {
+        "symptom": "Training hangs; no error but CPU at 100%",
+        "cause": "Dataloader worker deadlock; infinite loop in collate_fn",
+        "fix": "Debug collate_fn with timeout=0; remove infinite loops or blocking ops",
+        "category": "infra"
+    },
+    {
+        "symptom": "Gradient clipping never triggers; gradients unbounded at 100+",
+        "cause": "Clip value set to 1000 (too high); clipping disabled by mistake",
+        "fix": "Set max_norm=1.0 in torch.nn.utils.clip_grad_norm_",
+        "category": "numerical"
+    },
+    {
+        "symptom": "Model checkpoint loads but training resumes with old optimizer state",
+        "cause": "Optimizer state not saved; only model weights saved in checkpoint",
+        "fix": "Save dict with model, optimizer, lr_scheduler, epoch; load all",
+        "category": "io"
+    },
+    {
+        "symptom": "Precision issues: loss correct in float64, wrong in float32",
+        "cause": "Intermediate computations lose precision; accumulation in float32",
+        "fix": "Use mixed precision training; torch.cuda.amp or automatic_mixed_precision",
+        "category": "numerical"
+    },
+    {
+        "symptom": "One GPU idle; multi-GPU training not scaling",
+        "cause": "DataParallel; single GPU bottleneck in forward pass",
+        "fix": "Switch to DistributedDataParallel; ensure synchronization",
+        "category": "infra"
+    },
+    {
+        "symptom": "Label smoothing causes calibration drift",
+        "cause": "Smoothing applied after softmax instead of before loss",
+        "fix": "Apply label smoothing to targets before computing cross-entropy",
+        "category": "loss"
+    },
+    {
+        "symptom": "Memory leak; memory grows even with constant batch size",
+        "cause": "Circular reference in custom forward; loss graph not freed",
+        "fix": "Break reference cycle; use weakref or torch.no_grad() in eval blocks",
+        "category": "memory"
+    },
+    {
+        "symptom": "Predictions identical for all samples of same class",
+        "cause": "Model collapsed; all weights point to same attractor",
+        "fix": "Reduce learning rate by 100x; add input noise for regularization",
+        "category": "loss"
+    },
+    {
+        "symptom": "Tokenizer produces different token IDs on different runs",
+        "cause": "Random seed not set in tokenizer; shuffle=True in tokenization",
+        "fix": "Set tokenizer seed; ensure vocab built deterministically",
+        "category": "data"
+    },
+    {
+        "symptom": "Cosine annealing scheduler resets unexpectedly mid-training",
+        "cause": "Scheduler step called twice per iteration; epoch vs step mismatch",
+        "fix": "Clarify scheduler call site: after optimizer.step() or after epoch loop",
+        "category": "optimizer"
+    },
+    {
+        "symptom": "Backward pass fails with autograd error; graph structure invalid",
+        "cause": "In-place operation on leaf tensor during forward (x += y)",
+        "fix": "Replace in-place ops: use x = x + y or clone before modify",
+        "category": "numerical"
+    },
+    {
+        "symptom": "Data augmentation applied twice; examples become unrecognizable",
+        "cause": "Augmentation in dataset and in dataloader; double application",
+        "fix": "Remove one augmentation layer; choose single canonical location",
+        "category": "data"
+    },
+    {
+        "symptom": "Model inference 10x slower than training (same batch size)",
+        "cause": "Dropout not disabled; stochastic forward pass during eval",
+        "fix": "Ensure model.eval() called; Dropout(p) becomes identity in eval mode",
+        "category": "loss"
+    },
+    {
+        "symptom": "Cross-entropy loss stays at ln(num_classes) for many epochs",
+        "cause": "Softmax output uniform; model not updating; dead learning rate",
+        "fix": "Increase learning rate 100x; reset weights; check for zero gradients",
+        "category": "optimizer"
+    },
+    {
+        "symptom": "Multi-head attention produces all-zero gradients",
+        "cause": "Attention mask broadcast incorrectly; all entries masked",
+        "fix": "Verify mask shape and application; test with unmasked attention",
+        "category": "numerical"
+    },
+    {
+        "symptom": "Test loss lower than training loss consistently",
+        "cause": "Regularization (dropout, weight decay) only in train; test runs clean",
+        "fix": "Disable regularization for fair comparison; or add to test loss",
+        "category": "loss"
+    },
+    {
+        "symptom": "Checkpoint loading succeeds but model weights are NaN",
+        "cause": "File corruption during save; dtype mismatch on load",
+        "fix": "Verify save integrity; specify device and dtype during torch.load()",
+        "category": "io"
+    },
+    {
+        "symptom": "Distributed training hangs; all ranks waiting",
+        "cause": "Barrier synchronization skipped on one rank; deadlock",
+        "fix": "Ensure all ranks reach dist.barrier(); no early returns before sync",
+        "category": "infra"
+    },
+    {
+        "symptom": "Gradient accumulation produces wrong update direction",
+        "cause": "Accumulated gradients not normalized by num_accumulation_steps",
+        "fix": "Divide loss by num_accumulation_steps before backward()",
+        "category": "optimizer"
+    },
+    {
+        "symptom": "Model underfits; both train and val loss high and flat",
+        "cause": "Model capacity too low; insufficient layers or hidden dims",
+        "fix": "Double hidden dimension; add residual connections; increase depth",
+        "category": "loss"
+    },
+    {
+        "symptom": "Learning rate warmup causes initial loss spike",
+        "cause": "Learning rate jumps from 0 to max instantly; no ramp-up",
+        "fix": "Implement linear warmup: LR = init_LR * (step / warmup_steps)",
+        "category": "optimizer"
+    },
+    {
+        "symptom": "Batch statistics inconsistent; mean/std vary per batch",
+        "cause": "Normalization computed per-batch not globally; small batch variance",
+        "fix": "Use LayerNorm instead of BatchNorm for sequence models",
+        "category": "loss"
+    },
+    {
+        "symptom": "Model produces NaN loss after loading from checkpoint",
+        "cause": "Checkpoint saved in eval mode; batch norm statistics frozen",
+        "fix": "Reset running statistics: for m in model.modules() if BN, m.reset_running_stats()",
+        "category": "io"
+    },
+    {
+        "symptom": "Sampler produces duplicate samples in dataloader",
+        "cause": "Random seed not set globally; sampler order non-deterministic",
+        "fix": "Set np.random.seed() and torch.manual_seed() before DataLoader init",
+        "category": "data"
+    },
+    {
+        "symptom": "Loss oscillates with period matching batch count",
+        "cause": "Gradient accumulation not scaling loss; step-level variance high",
+        "fix": "Verify accumulation divisor; check gradient noise scale",
+        "category": "numerical"
+    },
+    {
+        "symptom": "Mixed precision training produces NaN",
+        "cause": "Overflow in float16 computation; scale factor too high or too low",
+        "fix": "Tune loss_scale in amp; use PyTorch automatic_mixed_precision",
+        "category": "numerical"
+    },
+    {
+        "symptom": "Model output has extreme values (>1e6); softmax undefined",
+        "cause": "No gradient clipping in early training; instability from initialization",
+        "fix": "Set gradient clipping; initialize weights from N(0, 0.01) not U(0,1)",
+        "category": "loss"
+    },
+    {
+        "symptom": "Validation set performance worse after adding data augmentation",
+        "cause": "Augmentation applied to validation set; inconsistent with test",
+        "fix": "Disable augmentation for val/test splits; only augment training",
+        "category": "data"
+    }
+]

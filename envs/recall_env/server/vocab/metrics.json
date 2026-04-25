@@ -1,0 +1,242 @@
+[
+    {
+        "abbrev": "train_acc",
+        "full": "training accuracy",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "val_acc",
+        "full": "validation accuracy",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "test_acc",
+        "full": "test accuracy",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "train_loss",
+        "full": "training loss",
+        "value_low": 0.0,
+        "value_high": 10.0,
+        "format": "float",
+        "direction": "lower_is_better"
+    },
+    {
+        "abbrev": "val_loss",
+        "full": "validation loss",
+        "value_low": 0.0,
+        "value_high": 10.0,
+        "format": "float",
+        "direction": "lower_is_better"
+    },
+    {
+        "abbrev": "test_loss",
+        "full": "test loss",
+        "value_low": 0.0,
+        "value_high": 10.0,
+        "format": "float",
+        "direction": "lower_is_better"
+    },
+    {
+        "abbrev": "ppl",
+        "full": "perplexity",
+        "value_low": 1.0,
+        "value_high": 1000.0,
+        "format": "float",
+        "direction": "lower_is_better"
+    },
+    {
+        "abbrev": "f1_macro",
+        "full": "f1 score macro",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "f1_micro",
+        "full": "f1 score micro",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "precision",
+        "full": "precision",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "recall",
+        "full": "recall",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "bleu",
+        "full": "bleu score",
+        "value_low": 0.0,
+        "value_high": 100.0,
+        "format": "percentage",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "rouge1",
+        "full": "rouge 1 f1",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "rougeL",
+        "full": "rouge l f1",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "grad_norm",
+        "full": "gradient norm",
+        "value_low": 0.0,
+        "value_high": 200.0,
+        "format": "float",
+        "direction": "lower_is_better"
+    },
+    {
+        "abbrev": "throughput",
+        "full": "samples per second",
+        "value_low": 1.0,
+        "value_high": 10000.0,
+        "format": "float",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "latency_ms",
+        "full": "inference latency milliseconds",
+        "value_low": 1.0,
+        "value_high": 5000.0,
+        "format": "float",
+        "direction": "lower_is_better"
+    },
+    {
+        "abbrev": "mem_mb",
+        "full": "memory usage megabytes",
+        "value_low": 10.0,
+        "value_high": 40000.0,
+        "format": "float",
+        "direction": "lower_is_better"
+    },
+    {
+        "abbrev": "flops",
+        "full": "floating point operations",
+        "value_low": 1e6,
+        "value_high": 1e12,
+        "format": "float",
+        "direction": "lower_is_better"
+    },
+    {
+        "abbrev": "auc_roc",
+        "full": "auc roc",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "mse",
+        "full": "mean squared error",
+        "value_low": 0.0,
+        "value_high": 100.0,
+        "format": "float",
+        "direction": "lower_is_better"
+    },
+    {
+        "abbrev": "mae",
+        "full": "mean absolute error",
+        "value_low": 0.0,
+        "value_high": 100.0,
+        "format": "float",
+        "direction": "lower_is_better"
+    },
+    {
+        "abbrev": "lr",
+        "full": "learning rate",
+        "value_low": 1e-6,
+        "value_high": 0.1,
+        "format": "float",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "epoch",
+        "full": "epoch count",
+        "value_low": 1.0,
+        "value_high": 1000.0,
+        "format": "integer",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "train_time",
+        "full": "training time seconds",
+        "value_low": 1.0,
+        "value_high": 86400.0,
+        "format": "float",
+        "direction": "lower_is_better"
+    },
+    {
+        "abbrev": "val_f1",
+        "full": "validation f1 score",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "map",
+        "full": "mean average precision",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "ndcg",
+        "full": "normalized discounted cumulative gain",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "mrr",
+        "full": "mean reciprocal rank",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    },
+    {
+        "abbrev": "batch_acc",
+        "full": "batch accuracy",
+        "value_low": 0.0,
+        "value_high": 1.0,
+        "format": "fraction",
+        "direction": "higher_is_better"
+    }
+]

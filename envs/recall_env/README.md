@@ -1,87 +1,120 @@
 ---
-title: RECALL — Memory Management RL Environment
+title: RECALL Memory Environment
 emoji: 🧠
-colorFrom: blue
-colorTo: indigo
+colorFrom: indigo
+colorTo: pink
 sdk: docker
 pinned: false
+license: apache-2.0
 app_port: 8000
-base_path: /web
 tags:
   - openenv
-  - reinforcement-learning
-  - memory-management
+  - rl
+  - memory
+  - llm
 ---
 
-# RECALL Environment
+# 🧠 RECALL — Memory-Constrained Long-Horizon Memory
 
-RECALL is an OpenEnv reinforcement learning environment where the agent learns to **manage its own memory** under budget constraints. The agent must decide what to store from a stream of facts and how to phrase retrieval anchors to answer future queries.
+RECALL is an **OpenEnv** reinforcement learning environment where the agent learns to **manage its own memory** under budget constraints. Given a stream of facts (experiment logs, papers, decisions, debug notes), the agent must decide what to store, craft retrieval anchors, and answer future queries from memory.
+
+> **Key insight**: RECALL trains the _write-side_ of memory management — complementary to read-side approaches like RLM.
+
+## What This Is
+
+A PhD student runs transformer experiments over 3 weeks. Facts arrive as a batch: experiment results, paper insights, design decisions, debugging notes, and irrelevant distractions. The agent must:
+
+1. **Decide** which facts to store (skip distractors, prioritize queryable items)
+2. **Author anchors** — short phrases the agent writes to enable future retrieval
+3. **Retrieve** from memory using authored anchors
+4. **Answer** queries about stored information — or say "UNKNOWN" if the fact was skipped
 
 ## Quick Start
 
 ```python
-from envs.recall_env import RecallEnv, RecallAction, FactDecision
+from envs.recall_env import RecallEnv, RecallAction
+from envs.recall_env.models import FactDecision
 
-# Connect to a running server
-with RecallEnv(base_url="http://localhost:8000") as env:
-    # Reset for Level 1
-    obs = env.reset(difficulty=1, seed=42)
+async with RecallEnv.from_env("openenv/recall-env") as env:
+    obs = await env.reset(difficulty=1, seed=42)
 
-    # Ingestion Phase: décide which facts to store
+    # Phase 1: Ingestion — all facts at once
     if obs.phase == "ingest":
         decisions = [
             FactDecision(fact_id=f["fact_id"], decision="store", anchor=f["text"][:30])
-            for f in obs.current_batch
+            for f in obs.all_facts
         ]
-        obs = env.step(RecallAction(mode="ingest", decisions=decisions))
+        result = await env.step(RecallAction(mode="ingest", decisions=decisions))
+        obs = result.observation
 
-    # Query Phase: retrieve and answer
-    if obs.phase == "query":
-        # 1. Retrieve
-        obs = env.step(RecallAction(mode="retrieve", query=obs.current_query))
+    # Phase 2: Query loop
+    while obs.phase == "query":
+        # Retrieve
+        result = await env.step(RecallAction(mode="retrieve", query=obs.current_query))
+        obs = result.observation
 
-        # 2. Answer
-        obs = env.step(RecallAction(mode="answer", answer_text="The answer is ..."))
+        # Answer
+        answer = obs.retrieval_results[0]["content"] if obs.retrieval_results else "UNKNOWN"
+        result = await env.step(RecallAction(mode="answer", answer_text=answer))
+        obs = result.observation
 ```
 
-## Action / Observation Space
+## Action Space
 
-### Action
+| Field         | Type                                 | Description                            |
+| ------------- | ------------------------------------ | -------------------------------------- |
+| `mode`        | `"ingest" \| "retrieve" \| "answer"` | Action type                            |
+| `decisions`   | `List[FactDecision]`                 | Storage decisions (ingest mode only)   |
+| `query`       | `str`                                | Search query (retrieve mode only)      |
+| `answer_text` | `str`                                | Answer or "UNKNOWN" (answer mode only) |
 
-- `mode`: "ingest", "retrieve", "answer", or "delete".
-- `decisions`: List of storage decisions (for `ingest` mode).
-- `query`: Search string (for `retrieve` mode).
-- `answer_text`: Final answer (for `answer` mode).
-- `slot_id`: Slot to free up (for `delete` mode).
+## Observation Space
 
-### Observation
-
-- `phase`: "ingest", "query", or "done".
-- `current_batch`: Batch of facts to process.
-- `current_query`: The current question to answer.
-- `retrieval_results`: top-k matches from memory.
-- `memory_anchors`: List of currently stored anchors.
-- `memory_used` / `memory_budget`: Budget status.
+| Field                           | Type                            | Description                        |
+| ------------------------------- | ------------------------------- | ---------------------------------- |
+| `phase`                         | `"ingest" \| "query" \| "done"` | Current episode phase              |
+| `all_facts`                     | `List[Dict]`                    | Full fact list (ingest phase only) |
+| `current_query`                 | `str`                           | Active query (query phase only)    |
+| `retrieval_results`             | `List[Dict]`                    | Top-k memory matches               |
+| `memory_anchors`                | `List[str]`                     | Current stored anchors             |
+| `memory_used` / `memory_budget` | `int`                           | Budget status                      |
+| `queries_remaining`             | `int`                           | Queries left in episode            |
+| `last_reward`                   | `float`                         | Reward from previous step          |
 
 ## Reward Design
 
-- **Correct Answer**: +1.0
-- **Storage Cost**: -0.05 per fact stored.
-- **Malformed Action**: -0.5
-- **Budget Overflow**: -0.2
-- **Shaping Bonuses**: Credited at low difficulty levels for successful store->retrieval cycles.
+Two-phase system for GRPO stability:
+
+- **Phase 1 (Bootstrap)**: Dense shaping at L1/L2 — correctness + storage/retrieval bonuses + malformed penalties
+- **Phase 2 (Binary)**: Agent accuracy vs FIFO baseline accuracy
+  - Agent > baseline + 5pp → reward = **+1.0**
+  - Agent > baseline → reward = **+0.3**
+  - Agent ≤ baseline → reward = **0.0**
 
 ## Curriculum
 
-1. **L1**: Action grammar (everything fits in memory).
-2. **L2**: Recency + Importance tags.
-3. **L3**: Anchor authoring (lexical mismatch between facts and queries).
-4. **L4**: Contradictions (handling updates and stale facts).
-5. **L5**: Selective storage under adversarial pressure.
+| Level | Facts | Budget | Challenge                               | Bootstrap |
+| ----- | ----- | ------ | --------------------------------------- | --------- |
+| L1    | 10    | 8      | Action grammar, `[IMPORTANT]` tags      | 100 steps |
+| L2    | 25    | 20     | Distractor filtering (30%)              | 200 steps |
+| L3    | 50    | 25     | Anchor authoring, lexical mismatch      | None      |
+| L4    | 80    | 30     | Contradictions, corrections             | None      |
+| L5    | 120   | 40     | Adversarial tags, deceptive distractors | None      |
 
-## Implementation Details
+## Data Domain
 
-- **Memory Backend**: Vector store using `SentenceTransformer`.
-- **Anchor Authoring**: The agent writes its own retrieval anchors.
-- **Single Tier**: Currently supports a single fast-access memory tier.
-- **Typed Interface**: Full Pydantic validation of actions and observations.
+Facts are generated from Haiku-created vocabularies covering:
+
+- **Architectures** (80 items): transformers, MoE, diffusion, SSM, hybrid, vision, RNN
+- **Hyperparameters** (40 items): LR, WD, dropout, batch size, etc.
+- **Metrics** (30 items): accuracy, loss, perplexity, throughput, etc.
+- **Papers** (60 items): research insights across architecture, training, efficiency
+- **Decisions** (30 items): architecture and training design choices
+- **Debug Findings** (50 items): training bugs with symptoms/causes/fixes
+- **Distractors** (40 items): lab life, scheduling, personal, admin
+
+## References
+
+- [OpenEnv Framework](https://github.com/meta-pytorch/OpenEnv)
+- RLM (Recursive Language Models) — read-side memory management
+- MemGPT, GraphRAG, Generative Agents — related memory systems
