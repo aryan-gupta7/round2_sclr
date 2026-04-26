@@ -173,7 +173,7 @@ def recall_reward(completions, prompts, difficulty, seed, **kwargs):
                     obs = res.observation
                     answer = "UNKNOWN"
                     if obs.retrieval_results and len(obs.retrieval_results) > 0:
-                        answer = obs.retrieval_results[0].get("text", "UNKNOWN")
+                        answer = obs.retrieval_results[0].get("content", "UNKNOWN")
                     res = env.step(RecallAction(mode="answer", answer_text=answer))
                     obs = res.observation
 

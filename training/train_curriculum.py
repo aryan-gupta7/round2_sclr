@@ -149,14 +149,14 @@ def _simulate_episode(env_url, difficulty, seed, decisions):
             obs = res.observation
             answer = "UNKNOWN"
             if obs.retrieval_results and len(obs.retrieval_results) > 0:
-                answer = obs.retrieval_results[0].get("text", "UNKNOWN")
+                answer = obs.retrieval_results[0].get("content", "UNKNOWN")
             res = env.step(RecallAction(mode="answer", answer_text=answer))
             obs = res.observation
 
         state = env.state()
         
         qt = max(1, state.queries_total)
-        agent_acc = state.queries_answered_correctly / qt
+        agent_acc = state.correct_answers / qt
         baseline_acc = getattr(state, "baseline_correct", 0) / qt
         
         return float(state.cumulative_reward), agent_acc, baseline_acc
