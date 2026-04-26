@@ -71,15 +71,33 @@ def build_ingestion_prompt(obs):
     ]
 
 def pregenerate_dataset(env_url: str, num_samples: int, difficulty: int, seed_offset: int):
-    print(f"  Pre-generating {num_samples} prompts (difficulty={difficulty}, seeds={seed_offset}-{seed_offset+num_samples-1})...")
+    """Pre-generate prompts.
+    
+    Key insight: GRPOTrainer generates `num_generations` completions per row.
+    All completions in one step see the SAME episode (same seed).
+    If that episode always gives the same reward regardless of what's stored,
+    reward_std collapses to 0 and GRPO gets zero gradient.
+    
+    Fix: We use num_generations=1 and instead generate num_steps * 8 rows
+    so each of the 8 completions per step sees a DIFFERENT seed/episode.
+    This guarantees reward variance within every batch.
+    """
+    num_generations = 8  # must match GRPOConfig.num_generations
+    # Each step processes num_generations rows, so total rows = num_samples * num_generations
+    total_rows = num_samples * num_generations
+    seeds_expanded = []
+    for i in range(num_samples):
+        base_seed = seed_offset + i * num_generations
+        seeds_expanded.extend(range(base_seed, base_seed + num_generations))
+
+    print(f"  Pre-generating {total_rows} prompts (difficulty={difficulty}, {num_samples} steps x {num_generations} seeds/step)...")
     prompts = []
-    seeds = list(range(seed_offset, seed_offset + num_samples))
     fallback = [
         {"role": "system", "content": SYSTEM_MSG},
         {"role": "user", "content": "No facts available. Output: []"},
     ]
 
-    for i, seed in enumerate(seeds):
+    for i, seed in enumerate(seeds_expanded):
         try:
             with RecallEnv(base_url=env_url).sync() as env:
                 res = env.reset(difficulty=difficulty, seed=seed)
@@ -88,14 +106,17 @@ def pregenerate_dataset(env_url: str, num_samples: int, difficulty: int, seed_of
             print(f"    Seed {seed} failed: {e}")
             prompts.append(fallback)
         if (i + 1) % 50 == 0:
-            print(f"    {i+1}/{num_samples} done")
+            print(f"    {i+1}/{total_rows} done")
 
     print(f"  Dataset ready: {len(prompts)} prompts")
     return datasets.Dataset.from_dict({
         "prompt": prompts,
-        "difficulty": [difficulty] * num_samples,
-        "seed": seeds,
+        "difficulty": [difficulty] * total_rows,
+        "seed": seeds_expanded,
     })
+
+
+EVAL_SEEDS = list(range(9000, 9050))  # Stable held-out eval set (never used in training)
 
 # ============================================================
 # Parsing
@@ -204,12 +225,37 @@ def recall_reward(completions, prompts, difficulty, seed, **kwargs):
     if agent_accs:
         global_eval_stats["agent_accs"].append(np.mean(agent_accs))
         global_eval_stats["baseline_accs"].append(np.mean(baseline_accs))
-        
+
     if recall_reward._step % 10 == 0:
-        avg_a = np.mean(agent_accs) * 100 if agent_accs else 0
-        avg_b = np.mean(baseline_accs) * 100 if baseline_accs else 0
-        print(f"  [STEP {recall_reward._step}] SIDE-BY-SIDE EVAL | Agent Acc: {avg_a:.1f}% vs FIFO Baseline Acc: {avg_b:.1f}%")
-        
+        # Use held-out eval seeds for stable accuracy measurement
+        difficulty_val = difficulty[0] if hasattr(difficulty, '__getitem__') else 1
+        eval_agent_accs = []
+        eval_baseline_accs = []
+        for eval_seed in EVAL_SEEDS[:12]:  # 12 seeds for quick eval
+            try:
+                with RecallEnv(base_url=ENV_URL).sync() as eval_env:
+                    eval_res = eval_env.reset(difficulty=int(difficulty_val), seed=eval_seed)
+                    eval_obs = eval_res.observation
+                    # Use FIFO-like decisions (store first N) for stable baseline measure
+                    fifo_decisions = [
+                        FactDecision(fact_id=f["fact_id"], decision="store", anchor=f["text"][:50])
+                        if i < eval_obs.memory_budget
+                        else FactDecision(fact_id=f["fact_id"], decision="skip")
+                        for i, f in enumerate(eval_obs.all_facts)
+                    ]
+                    _, a_acc, b_acc = _simulate_episode(ENV_URL, difficulty_val, eval_seed, fifo_decisions)
+                    eval_agent_accs.append(a_acc)
+                    eval_baseline_accs.append(b_acc)
+            except Exception:
+                pass
+        avg_a = np.mean(eval_agent_accs) * 100 if eval_agent_accs else 0
+        avg_b = np.mean(eval_baseline_accs) * 100 if eval_baseline_accs else 0
+        print(f"  [STEP {recall_reward._step}] HELD-OUT EVAL (12 seeds) | FIFO Acc: {avg_a:.1f}% | Honest Baseline: {avg_b:.1f}%")
+        # Also print current batch stats
+        batch_a = np.mean(agent_accs) * 100 if agent_accs else 0
+        batch_b = np.mean(baseline_accs) * 100 if baseline_accs else 0
+        print(f"  [STEP {recall_reward._step}] BATCH STATS | Agent Acc: {batch_a:.1f}% vs Baseline: {batch_b:.1f}%")
+
     recall_reward._step += 1
     return rewards
 
@@ -273,10 +319,10 @@ def train_one_level(level: int, num_steps: int, difficulty: int, prev_adapter: O
     training_args = GRPOConfig(
         output_dir=output_dir,
         num_train_epochs=1,
-        per_device_train_batch_size=1,
-        gradient_accumulation_steps=8,
+        per_device_train_batch_size=8,  # 8 different episodes per step
+        gradient_accumulation_steps=1,
         learning_rate=5e-6,
-        num_generations=8,
+        num_generations=1,              # 1 completion per row, diversity via different seeds
         max_prompt_length=4096,
         max_completion_length=max_completion_length,
         warmup_steps=10,
