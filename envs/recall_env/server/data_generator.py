@@ -10,7 +10,7 @@ import re
 import math
 import numpy as np
 from dataclasses import dataclass, field
-from typing import List, Dict, Optional, Tuple, Any
+from typing import List, Dict, Optional, Tuple, Any, Set
 
 # ---------------------------------------------------------------------------
 # Data classes
@@ -26,6 +26,7 @@ class LevelConfig:
     retrieval_k: int
     embedding_model: str
     embedding_dim: Optional[int] = None
+    retrieval_mode: str = "bm25"
     prefilled_memory_count: int = 0
     distractor_rate: float = 0.0
     contradiction_rate: float = 0.0

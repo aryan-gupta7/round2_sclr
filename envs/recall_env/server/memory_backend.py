@@ -142,7 +142,7 @@ class MemoryBackend:
         while slot_id in used_ids:
             slot_id += 1
 
-        emb = self._get_embedding(anchor) if self.retrieval_mode != "bm25" else np.zeros(1)
+        emb = self._get_embedding(anchor)
         tokens = Counter(_tokenize(anchor))
 
         item = MemoryItem(

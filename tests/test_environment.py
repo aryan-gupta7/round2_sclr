@@ -12,6 +12,9 @@ class MockGenerator:
         return facts, queries, gt
     def generate_prefill(self, config, rng):
         return []
+        
+    def grade(self, answer: str, expected: str) -> bool:
+        return expected.lower() in answer.lower()
 
 def test_environment_import():
     env = RecallEnvironment()
@@ -22,7 +25,7 @@ def test_environment_reset():
     env.data_generator = MockGenerator()
     obs = env.reset(difficulty=1, seed=0)
     assert obs.phase == "ingest"
-    assert len(obs.current_batch) == 8
+    assert len(obs.all_facts) == 10
     assert obs.memory_used == 0
 
 def test_environment_ingest_step():
@@ -30,38 +33,35 @@ def test_environment_ingest_step():
     env.data_generator = MockGenerator()
     obs = env.reset(difficulty=1, seed=0)
     
-    # Create ingest action
+    # Create ingest action for all 10 facts (2 skips, 8 stores)
     decisions = [FactDecision(fact_id=i, decision="store", anchor=f"anchor-{i}") for i in range(8)]
+    decisions += [FactDecision(fact_id=i, decision="skip") for i in range(8, 10)]
     action = RecallAction(mode="ingest", decisions=decisions)
     
     obs = env.step(action)
-    assert obs.memory_used == 8
-    assert obs.phase == "ingest" # remaining 2 facts
-    assert len(obs.current_batch) == 2
+    assert obs.memory_used == 5
+    assert obs.phase == "query"
 
 def test_environment_full_cycle():
     env = RecallEnvironment()
     env.data_generator = MockGenerator()
     obs = env.reset(difficulty=1, seed=0)
     
-    # Step 1: Ingest 8 facts
+    # Step 1: Ingest all 10 facts
     decisions = [FactDecision(fact_id=i, decision="store", anchor=f"anchor-{i}") for i in range(8)]
-    obs = env.step(RecallAction(mode="ingest", decisions=decisions))
-    
-    # Step 2: Ingest remaining 2 facts
-    decisions = [FactDecision(fact_id=i, decision="store", anchor=f"anchor-{i}") for i in range(8, 10)]
+    decisions += [FactDecision(fact_id=i, decision="skip") for i in range(8, 10)]
     obs = env.step(RecallAction(mode="ingest", decisions=decisions))
     
     assert obs.phase == "query"
     assert obs.current_query == "what is fact-3"
     
-    # Step 3: Retrieve
+    # Step 2: Retrieve
     obs = env.step(RecallAction(mode="retrieve", query="fact-3"))
     assert len(obs.retrieval_results) > 0
     assert obs.retrieval_results[0]["content"] == "fact-3"
     
-    # Step 4: Answer
+    # Step 3: Answer
     obs = env.step(RecallAction(mode="answer", answer_text="fact-3"))
     assert obs.phase == "done"
-    assert env.state.correct_answers == 1
+    assert env._state.correct_answers == 1
     assert obs.reward > 0

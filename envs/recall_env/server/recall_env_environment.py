@@ -154,6 +154,7 @@ class RecallEnvironment(Environment):
         return correct
 
     def _build_observation(self) -> RecallObservation:
+        assert self.config is not None
         instruction = self._get_instruction()
         
         all_facts = None
@@ -272,6 +273,7 @@ class RecallEnvironment(Environment):
         return True
 
     def _process_action(self, action: RecallAction) -> float:
+        assert self.config is not None and self._state is not None
         if action.mode == "ingest":
             for d in action.decisions:
                 fact = next(f for f in self.facts if f.fact_id == d.fact_id)
