@@ -109,35 +109,42 @@ class RecallEnvironment(Environment):
         return self._build_observation()
 
     def _run_fifo_baseline_dry(self) -> int:
-        """Simulate FIFO behavior on this seed."""
-        # Simple FIFO simulation:
-        # 1. Fill memory with facts in order.
-        # 2. When full, eject oldest.
-        memory_ids = []
-        # Pre-fill handled first (assumed static for now)
-        prefill_count = self.config.prefilled_memory_count
-        # We assume prefilled items are "oldest"
-        for i in range(prefill_count):
-             memory_ids.append(f"prefilled_{i}")
-             
-        for fact in self.facts:
-             if len(memory_ids) >= self.config.memory_budget:
-                  memory_ids.pop(0)
-             memory_ids.append(fact.fact_id)
+        """Simulate FIFO behavior using real retrieval + grading pipeline.
         
-        final_memory_ids = set(memory_ids)
+        Stores first N facts (budget) with their text as anchors,
+        then runs retrieval + grading identically to how the agent is scored.
+        This ensures an honest apples-to-apples comparison.
+        """
+        fifo_mem = MemoryBackend(
+            budget=self.config.memory_budget,
+            embedding_model=self.config.embedding_model,
+            embedding_dim=self.config.embedding_dim,
+            seed=self._state.seed if self._state else 0
+        )
+        
+        # FIFO: store facts in order until budget is full
+        for fact in self.facts:
+            if len(fifo_mem.items) >= self.config.memory_budget:
+                break
+            fifo_mem.store(fact.text[:60], fact.text, step=0)
+        
         correct = 0
         for query in self.queries:
-             if not query.relevant_fact_ids: # UNKNOWN
-                  # A dummy FIFO might just say UNKNOWN if no match, 
-                  # but let's assume it only gets it right if it was UNKNOWN
-                  if query.expected_answer == "UNKNOWN":
-                       correct += 1
-                  continue
-             # If ANY relevant fact is in memory, FIFO survives
-             # Note: This is an optimistic FIFO simulation.
-             if any(fid in final_memory_ids for fid in query.relevant_fact_ids):
-                  correct += 1
+            if not query.relevant_fact_ids:
+                # Negative/unknown query — FIFO answers UNKNOWN
+                if query.expected_answer == "UNKNOWN":
+                    correct += 1
+                continue
+            
+            # Retrieve using the same cosine similarity as the agent
+            results = fifo_mem.retrieve(query.text, self.config.retrieval_k)
+            answer = "UNKNOWN"
+            if results:
+                answer = results[0]["content"]
+            
+            if self.data_generator.grade(answer, query.expected_answer):
+                correct += 1
+        
         return correct
 
     def _build_observation(self) -> RecallObservation:
