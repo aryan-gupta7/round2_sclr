@@ -337,6 +337,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--env-url", type=str, required=True)
     parser.add_argument("--target-level", type=int, default=None)
+    parser.add_argument("--steps-override", type=int, default=None)
     args = parser.parse_args()
 
     ENV_URL = args.env_url.replace("https://", "wss://").replace("http://", "ws://")
@@ -347,6 +348,8 @@ def main():
             raise ValueError(f"Unknown level {args.target_level}")
 
         level, num_steps, difficulty, hub_repo, max_comp_len = target_tuple
+        if args.steps_override:
+            num_steps = args.steps_override
 
         # Strict previous adapter tracking from earlier levels (L_n requires L_{n-1})
         prev_adapter = f"{USERNAME}/recall-policy-l{level-1}" if level > 1 else None
