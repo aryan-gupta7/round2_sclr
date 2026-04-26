@@ -15,7 +15,7 @@ command = [
     f"echo '{script_b64}' | base64 -d > train_curriculum.py && "
     f"uv pip install --python /opt/venv/bin/python 'huggingface-hub<1.0' openenv-core fastmcp vllm "
     f"git+https://huggingface.co/spaces/s1nn3rx69/recall-env && "
-    f"python train_curriculum.py --env-url https://s1nn3rx69-recall-env.hf.space --target-level 1 --steps-override 60"
+    f"python train_curriculum.py --env-url https://s1nn3rx69-recall-env.hf.space"
 ]
 
 print("Submitting training job...")
