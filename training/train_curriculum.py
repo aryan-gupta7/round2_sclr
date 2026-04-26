@@ -71,33 +71,23 @@ def build_ingestion_prompt(obs):
     ]
 
 def pregenerate_dataset(env_url: str, num_samples: int, difficulty: int, seed_offset: int):
-    """Pre-generate prompts.
+    """Pre-generate one prompt per training step.
     
-    Key insight: GRPOTrainer generates `num_generations` completions per row.
-    All completions in one step see the SAME episode (same seed).
-    If that episode always gives the same reward regardless of what's stored,
-    reward_std collapses to 0 and GRPO gets zero gradient.
-    
-    Fix: We use num_generations=1 and instead generate num_steps * 8 rows
-    so each of the 8 completions per step sees a DIFFERENT seed/episode.
-    This guarantees reward variance within every batch.
+    GRPOTrainer generates num_generations=8 completions per row.
+    All 8 completions compete against each other on the SAME seed → reward
+    variance comes from model output diversity (different store/skip choices).
+    This is valid as long as the episode has meaningful reward variance across
+    different ingestion strategies, which it does.
     """
-    num_generations = 8  # must match GRPOConfig.num_generations
-    # Each step processes num_generations rows, so total rows = num_samples * num_generations
-    total_rows = num_samples * num_generations
-    seeds_expanded = []
-    for i in range(num_samples):
-        base_seed = seed_offset + i * num_generations
-        seeds_expanded.extend(range(base_seed, base_seed + num_generations))
-
-    print(f"  Pre-generating {total_rows} prompts (difficulty={difficulty}, {num_samples} steps x {num_generations} seeds/step)...")
+    print(f"  Pre-generating {num_samples} prompts (difficulty={difficulty}, seeds={seed_offset}-{seed_offset+num_samples-1})...")
     prompts = []
+    seeds = list(range(seed_offset, seed_offset + num_samples))
     fallback = [
         {"role": "system", "content": SYSTEM_MSG},
         {"role": "user", "content": "No facts available. Output: []"},
     ]
 
-    for i, seed in enumerate(seeds_expanded):
+    for i, seed in enumerate(seeds):
         try:
             with RecallEnv(base_url=env_url).sync() as env:
                 res = env.reset(difficulty=difficulty, seed=seed)
@@ -106,13 +96,13 @@ def pregenerate_dataset(env_url: str, num_samples: int, difficulty: int, seed_of
             print(f"    Seed {seed} failed: {e}")
             prompts.append(fallback)
         if (i + 1) % 50 == 0:
-            print(f"    {i+1}/{total_rows} done")
+            print(f"    {i+1}/{num_samples} done")
 
     print(f"  Dataset ready: {len(prompts)} prompts")
     return datasets.Dataset.from_dict({
         "prompt": prompts,
-        "difficulty": [difficulty] * total_rows,
-        "seed": seeds_expanded,
+        "difficulty": [difficulty] * num_samples,
+        "seed": seeds,
     })
 
 
@@ -319,10 +309,10 @@ def train_one_level(level: int, num_steps: int, difficulty: int, prev_adapter: O
     training_args = GRPOConfig(
         output_dir=output_dir,
         num_train_epochs=1,
-        per_device_train_batch_size=8,  # 8 different episodes per step
-        gradient_accumulation_steps=1,
+        per_device_train_batch_size=1,
+        gradient_accumulation_steps=8,
         learning_rate=5e-6,
-        num_generations=1,              # 1 completion per row, diversity via different seeds
+        num_generations=8,
         max_prompt_length=4096,
         max_completion_length=max_completion_length,
         warmup_steps=10,
