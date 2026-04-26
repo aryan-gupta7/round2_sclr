@@ -1,9 +1,6 @@
 """
-RECALL Curriculum Training: L1 → L2 → L3 → L4
-Trains Qwen2.5-3B-Instruct with LoRA across 4 difficulty levels.
-Each level loads the previous level's adapter.
-
-Total: 650 GRPO steps (~6-7 hours on T4)
+RECALL Curriculum Training: L1 → L5
+Trains Qwen2.5-7B-Instruct with LoRA across 5 difficulty levels.
 """
 
 import os
@@ -13,13 +10,23 @@ import time
 import argparse
 import traceback
 import gc
+import concurrent.futures
 from typing import Optional, List
+import numpy as np
+
+# Disable vLLM CUDA Graphs and Torch Compile to prevent illegal memory access during sleep()
+os.environ["VLLM_ENFORCE_EAGER"] = "1"
+os.environ["TORCH_COMPILE_DISABLE"] = "1"
+os.environ["VLLM_LOGGING_LEVEL"] = "WARNING"
+os.environ["VLLM_USE_V1"] = "0"
 
 import torch
 import datasets
 from unsloth import FastLanguageModel
 from trl import GRPOConfig, GRPOTrainer
 from transformers import TrainerCallback
+from peft.utils import load_peft_weights
+from peft import set_peft_model_state_dict
 from recall_env.client import RecallEnv
 from recall_env.models import RecallAction, FactDecision
 
@@ -31,13 +38,13 @@ USERNAME = "s1nn3rx69"
 
 LEVEL_SCHEDULE = [
     # (level, num_steps, difficulty, hub_repo, max_completion_length)
-    (1, 100, 1, f"{USERNAME}/recall-policy-l1", 512),
+    (1, 250, 1, f"{USERNAME}/recall-policy-l1", 512),
     (2, 200, 2, f"{USERNAME}/recall-policy-l2", 512),
-    (3, 200, 3, f"{USERNAME}/recall-policy-l3", 768),
-    (4, 150, 4, f"{USERNAME}/recall-policy-l4", 768),
+    (3, 250, 3, f"{USERNAME}/recall-policy-l3", 768),
+    (4, 200, 4, f"{USERNAME}/recall-policy-l4", 768),
+    (5, 200, 5, f"{USERNAME}/recall-policy-l5", 768),
 ]
 
-# Will be set from CLI args
 ENV_URL = ""
 
 # ============================================================
@@ -46,9 +53,7 @@ ENV_URL = ""
 
 SYSTEM_MSG = "Output ONLY a JSON array. No text before or after."
 
-
 def build_ingestion_prompt(obs):
-    """Returns chat messages for the tokenizer."""
     n = len(obs.all_facts)
     facts_lines = [f"{f['fact_id']}: {f['text']}" for f in obs.all_facts]
     facts_text = "\n".join(facts_lines)
@@ -65,9 +70,7 @@ def build_ingestion_prompt(obs):
         {"role": "user", "content": user_msg},
     ]
 
-
 def pregenerate_dataset(env_url: str, num_samples: int, difficulty: int, seed_offset: int):
-    """Connect to live env and build prompts from actual observations."""
     print(f"  Pre-generating {num_samples} prompts (difficulty={difficulty}, seeds={seed_offset}-{seed_offset+num_samples-1})...")
     prompts = []
     seeds = list(range(seed_offset, seed_offset + num_samples))
@@ -94,7 +97,6 @@ def pregenerate_dataset(env_url: str, num_samples: int, difficulty: int, seed_of
         "seed": seeds,
     })
 
-
 # ============================================================
 # Parsing
 # ============================================================
@@ -102,7 +104,6 @@ def pregenerate_dataset(env_url: str, num_samples: int, difficulty: int, seed_of
 def parse_ingest_decisions(text: str):
     if not text:
         return None
-
     if isinstance(text, list):
         text = text[0].get("content", "") if text else ""
     if isinstance(text, dict):
@@ -129,20 +130,45 @@ def parse_ingest_decisions(text: str):
             pass
     return None
 
+# ============================================================
+# Reward function
+# ============================================================
 
-# ============================================================
-# Reward function (same across all levels)
-# ============================================================
+global_eval_stats = {"agent_accs": [], "baseline_accs": []}
+
+def _simulate_episode(env_url, difficulty, seed, decisions):
+    with RecallEnv(base_url=env_url).sync() as env:
+        res = env.reset(difficulty=int(difficulty), seed=int(seed))
+        obs = res.observation
+
+        res = env.step(RecallAction(mode="ingest", decisions=decisions))
+        obs = res.observation
+
+        while obs.phase == "query":
+            res = env.step(RecallAction(mode="retrieve", query=obs.current_query))
+            obs = res.observation
+            answer = "UNKNOWN"
+            if obs.retrieval_results and len(obs.retrieval_results) > 0:
+                answer = obs.retrieval_results[0].get("text", "UNKNOWN")
+            res = env.step(RecallAction(mode="answer", answer_text=answer))
+            obs = res.observation
+
+        state = env.state()
+        
+        qt = max(1, state.queries_total)
+        agent_acc = state.queries_answered_correctly / qt
+        baseline_acc = getattr(state, "baseline_correct", 0) / qt
+        
+        return float(state.cumulative_reward), agent_acc, baseline_acc
 
 def recall_reward(completions, prompts, difficulty, seed, **kwargs):
-    if not hasattr(recall_reward, "_logged"):
-        print("=" * 60)
-        print("FIRST COMPLETION SAMPLE:")
-        print(completions[0][:1500])
-        print("=" * 60)
-        recall_reward._logged = True
+    if not hasattr(recall_reward, "_step"):
+        recall_reward._step = 0
 
     rewards = []
+    agent_accs = []
+    baseline_accs = []
+    
     for completion, diff, s in zip(completions, difficulty, seed):
         try:
             comp_text = completion
@@ -154,105 +180,94 @@ def recall_reward(completions, prompts, difficulty, seed, **kwargs):
             decisions = parse_ingest_decisions(comp_text)
             if decisions is None:
                 rewards.append(-1.0)
+                agent_accs.append(0.0)
+                baseline_accs.append(0.0)
                 continue
 
-            with RecallEnv(base_url=ENV_URL).sync() as env:
-                res = env.reset(difficulty=int(diff), seed=int(s))
-                obs = res.observation
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(_simulate_episode, ENV_URL, diff, s, decisions)
+                try:
+                    reward, a_acc, b_acc = future.result(timeout=60.0)
+                    rewards.append(reward)
+                    agent_accs.append(a_acc)
+                    baseline_accs.append(b_acc)
+                except concurrent.futures.TimeoutError:
+                    rewards.append(-1.0)
+                    agent_accs.append(0.0)
+                    baseline_accs.append(0.0)
 
-                res = env.step(RecallAction(mode="ingest", decisions=decisions))
-                obs = res.observation
-
-                while obs.phase == "query":
-                    res = env.step(RecallAction(mode="retrieve", query=obs.current_query))
-                    obs = res.observation
-                    answer = "UNKNOWN"
-                    if obs.retrieval_results and len(obs.retrieval_results) > 0:
-                        answer = obs.retrieval_results[0].get("text", "UNKNOWN")
-                    res = env.step(RecallAction(mode="answer", answer_text=answer))
-                    obs = res.observation
-
-                state = env.state()
-                rewards.append(float(state.cumulative_reward))
         except Exception as e:
-            print(f"    Reward error (seed={s}): {e}")
             rewards.append(-1.0)
+            agent_accs.append(0.0)
+            baseline_accs.append(0.0)
+            
+    if agent_accs:
+        global_eval_stats["agent_accs"].append(np.mean(agent_accs))
+        global_eval_stats["baseline_accs"].append(np.mean(baseline_accs))
+        
+    if recall_reward._step % 10 == 0:
+        avg_a = np.mean(agent_accs) * 100 if agent_accs else 0
+        avg_b = np.mean(baseline_accs) * 100 if baseline_accs else 0
+        print(f"  [STEP {recall_reward._step}] SIDE-BY-SIDE EVAL | Agent Acc: {avg_a:.1f}% vs FIFO Baseline Acc: {avg_b:.1f}%")
+        
+    recall_reward._step += 1
     return rewards
 
-
-# ============================================================
-# Eval callback
-# ============================================================
-
 class EvalCallback(TrainerCallback):
-    def __init__(self, env_url, difficulty):
-        self.env_url = env_url
-        self.difficulty = difficulty
-        self.eval_seeds = list(range(9000 + difficulty * 100, 9010 + difficulty * 100))
-
     def on_log(self, args, state, control, logs=None, **kwargs):
         step = state.global_step
         if step == 0 or step % 25 != 0:
             return
         reward_mean = logs.get("reward", "N/A") if logs else "N/A"
-        reward_std = logs.get("reward_std", "N/A") if logs else "N/A"
-        print(f"\n  EVAL @ step {step}: reward_mean={reward_mean}, reward_std={reward_std}")
-
+        print(f"\n  EVAL @ step {step}: reward_mean={reward_mean}")
+        
+        # Print a moving average comparison
+        if len(global_eval_stats["agent_accs"]) > 0:
+            a_mean = np.mean(global_eval_stats["agent_accs"][-25:]) * 100
+            b_mean = np.mean(global_eval_stats["baseline_accs"][-25:]) * 100
+            print(f"  [MOVING AVG LAST 25 STEPS] Agent Acc: {a_mean:.1f}% | Baseline Acc: {b_mean:.1f}%")
 
 # ============================================================
 # Train one level
 # ============================================================
 
-def train_one_level(
-    level: int,
-    num_steps: int,
-    difficulty: int,
-    prev_adapter: Optional[str],
-    hub_repo: str,
-    max_completion_length: int,
-):
+def train_one_level(level: int, num_steps: int, difficulty: int, prev_adapter: Optional[str], hub_repo: str, max_completion_length: int):
     global ENV_URL
 
     print(f"\n{'='*60}")
     print(f"  LEVEL {level}: {num_steps} steps, difficulty={difficulty}")
-    print(f"  Previous adapter: {prev_adapter or 'None (fresh LoRA)'}")
+    print(f"  Loading adapter from: {prev_adapter or 'None (fresh LoRA)'}")
     print(f"  Target hub repo: {hub_repo}")
     print(f"{'='*60}\n")
 
     t0 = time.time()
-
-    # Seed ranges: L1=1000-1099, L2=2000-2199, L3=3000-3199, L4=4000-4149
     seed_offset = 1000 + (level - 1) * 1000
     train_dataset = pregenerate_dataset(ENV_URL, num_steps, difficulty, seed_offset)
 
-    # Load base model
-    print(f"  Loading Qwen2.5-3B-Instruct (4-bit)...")
+    print(f"  Loading Qwen2.5-7B-Instruct (4-bit)...")
     model, tokenizer = FastLanguageModel.from_pretrained(
-        model_name="Qwen/Qwen2.5-3B-Instruct",
+        model_name="unsloth/Qwen2.5-7B-Instruct",
         max_seq_length=4096,
         load_in_4bit=True,
         fast_inference=True,
         max_lora_rank=16,
     )
 
+    model = FastLanguageModel.get_peft_model(
+        model,
+        r=16,
+        target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+        lora_alpha=32,
+        lora_dropout=0.05,
+        bias="none",
+        use_gradient_checkpointing="unsloth",
+        random_state=3407,
+    )
+
     if prev_adapter is not None:
-        # Load previous level's adapter
-        print(f"  Loading previous adapter from {prev_adapter}...")
-        from peft import PeftModel
-        model = PeftModel.from_pretrained(model, prev_adapter, is_trainable=True)
-    else:
-        # Fresh LoRA
-        model = FastLanguageModel.get_peft_model(
-            model,
-            r=16,
-            target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
-                            "gate_proj", "up_proj", "down_proj"],
-            lora_alpha=32,
-            lora_dropout=0.05,
-            bias="none",
-            use_gradient_checkpointing="unsloth",
-            random_state=3407,
-        )
+        print(f"  Loading previous adapter weights from {prev_adapter}...")
+        weights = load_peft_weights(prev_adapter)
+        set_peft_model_state_dict(model, weights)
 
     output_dir = f"./outputs/recall_l{level}"
     training_args = GRPOConfig(
@@ -266,9 +281,9 @@ def train_one_level(
         max_completion_length=max_completion_length,
         warmup_steps=10,
         logging_steps=1,
-        save_steps=25,
-        bf16=torch.cuda.is_bf16_supported(),
-        fp16=not torch.cuda.is_bf16_supported(),
+        save_steps=50,
+        bf16=True,
+        fp16=False,
         use_vllm=True,
         vllm_mode="colocate",
         vllm_gpu_memory_utilization=0.3,
@@ -283,35 +298,34 @@ def train_one_level(
         reward_funcs=[recall_reward],
         args=training_args,
         train_dataset=train_dataset,
-        callbacks=[EvalCallback(ENV_URL, difficulty)],
+        callbacks=[EvalCallback()],
     )
 
     print(f"  Starting L{level} training ({num_steps} steps)...")
-    trainer.train()
+    resume_from = False
+    if os.path.exists(output_dir):
+        checkpoints = [d for d in os.listdir(output_dir) if d.startswith("checkpoint-")]
+        if checkpoints:
+            resume_from = True
+            print(f"  Found checkpoints, enabling resume_from_checkpoint=True")
 
-    # Push to hub
+    trainer.train(resume_from_checkpoint=resume_from)
+
     print(f"  Pushing adapter to {hub_repo}...")
     trainer.push_to_hub()
 
     elapsed = time.time() - t0
-    # Get final metrics
-    final_reward = "N/A"
-    if trainer.state.log_history:
-        last_log = trainer.state.log_history[-1]
-        final_reward = last_log.get("reward", "N/A")
+    final_reward = trainer.state.log_history[-1].get("reward", "N/A") if trainer.state.log_history else "N/A"
 
-    summary = f"=== L{level} DONE: {num_steps} steps, final mean reward {final_reward}, pushed to {hub_repo}, took {elapsed/60:.1f} min ==="
-    print(summary)
+    print(f"=== L{level} DONE: {num_steps} steps, final mean reward {final_reward}, pushed to {hub_repo}, took {elapsed/60:.1f} min ===")
 
-    # Cleanup GPU memory
     del trainer
     del model
     del tokenizer
     gc.collect()
     torch.cuda.empty_cache()
 
-    return hub_repo  # next level loads from this hub repo
-
+    return hub_repo
 
 # ============================================================
 # Main
@@ -322,55 +336,38 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--env-url", type=str, required=True)
-    parser.add_argument("--steps-override", type=int, default=None,
-                        help="Override step count for ALL levels (for smoke testing)")
-    parser.add_argument("--target-level", type=int, default=None,
-                        help="Train a specific level (used internally for process isolation)")
+    parser.add_argument("--target-level", type=int, default=None)
     args = parser.parse_args()
 
-    ENV_URL = args.env_url
+    ENV_URL = args.env_url.replace("https://", "wss://").replace("http://", "ws://")
 
-    # If --target-level is provided, run just that level in this process.
     if args.target_level is not None:
-        level_idx = args.target_level - 1
-        level, num_steps, difficulty, hub_repo, max_comp_len = LEVEL_SCHEDULE[level_idx]
-        if args.steps_override:
-            num_steps = args.steps_override
+        target_tuple = next((t for t in LEVEL_SCHEDULE if t[0] == args.target_level), None)
+        if target_tuple is None:
+            raise ValueError(f"Unknown level {args.target_level}")
 
-        prev_adapter = None
-        if level > 1:
-            prev_adapter = LEVEL_SCHEDULE[level_idx - 1][3]
+        level, num_steps, difficulty, hub_repo, max_comp_len = target_tuple
 
-        train_one_level(
-            level=level,
-            num_steps=num_steps,
-            difficulty=difficulty,
-            prev_adapter=prev_adapter,
-            hub_repo=hub_repo,
-            max_completion_length=max_comp_len,
-        )
+        # Strict previous adapter tracking from earlier levels (L_n requires L_{n-1})
+        prev_adapter = f"{USERNAME}/recall-policy-l{level-1}" if level > 1 else None
+
+        train_one_level(level, num_steps, difficulty, prev_adapter, hub_repo, max_comp_len)
         return
 
-    # Otherwise, act as the orchestrator and spawn a fresh process for each level
     import subprocess
     import sys
 
     total_start = time.time()
     print("=" * 60)
-    print("  RECALL Curriculum Training (Multi-process Orchestrator)")
+    print("  RECALL Curriculum Training (Full run L1 -> L5)")
     print(f"  Environment: {ENV_URL}")
-    if args.steps_override:
-        print(f"  SMOKE TEST MODE: {args.steps_override} steps per level")
     print("=" * 60)
 
     summaries = []
-    
+
     for level, num_steps, difficulty, hub_repo, max_comp_len in LEVEL_SCHEDULE:
         print(f"\n[Orchestrator] Spawning new process for LEVEL {level}...")
-        
         cmd = [sys.executable, sys.argv[0], "--env-url", ENV_URL, "--target-level", str(level)]
-        if args.steps_override:
-            cmd.extend(["--steps-override", str(args.steps_override)])
 
         try:
             subprocess.check_call(cmd)
@@ -378,7 +375,7 @@ def main():
         except subprocess.CalledProcessError as e:
             print(f"\n!!! L{level} subprocess FAILED (exit code {e.returncode})")
             summaries.append(f"L{level}: FAILED")
-            raise  # Don't proceed to the next level if this one fails
+            raise
 
     total_elapsed = time.time() - total_start
     print("\n" + "=" * 60)
@@ -387,9 +384,8 @@ def main():
     for s in summaries:
         print(f"  {s}")
     print(f"  Total time: {total_elapsed/60:.1f} min ({total_elapsed/3600:.1f} hours)")
-    print(f"  Estimated credits: ~${total_elapsed/3600 * 0.60:.2f}")
+    print(f"  Estimated credits: ~${total_elapsed/3600 * 1.50:.2f}")
     print("=" * 60)
-
 
 if __name__ == "__main__":
     main()

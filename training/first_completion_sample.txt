@@ -1,0 +1,1329 @@
+============================================================
+
+FIRST COMPLETION SAMPLE:
+
+[{'role': 'assistant', 'content': '[{"fact_id":0,"decision":"store","anchor":"T-RMSNorm"},{"fact_id":1,"decision":"store","anchor":"mixed-precision bfloat16"},{"fact_id":2,"decision":"skip","anchor":"memory usage"},{"fact_id":3,"decision":"store","anchor":"entropy-weighted data quality"},{"fact_id":4,"decision":"store","anchor":"cross-layer weight sharing"},{"fact_id":5,"decision":"store","anchor":"class imbalance correction"},{"fact_id":6,"decision":"skip","anchor":"Stack-GRU results"},{"fact_id":7,"decision":"store","anchor":"gradient accumulation bug fixed"},{"fact_id":8,"decision":"skip","anchor":"latency measurements"},{"fact_id":9,"decision":"store","anchor":"Top2-MoE flop count"}]'}]
+
+============================================================
+
+
+  0%|          | 0/100 [00:00<?, ?it/s][A
+
+
+  1%|          | 1/100 [00:18<31:17, 18.96s/it][A
+
+{'loss': 0.0, 'grad_norm': 0.341271311044693, 'learning_rate': 0.0, 'num_tokens': 5691.0, 'completions/mean_length': 230.375, 'completions/min_length': 154.0, 'completions/max_length': 374.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 230.375, 'completions/min_terminated_length': 154.0, 'completions/max_terminated_length': 374.0, 'rewards/recall_reward/mean': -0.5099999904632568, 'rewards/recall_reward/std': 0.27422618865966797, 'reward': -0.5099999904632568, 'reward_std': 0.27422618865966797, 'frac_reward_zero_std': 0.0, 'completion_length': 230.375, 'kl': 0.0, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.01}
+
+
+                                               
+[A
+
+    Reward error (seed=1073): Server error: 'NoneType' object has no attribute 'strip' (code: EXECUTION_ERROR)
+
+
+  1%|          | 1/100 [00:18<31:17, 18.96s/it][A
+
+
+  2%|▏         | 2/100 [00:30<23:32, 14.42s/it][A
+
+{'loss': 0.0004, 'grad_norm': 0.4941070079803467, 'learning_rate': 5.000000000000001e-07, 'num_tokens': 10598.0, 'completions/mean_length': 147.375, 'completions/min_length': 113.0, 'completions/max_length': 194.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 147.375, 'completions/min_terminated_length': 113.0, 'completions/max_terminated_length': 194.0, 'rewards/recall_reward/mean': -0.38999998569488525, 'rewards/recall_reward/std': 0.2625153064727783, 'reward': -0.38999998569488525, 'reward_std': 0.2625153064727783, 'frac_reward_zero_std': 0.0, 'completion_length': 147.375, 'kl': 0.000320170276609133, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0031470542307943106, 'clip_ratio/high_max': 0.0031470542307943106, 'clip_ratio/region_mean': 0.0031470542307943106, 'epoch': 0.02}
+
+
+                                               
+[A
+
+
+  2%|▏         | 2/100 [00:30<23:32, 14.42s/it][A
+
+
+  3%|▎         | 3/100 [00:41<20:57, 12.97s/it][A
+
+
+                                               
+[A
+
+{'loss': 0.0011, 'grad_norm': 0.357126384973526, 'learning_rate': 1.0000000000000002e-06, 'num_tokens': 15663.0, 'completions/mean_length': 153.125, 'completions/min_length': 136.0, 'completions/max_length': 196.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 153.125, 'completions/min_terminated_length': 136.0, 'completions/max_terminated_length': 196.0, 'rewards/recall_reward/mean': -0.4375, 'rewards/recall_reward/std': 0.2951875925064087, 'reward': -0.4375, 'reward_std': 0.2951875925064087, 'frac_reward_zero_std': 0.0, 'completion_length': 153.125, 'kl': 0.0005145163040651823, 'clip_ratio/low_mean': 0.0008561643771827221, 'clip_ratio/low_min': 0.0008561643771827221, 'clip_ratio/high_mean': 0.0006377550889737904, 'clip_ratio/high_max': 0.0006377550889737904, 'clip_ratio/region_mean': 0.0014939194661565125, 'epoch': 0.03}
+
+
+  3%|▎         | 3/100 [00:41<20:57, 12.97s/it][A
+
+
+  4%|▍         | 4/100 [00:52<19:36, 12.26s/it][A
+
+
+                                               
+[A
+
+{'loss': -0.0007, 'grad_norm': 0.3565712869167328, 'learning_rate': 1.5e-06, 'num_tokens': 20629.0, 'completions/mean_length': 152.75, 'completions/min_length': 134.0, 'completions/max_length': 201.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 152.75, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 201.0, 'rewards/recall_reward/mean': -0.5449999570846558, 'rewards/recall_reward/std': 0.289186030626297, 'reward': -0.5449999570846558, 'reward_std': 0.2891860604286194, 'frac_reward_zero_std': 0.0, 'completion_length': 152.75, 'kl': 0.00034744957974908175, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0017361948266625404, 'clip_ratio/high_max': 0.0017361948266625404, 'clip_ratio/region_mean': 0.0017361948266625404, 'epoch': 0.04}
+
+
+  4%|▍         | 4/100 [00:52<19:36, 12.26s/it][A
+
+
+  5%|▌         | 5/100 [01:12<23:41, 14.96s/it][A
+
+{'loss': -0.0011, 'grad_norm': 0.35853803157806396, 'learning_rate': 2.0000000000000003e-06, 'num_tokens': 26910.0, 'completions/mean_length': 289.125, 'completions/min_length': 135.0, 'completions/max_length': 484.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 289.125, 'completions/min_terminated_length': 135.0, 'completions/max_terminated_length': 484.0, 'rewards/recall_reward/mean': -0.3500000238418579, 'rewards/recall_reward/std': 0.12961481511592865, 'reward': -0.3500000238418579, 'reward_std': 0.12961481511592865, 'frac_reward_zero_std': 0.0, 'completion_length': 289.125, 'kl': 0.0002387840877418057, 'clip_ratio/low_mean': 0.0015897536650300026, 'clip_ratio/low_min': 0.0015897536650300026, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0015897536650300026, 'epoch': 0.05}
+
+
+                                               
+[A
+
+
+  5%|▌         | 5/100 [01:12<23:41, 14.96s/it][A
+
+
+  6%|▌         | 6/100 [01:29<24:49, 15.84s/it][A
+
+
+                                               
+[A
+
+{'loss': -0.0004, 'grad_norm': 0.42993247509002686, 'learning_rate': 2.5e-06, 'num_tokens': 33115.0, 'completions/mean_length': 271.625, 'completions/min_length': 134.0, 'completions/max_length': 425.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 271.625, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 425.0, 'rewards/recall_reward/mean': -0.4399999976158142, 'rewards/recall_reward/std': 0.375080943107605, 'reward': -0.4399999976158142, 'reward_std': 0.375080943107605, 'frac_reward_zero_std': 0.0, 'completion_length': 271.625, 'kl': 0.0004845895718972315, 'clip_ratio/low_mean': 0.0015243901871144772, 'clip_ratio/low_min': 0.0015243901871144772, 'clip_ratio/high_mean': 0.0027759268414229155, 'clip_ratio/high_max': 0.0027759268414229155, 'clip_ratio/region_mean': 0.004300317028537393, 'epoch': 0.06}
+
+
+  6%|▌         | 6/100 [01:29<24:49, 15.84s/it][A
+
+
+  7%|▋         | 7/100 [01:46<25:02, 16.16s/it][A
+
+{'loss': 0.0005, 'grad_norm': 0.26037850975990295, 'learning_rate': 3e-06, 'num_tokens': 38752.0, 'completions/mean_length': 211.625, 'completions/min_length': 143.0, 'completions/max_length': 371.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 211.625, 'completions/min_terminated_length': 143.0, 'completions/max_terminated_length': 371.0, 'rewards/recall_reward/mean': -0.38750001788139343, 'rewards/recall_reward/std': 0.285844624042511, 'reward': -0.38750001788139343, 'reward_std': 0.2858445942401886, 'frac_reward_zero_std': 0.0, 'completion_length': 211.625, 'kl': 0.0002909514228122134, 'clip_ratio/low_mean': 0.0003369272162672132, 'clip_ratio/low_min': 0.0003369272162672132, 'clip_ratio/high_mean': 0.0022988805430941284, 'clip_ratio/high_max': 0.0022988805430941284, 'clip_ratio/region_mean': 0.0026358077593613416, 'epoch': 0.07}
+
+
+                                               
+[A
+
+
+  7%|▋         | 7/100 [01:46<25:02, 16.16s/it][A
+
+
+  8%|▊         | 8/100 [01:57<22:03, 14.39s/it][A
+
+{'loss': 0.0002, 'grad_norm': 0.563527524471283, 'learning_rate': 3.5e-06, 'num_tokens': 43546.0, 'completions/mean_length': 145.25, 'completions/min_length': 130.0, 'completions/max_length': 159.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 145.25, 'completions/min_terminated_length': 130.0, 'completions/max_terminated_length': 159.0, 'rewards/recall_reward/mean': -0.2800000309944153, 'rewards/recall_reward/std': 0.300665944814682, 'reward': -0.2800000309944153, 'reward_std': 0.3006659150123596, 'frac_reward_zero_std': 0.0, 'completion_length': 145.25, 'kl': 0.0003834685201127286, 'clip_ratio/low_mean': 0.0008389261784031987, 'clip_ratio/low_min': 0.0008389261784031987, 'clip_ratio/high_mean': 0.002590563439298421, 'clip_ratio/high_max': 0.002590563439298421, 'clip_ratio/region_mean': 0.00342948961770162, 'epoch': 0.08}
+
+
+                                               
+[A
+
+
+  8%|▊         | 8/100 [01:57<22:03, 14.39s/it][A
+
+
+  9%|▉         | 9/100 [02:07<19:59, 13.18s/it][A
+
+
+                                               
+[A
+
+{'loss': 0.0, 'grad_norm': 0.4413634240627289, 'learning_rate': 4.000000000000001e-06, 'num_tokens': 48596.0, 'completions/mean_length': 153.25, 'completions/min_length': 146.0, 'completions/max_length': 166.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 153.25, 'completions/min_terminated_length': 146.0, 'completions/max_terminated_length': 166.0, 'rewards/recall_reward/mean': -0.8149999976158142, 'rewards/recall_reward/std': 0.34669873118400574, 'reward': -0.8149999976158142, 'reward_std': 0.34669873118400574, 'frac_reward_zero_std': 0.0, 'completion_length': 153.25, 'kl': 0.0006651856056123506, 'clip_ratio/low_mean': 0.0007961783558130264, 'clip_ratio/low_min': 0.0007961783558130264, 'clip_ratio/high_mean': 0.0016891892300918698, 'clip_ratio/high_max': 0.0016891892300918698, 'clip_ratio/region_mean': 0.0024853675859048963, 'epoch': 0.09}
+
+
+  9%|▉         | 9/100 [02:07<19:59, 13.18s/it][A
+
+
+ 10%|█         | 10/100 [02:20<19:19, 12.88s/it][A
+
+{'loss': -0.0002, 'grad_norm': 0.3687933385372162, 'learning_rate': 4.5e-06, 'num_tokens': 53593.0, 'completions/mean_length': 159.625, 'completions/min_length': 126.0, 'completions/max_length': 230.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 159.625, 'completions/min_terminated_length': 126.0, 'completions/max_terminated_length': 230.0, 'rewards/recall_reward/mean': -0.36000001430511475, 'rewards/recall_reward/std': 0.10690449923276901, 'reward': -0.36000001430511475, 'reward_std': 0.10690450668334961, 'frac_reward_zero_std': 0.0, 'completion_length': 159.625, 'kl': 0.0003044210716325324, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.1}
+
+
+                                                
+[A
+
+    Reward error (seed=1063): Server error: 'NoneType' object has no attribute 'strip' (code: EXECUTION_ERROR)
+
+
+ 10%|█         | 10/100 [02:20<19:19, 12.88s/it][A
+
+
+ 11%|█         | 11/100 [02:33<19:28, 13.13s/it][A
+
+{'loss': 0.0016, 'grad_norm': 0.3737831115722656, 'learning_rate': 5e-06, 'num_tokens': 58682.0, 'completions/mean_length': 179.125, 'completions/min_length': 94.0, 'completions/max_length': 290.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 179.125, 'completions/min_terminated_length': 94.0, 'completions/max_terminated_length': 290.0, 'rewards/recall_reward/mean': -0.7875000238418579, 'rewards/recall_reward/std': 0.3935098648071289, 'reward': -0.7875000238418579, 'reward_std': 0.3935098648071289, 'frac_reward_zero_std': 0.0, 'completion_length': 179.125, 'kl': 0.00038779133865318727, 'clip_ratio/low_mean': 0.0018090386874973774, 'clip_ratio/low_min': 0.0018090386874973774, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0018090386874973774, 'epoch': 0.11}
+
+
+                                                
+[A
+
+
+ 11%|█         | 11/100 [02:33<19:28, 13.13s/it][A
+
+
+ 12%|█▏        | 12/100 [02:44<18:09, 12.38s/it][A
+
+{'loss': -0.0004, 'grad_norm': 0.4395996630191803, 'learning_rate': 4.944444444444445e-06, 'num_tokens': 63938.0, 'completions/mean_length': 149.0, 'completions/min_length': 144.0, 'completions/max_length': 158.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 149.0, 'completions/min_terminated_length': 144.0, 'completions/max_terminated_length': 158.0, 'rewards/recall_reward/mean': -0.5149999856948853, 'rewards/recall_reward/std': 0.24418963491916656, 'reward': -0.5149999856948853, 'reward_std': 0.24418960511684418, 'frac_reward_zero_std': 0.0, 'completion_length': 149.0, 'kl': 0.00040039760187937645, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.003251616144552827, 'clip_ratio/high_max': 0.003251616144552827, 'clip_ratio/region_mean': 0.003251616144552827, 'epoch': 0.12}
+
+
+                                                
+[A
+
+
+ 12%|█▏        | 12/100 [02:44<18:09, 12.38s/it][A
+
+
+ 13%|█▎        | 13/100 [03:00<19:24, 13.38s/it][A
+
+
+                                                
+[A
+
+{'loss': 0.0008, 'grad_norm': 0.4797918498516083, 'learning_rate': 4.888888888888889e-06, 'num_tokens': 69731.0, 'completions/mean_length': 203.125, 'completions/min_length': 134.0, 'completions/max_length': 349.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 203.125, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 349.0, 'rewards/recall_reward/mean': -0.42250001430511475, 'rewards/recall_reward/std': 0.2819194495677948, 'reward': -0.42250001430511475, 'reward_std': 0.2819194495677948, 'frac_reward_zero_std': 0.0, 'completion_length': 203.125, 'kl': 0.0003224228194085299, 'clip_ratio/low_mean': 0.0003846153849735856, 'clip_ratio/low_min': 0.0003846153849735856, 'clip_ratio/high_mean': 0.0016491682035848498, 'clip_ratio/high_max': 0.0016491682035848498, 'clip_ratio/region_mean': 0.0020337835885584354, 'epoch': 0.13}
+
+
+ 13%|█▎        | 13/100 [03:00<19:24, 13.38s/it][A
+
+
+ 14%|█▍        | 14/100 [03:19<21:56, 15.31s/it][A
+
+{'loss': 0.0009, 'grad_norm': 0.307390421628952, 'learning_rate': 4.833333333333333e-06, 'num_tokens': 75770.0, 'completions/mean_length': 246.875, 'completions/min_length': 151.0, 'completions/max_length': 493.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 246.875, 'completions/min_terminated_length': 151.0, 'completions/max_terminated_length': 493.0, 'rewards/recall_reward/mean': -0.3050000071525574, 'rewards/recall_reward/std': 0.1023997813463211, 'reward': -0.3050000071525574, 'reward_std': 0.1023997887969017, 'frac_reward_zero_std': 0.0, 'completion_length': 246.875, 'kl': 0.0002497556642993004, 'clip_ratio/low_mean': 0.0013200055691413581, 'clip_ratio/low_min': 0.0013200055691413581, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0013200055691413581, 'epoch': 0.14}
+
+
+                                                
+[A
+
+
+ 14%|█▍        | 14/100 [03:19<21:56, 15.31s/it][A
+
+
+ 15%|█▌        | 15/100 [03:31<20:01, 14.14s/it][A
+
+{'loss': -0.0002, 'grad_norm': 0.39947426319122314, 'learning_rate': 4.777777777777778e-06, 'num_tokens': 80782.0, 'completions/mean_length': 150.5, 'completions/min_length': 134.0, 'completions/max_length': 218.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 150.5, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 218.0, 'rewards/recall_reward/mean': -0.5099999904632568, 'rewards/recall_reward/std': 0.09258200973272324, 'reward': -0.5099999904632568, 'reward_std': 0.09258200973272324, 'frac_reward_zero_std': 0.0, 'completion_length': 150.5, 'kl': 0.000200936036890198, 'clip_ratio/low_mean': 0.0017793819424696267, 'clip_ratio/low_min': 0.0017793819424696267, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0017793819424696267, 'epoch': 0.15}
+
+
+                                                
+[A
+
+
+ 15%|█▌        | 15/100 [03:31<20:01, 14.14s/it][A
+
+
+ 16%|█▌        | 16/100 [03:46<20:24, 14.58s/it][A
+
+{'loss': -0.0001, 'grad_norm': 0.28112226724624634, 'learning_rate': 4.722222222222222e-06, 'num_tokens': 86124.0, 'completions/mean_length': 196.75, 'completions/min_length': 134.0, 'completions/max_length': 489.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 196.75, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 489.0, 'rewards/recall_reward/mean': -0.4950000047683716, 'rewards/recall_reward/std': 0.31924018263816833, 'reward': -0.4950000047683716, 'reward_std': 0.31924018263816833, 'frac_reward_zero_std': 0.0, 'completion_length': 196.75, 'kl': 0.0004751628175654332, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0038902576197870076, 'clip_ratio/high_max': 0.0038902576197870076, 'clip_ratio/region_mean': 0.0038902576197870076, 'epoch': 0.16}
+
+
+                                                
+[A
+
+
+ 16%|█▌        | 16/100 [03:46<20:24, 14.58s/it][A
+
+
+ 17%|█▋        | 17/100 [03:57<18:32, 13.40s/it][A
+
+{'loss': -0.0, 'grad_norm': 0.3448808193206787, 'learning_rate': 4.666666666666667e-06, 'num_tokens': 91165.0, 'completions/mean_length': 141.125, 'completions/min_length': 137.0, 'completions/max_length': 157.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 141.125, 'completions/min_terminated_length': 137.0, 'completions/max_terminated_length': 157.0, 'rewards/recall_reward/mean': -0.20999999344348907, 'rewards/recall_reward/std': 0.09258201718330383, 'reward': -0.20999999344348907, 'reward_std': 0.09258200973272324, 'frac_reward_zero_std': 0.0, 'completion_length': 141.125, 'kl': 0.00017372673482896062, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0009124087519012392, 'clip_ratio/high_max': 0.0009124087519012392, 'clip_ratio/region_mean': 0.0009124087519012392, 'epoch': 0.17}
+
+
+                                                
+[A
+
+
+ 17%|█▋        | 17/100 [03:57<18:32, 13.40s/it][A
+
+
+ 18%|█▊        | 18/100 [04:14<19:54, 14.57s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0001, 'grad_norm': 0.42057281732559204, 'learning_rate': 4.611111111111112e-06, 'num_tokens': 96973.0, 'completions/mean_length': 268.0, 'completions/min_length': 169.0, 'completions/max_length': 442.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 268.0, 'completions/min_terminated_length': 169.0, 'completions/max_terminated_length': 442.0, 'rewards/recall_reward/mean': -0.36000001430511475, 'rewards/recall_reward/std': 0.18516401946544647, 'reward': -0.36000001430511475, 'reward_std': 0.18516401946544647, 'frac_reward_zero_std': 0.0, 'completion_length': 268.0, 'kl': 0.0003179387441605286, 'clip_ratio/low_mean': 0.0007062146905809641, 'clip_ratio/low_min': 0.0007062146905809641, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0007062146905809641, 'epoch': 0.18}
+
+
+ 18%|█▊        | 18/100 [04:14<19:54, 14.57s/it][A
+
+
+ 19%|█▉        | 19/100 [04:32<20:45, 15.38s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0006, 'grad_norm': 0.22931183874607086, 'learning_rate': 4.555555555555556e-06, 'num_tokens': 102615.0, 'completions/mean_length': 227.25, 'completions/min_length': 134.0, 'completions/max_length': 478.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 227.25, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 478.0, 'rewards/recall_reward/mean': -0.4399999976158142, 'rewards/recall_reward/std': 0.22627416253089905, 'reward': -0.4399999976158142, 'reward_std': 0.22627416253089905, 'frac_reward_zero_std': 0.0, 'completion_length': 227.25, 'kl': 0.0003000545457325643, 'clip_ratio/low_mean': 0.0006720430101267993, 'clip_ratio/low_min': 0.0006720430101267993, 'clip_ratio/high_mean': 0.0024412946368101984, 'clip_ratio/high_max': 0.0024412946368101984, 'clip_ratio/region_mean': 0.0031133376469369978, 'epoch': 0.19}
+
+
+ 19%|█▉        | 19/100 [04:32<20:45, 15.38s/it][A
+
+
+ 20%|██        | 20/100 [04:43<19:02, 14.28s/it][A
+
+{'loss': -0.0, 'grad_norm': 0.4452609717845917, 'learning_rate': 4.5e-06, 'num_tokens': 107724.0, 'completions/mean_length': 170.625, 'completions/min_length': 154.0, 'completions/max_length': 202.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 170.625, 'completions/min_terminated_length': 154.0, 'completions/max_terminated_length': 202.0, 'rewards/recall_reward/mean': -0.26750001311302185, 'rewards/recall_reward/std': 0.1287023276090622, 'reward': -0.26750001311302185, 'reward_std': 0.128702312707901, 'frac_reward_zero_std': 0.0, 'completion_length': 170.625, 'kl': 0.000573050718230661, 'clip_ratio/low_mean': 0.0007102272938936949, 'clip_ratio/low_min': 0.0007102272938936949, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0007102272938936949, 'epoch': 0.2}
+
+
+                                                
+[A
+
+
+ 20%|██        | 20/100 [04:43<19:02, 14.28s/it][A
+
+
+ 21%|██        | 21/100 [04:59<19:11, 14.58s/it][A
+
+{'loss': -0.0007, 'grad_norm': 0.2947564423084259, 'learning_rate': 4.444444444444444e-06, 'num_tokens': 113197.0, 'completions/mean_length': 195.125, 'completions/min_length': 141.0, 'completions/max_length': 424.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 195.125, 'completions/min_terminated_length': 141.0, 'completions/max_terminated_length': 424.0, 'rewards/recall_reward/mean': -0.5900000333786011, 'rewards/recall_reward/std': 0.17984120547771454, 'reward': -0.5900000333786011, 'reward_std': 0.17984119057655334, 'frac_reward_zero_std': 0.0, 'completion_length': 195.125, 'kl': 0.00017480914812040282, 'clip_ratio/low_mean': 0.0008169934735633433, 'clip_ratio/low_min': 0.0008169934735633433, 'clip_ratio/high_mean': 0.0013166848220862448, 'clip_ratio/high_max': 0.0013166848220862448, 'clip_ratio/region_mean': 0.002133678295649588, 'epoch': 0.21}
+
+
+                                                
+[A
+
+
+ 21%|██        | 21/100 [04:59<19:11, 14.58s/it][A
+
+
+ 22%|██▏       | 22/100 [05:14<19:10, 14.75s/it][A
+
+{'loss': 0.0006, 'grad_norm': 0.4175739884376526, 'learning_rate': 4.388888888888889e-06, 'num_tokens': 119234.0, 'completions/mean_length': 240.625, 'completions/min_length': 141.0, 'completions/max_length': 323.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 240.625, 'completions/min_terminated_length': 141.0, 'completions/max_terminated_length': 323.0, 'rewards/recall_reward/mean': -0.4399999976158142, 'rewards/recall_reward/std': 0.22627416253089905, 'reward': -0.4399999976158142, 'reward_std': 0.22627416253089905, 'frac_reward_zero_std': 0.0, 'completion_length': 240.625, 'kl': 0.0004473072226574004, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.002673146780580282, 'clip_ratio/high_max': 0.002673146780580282, 'clip_ratio/region_mean': 0.002673146780580282, 'epoch': 0.22}
+
+
+                                                
+[A
+
+
+ 22%|██▏       | 22/100 [05:14<19:10, 14.75s/it][A
+
+
+ 23%|██▎       | 23/100 [05:30<19:32, 15.23s/it][A
+
+{'loss': 0.0, 'grad_norm': 3.8232788938330486e-05, 'learning_rate': 4.333333333333334e-06, 'num_tokens': 125046.0, 'completions/mean_length': 226.5, 'completions/min_length': 170.0, 'completions/max_length': 494.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 226.5, 'completions/min_terminated_length': 170.0, 'completions/max_terminated_length': 494.0, 'rewards/recall_reward/mean': -0.36000001430511475, 'rewards/recall_reward/std': 0.0, 'reward': -0.36000001430511475, 'reward_std': 0.0, 'frac_reward_zero_std': 1.0, 'completion_length': 226.5, 'kl': 0.00020134440612196158, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.23}
+
+
+                                                
+[A
+
+
+ 23%|██▎       | 23/100 [05:30<19:32, 15.23s/it][A
+
+
+ 24%|██▍       | 24/100 [05:50<21:14, 16.77s/it][A
+
+
+                                                
+[A
+
+{'loss': 0.0001, 'grad_norm': 0.37692791223526, 'learning_rate': 4.277777777777778e-06, 'num_tokens': 131924.0, 'completions/mean_length': 357.75, 'completions/min_length': 149.0, 'completions/max_length': 512.0, 'completions/clipped_ratio': 0.125, 'completions/mean_terminated_length': 335.71429443359375, 'completions/min_terminated_length': 149.0, 'completions/max_terminated_length': 510.0, 'rewards/recall_reward/mean': -0.675000011920929, 'rewards/recall_reward/std': 0.2815771996974945, 'reward': -0.675000011920929, 'reward_std': 0.2815771698951721, 'frac_reward_zero_std': 0.0, 'completion_length': 357.75, 'kl': 0.0003814939541371132, 'clip_ratio/low_mean': 0.000244140625, 'clip_ratio/low_min': 0.000244140625, 'clip_ratio/high_mean': 0.0019816607236862183, 'clip_ratio/high_max': 0.0019816607236862183, 'clip_ratio/region_mean': 0.0022258013486862183, 'epoch': 0.24}
+
+
+ 24%|██▍       | 24/100 [05:50<21:14, 16.77s/it][A
+
+  EVAL @ step 25: reward_mean=-0.5175000429153442, reward_std=0.31828781962394714
+
+
+ 25%|██▌       | 25/100 [06:03<19:16, 15.41s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0005, 'grad_norm': 0.4503631293773651, 'learning_rate': 4.222222222222223e-06, 'num_tokens': 137458.0, 'completions/mean_length': 170.75, 'completions/min_length': 137.0, 'completions/max_length': 241.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 170.75, 'completions/min_terminated_length': 137.0, 'completions/max_terminated_length': 241.0, 'rewards/recall_reward/mean': -0.5175000429153442, 'rewards/recall_reward/std': 0.31828784942626953, 'reward': -0.5175000429153442, 'reward_std': 0.31828781962394714, 'frac_reward_zero_std': 0.0, 'completion_length': 170.75, 'kl': 0.0005670274658768903, 'clip_ratio/low_mean': 0.0015668590203858912, 'clip_ratio/low_min': 0.0015668590203858912, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0015668590203858912, 'epoch': 0.25}
+
+
+ 25%|██▌       | 25/100 [06:03<19:16, 15.41s/it][A
+
+
+ 26%|██▌       | 26/100 [06:21<20:02, 16.25s/it][A
+
+{'loss': 0.0, 'grad_norm': 9.724889241624624e-05, 'learning_rate': 4.166666666666667e-06, 'num_tokens': 143377.0, 'completions/mean_length': 237.875, 'completions/min_length': 138.0, 'completions/max_length': 479.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 237.875, 'completions/min_terminated_length': 138.0, 'completions/max_terminated_length': 479.0, 'rewards/recall_reward/mean': -0.36000001430511475, 'rewards/recall_reward/std': 0.0, 'reward': -0.36000001430511475, 'reward_std': 0.0, 'frac_reward_zero_std': 1.0, 'completion_length': 237.875, 'kl': 0.0003926659392163856, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.26}
+
+
+                                                
+[A
+
+    Reward error (seed=1058): Server error: 'NoneType' object has no attribute 'strip' (code: EXECUTION_ERROR)
+
+
+ 26%|██▌       | 26/100 [06:21<20:02, 16.25s/it][A
+
+
+ 27%|██▋       | 27/100 [06:31<17:40, 14.53s/it][A
+
+{'loss': 0.0015, 'grad_norm': 0.3569657504558563, 'learning_rate': 4.111111111111111e-06, 'num_tokens': 148142.0, 'completions/mean_length': 138.625, 'completions/min_length': 94.0, 'completions/max_length': 157.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 138.625, 'completions/min_terminated_length': 94.0, 'completions/max_terminated_length': 157.0, 'rewards/recall_reward/mean': -0.5199999809265137, 'rewards/recall_reward/std': 0.33260872960090637, 'reward': -0.5199999809265137, 'reward_std': 0.33260872960090637, 'frac_reward_zero_std': 0.0, 'completion_length': 138.625, 'kl': 0.0004890036861979752, 'clip_ratio/low_mean': 0.000806451600510627, 'clip_ratio/low_min': 0.000806451600510627, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.000806451600510627, 'epoch': 0.27}
+
+
+                                                
+[A
+
+
+ 27%|██▋       | 27/100 [06:31<17:40, 14.53s/it][A
+
+
+ 28%|██▊       | 28/100 [06:43<16:15, 13.55s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.001, 'grad_norm': 0.3942498564720154, 'learning_rate': 4.055555555555556e-06, 'num_tokens': 153511.0, 'completions/mean_length': 156.125, 'completions/min_length': 130.0, 'completions/max_length': 182.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 156.125, 'completions/min_terminated_length': 130.0, 'completions/max_terminated_length': 182.0, 'rewards/recall_reward/mean': -0.4424999952316284, 'rewards/recall_reward/std': 0.3572014272212982, 'reward': -0.4424999952316284, 'reward_std': 0.35720139741897583, 'frac_reward_zero_std': 0.0, 'completion_length': 156.125, 'kl': 0.0006673609514109557, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0017605633474886417, 'clip_ratio/high_max': 0.0017605633474886417, 'clip_ratio/region_mean': 0.0017605633474886417, 'epoch': 0.28}
+
+    Reward error (seed=1008): Server error: 'NoneType' object has no attribute 'strip' (code: EXECUTION_ERROR)
+
+
+ 28%|██▊       | 28/100 [06:43<16:15, 13.55s/it][A
+
+
+ 29%|██▉       | 29/100 [06:54<15:18, 12.93s/it][A
+
+{'loss': 0.0002, 'grad_norm': 0.34993776679039, 'learning_rate': 4.000000000000001e-06, 'num_tokens': 158473.0, 'completions/mean_length': 150.25, 'completions/min_length': 94.0, 'completions/max_length': 200.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 150.25, 'completions/min_terminated_length': 94.0, 'completions/max_terminated_length': 200.0, 'rewards/recall_reward/mean': -0.2549999952316284, 'rewards/recall_reward/std': 0.3011881411075592, 'reward': -0.2549999952316284, 'reward_std': 0.3011881411075592, 'frac_reward_zero_std': 0.0, 'completion_length': 150.25, 'kl': 0.0002763237832255072, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0007183908019214869, 'clip_ratio/high_max': 0.0007183908019214869, 'clip_ratio/region_mean': 0.0007183908019214869, 'epoch': 0.29}
+
+
+                                                
+[A
+
+
+ 29%|██▉       | 29/100 [06:54<15:18, 12.93s/it][A
+
+
+ 30%|███       | 30/100 [07:14<17:20, 14.87s/it][A
+
+{'loss': -0.0, 'grad_norm': 0.36870068311691284, 'learning_rate': 3.944444444444445e-06, 'num_tokens': 164551.0, 'completions/mean_length': 282.75, 'completions/min_length': 146.0, 'completions/max_length': 478.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 282.75, 'completions/min_terminated_length': 146.0, 'completions/max_terminated_length': 478.0, 'rewards/recall_reward/mean': -0.6150000095367432, 'rewards/recall_reward/std': 0.15556348860263824, 'reward': -0.6150000095367432, 'reward_std': 0.15556347370147705, 'frac_reward_zero_std': 0.0, 'completion_length': 282.75, 'kl': 0.00023865991352067795, 'clip_ratio/low_mean': 0.0010245901066809893, 'clip_ratio/low_min': 0.0010245901066809893, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0010245901066809893, 'epoch': 0.3}
+
+
+                                                
+[A
+
+
+ 30%|███       | 30/100 [07:14<17:20, 14.87s/it][A
+
+
+ 31%|███       | 31/100 [07:32<18:29, 16.08s/it][A
+
+{'loss': -0.0002, 'grad_norm': 0.3647005259990692, 'learning_rate': 3.88888888888889e-06, 'num_tokens': 170137.0, 'completions/mean_length': 241.25, 'completions/min_length': 126.0, 'completions/max_length': 467.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 241.25, 'completions/min_terminated_length': 126.0, 'completions/max_terminated_length': 467.0, 'rewards/recall_reward/mean': -0.4925000071525574, 'rewards/recall_reward/std': 0.42667317390441895, 'reward': -0.4925000071525574, 'reward_std': 0.42667317390441895, 'frac_reward_zero_std': 0.0, 'completion_length': 241.25, 'kl': 0.00045141426835471066, 'clip_ratio/low_mean': 0.00043252596515230834, 'clip_ratio/low_min': 0.00043252596515230834, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.00043252596515230834, 'epoch': 0.31}
+
+
+                                                
+[A
+
+
+ 31%|███       | 31/100 [07:32<18:29, 16.08s/it][A
+
+
+ 32%|███▏      | 32/100 [07:45<16:55, 14.94s/it][A
+
+
+                                                
+[A
+
+{'loss': 0.0013, 'grad_norm': 0.459677129983902, 'learning_rate': 3.833333333333334e-06, 'num_tokens': 175205.0, 'completions/mean_length': 178.5, 'completions/min_length': 148.0, 'completions/max_length': 230.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 178.5, 'completions/min_terminated_length': 148.0, 'completions/max_terminated_length': 230.0, 'rewards/recall_reward/mean': -0.4399999976158142, 'rewards/recall_reward/std': 0.2923794090747833, 'reward': -0.4399999976158142, 'reward_std': 0.2923794090747833, 'frac_reward_zero_std': 0.0, 'completion_length': 178.5, 'kl': 0.0013279890754347434, 'clip_ratio/low_mean': 0.0006067961221560836, 'clip_ratio/low_min': 0.0006067961221560836, 'clip_ratio/high_mean': 0.0038036545156501234, 'clip_ratio/high_max': 0.0038036545156501234, 'clip_ratio/region_mean': 0.004410450637806207, 'epoch': 0.32}
+
+
+ 32%|███▏      | 32/100 [07:45<16:55, 14.94s/it][A
+
+
+ 33%|███▎      | 33/100 [08:04<17:58, 16.10s/it][A
+
+{'loss': 0.0001, 'grad_norm': 0.21386072039604187, 'learning_rate': 3.777777777777778e-06, 'num_tokens': 181216.0, 'completions/mean_length': 277.375, 'completions/min_length': 157.0, 'completions/max_length': 461.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 277.375, 'completions/min_terminated_length': 157.0, 'completions/max_terminated_length': 461.0, 'rewards/recall_reward/mean': -0.1550000011920929, 'rewards/recall_reward/std': 0.009258199483156204, 'reward': -0.1550000011920929, 'reward_std': 0.00925819668918848, 'frac_reward_zero_std': 0.0, 'completion_length': 277.375, 'kl': 0.0003967491411458468, 'clip_ratio/low_mean': 0.0005341880605556071, 'clip_ratio/low_min': 0.0005341880605556071, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0005341880605556071, 'epoch': 0.33}
+
+
+                                                
+[A
+
+
+ 33%|███▎      | 33/100 [08:04<17:58, 16.10s/it][A
+
+
+ 34%|███▍      | 34/100 [08:18<17:12, 15.65s/it][A
+
+{'loss': 0.0001, 'grad_norm': 0.46928417682647705, 'learning_rate': 3.7222222222222225e-06, 'num_tokens': 186536.0, 'completions/mean_length': 202.0, 'completions/min_length': 134.0, 'completions/max_length': 354.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 202.0, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 354.0, 'rewards/recall_reward/mean': -0.38999998569488525, 'rewards/recall_reward/std': 0.30293798446655273, 'reward': -0.38999998569488525, 'reward_std': 0.30293798446655273, 'frac_reward_zero_std': 0.0, 'completion_length': 202.0, 'kl': 0.0010595544827083359, 'clip_ratio/low_mean': 0.0009328357991762459, 'clip_ratio/low_min': 0.0009328357991762459, 'clip_ratio/high_mean': 0.0037251762114465237, 'clip_ratio/high_max': 0.0037251762114465237, 'clip_ratio/region_mean': 0.00465801201062277, 'epoch': 0.34}
+
+
+                                                
+[A
+
+
+ 34%|███▍      | 34/100 [08:18<17:12, 15.65s/it][A
+
+
+ 35%|███▌      | 35/100 [08:34<16:58, 15.66s/it][A
+
+{'loss': -0.0006, 'grad_norm': 0.5150354504585266, 'learning_rate': 3.6666666666666666e-06, 'num_tokens': 191758.0, 'completions/mean_length': 182.75, 'completions/min_length': 98.0, 'completions/max_length': 476.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 182.75, 'completions/min_terminated_length': 98.0, 'completions/max_terminated_length': 476.0, 'rewards/recall_reward/mean': -0.7099999785423279, 'rewards/recall_reward/std': 0.40496912598609924, 'reward': -0.7099999785423279, 'reward_std': 0.40496915578842163, 'frac_reward_zero_std': 0.0, 'completion_length': 182.75, 'kl': 0.0012495115952333435, 'clip_ratio/low_mean': 0.004233205632772297, 'clip_ratio/low_min': 0.004233205632772297, 'clip_ratio/high_mean': 0.0018682728405110538, 'clip_ratio/high_max': 0.0018682728405110538, 'clip_ratio/region_mean': 0.0061014784732833505, 'epoch': 0.35}
+
+
+                                                
+[A
+
+
+ 35%|███▌      | 35/100 [08:34<16:58, 15.66s/it][A
+
+
+ 36%|███▌      | 36/100 [08:45<15:22, 14.41s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0008, 'grad_norm': 0.35815539956092834, 'learning_rate': 3.6111111111111115e-06, 'num_tokens': 197024.0, 'completions/mean_length': 172.25, 'completions/min_length': 158.0, 'completions/max_length': 195.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 172.25, 'completions/min_terminated_length': 158.0, 'completions/max_terminated_length': 195.0, 'rewards/recall_reward/mean': -0.5974999666213989, 'rewards/recall_reward/std': 0.4364057779312134, 'reward': -0.5974999666213989, 'reward_std': 0.4364057779312134, 'frac_reward_zero_std': 0.0, 'completion_length': 172.25, 'kl': 0.001890997496957425, 'clip_ratio/low_mean': 0.0022279208642430604, 'clip_ratio/low_min': 0.0022279208642430604, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0022279208642430604, 'epoch': 0.36}
+
+
+ 36%|███▌      | 36/100 [08:45<15:22, 14.41s/it][A
+
+
+ 37%|███▋      | 37/100 [09:04<16:35, 15.81s/it][A
+
+{'loss': 0.001, 'grad_norm': 0.5363256335258484, 'learning_rate': 3.555555555555556e-06, 'num_tokens': 202876.0, 'completions/mean_length': 255.5, 'completions/min_length': 134.0, 'completions/max_length': 474.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 255.5, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 474.0, 'rewards/recall_reward/mean': -0.38999998569488525, 'rewards/recall_reward/std': 0.38336852192878723, 'reward': -0.38999998569488525, 'reward_std': 0.38336852192878723, 'frac_reward_zero_std': 0.0, 'completion_length': 255.5, 'kl': 0.0011508002962727915, 'clip_ratio/low_mean': 0.00031565656536258757, 'clip_ratio/low_min': 0.00031565656536258757, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.00031565656536258757, 'epoch': 0.37}
+
+
+                                                
+[A
+
+
+ 37%|███▋      | 37/100 [09:04<16:35, 15.81s/it][A
+
+
+ 38%|███▊      | 38/100 [09:16<15:00, 14.53s/it][A
+
+{'loss': 0.0, 'grad_norm': 0.00011360822099959478, 'learning_rate': 3.5e-06, 'num_tokens': 208267.0, 'completions/mean_length': 154.875, 'completions/min_length': 134.0, 'completions/max_length': 187.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 154.875, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 187.0, 'rewards/recall_reward/mean': -0.36000001430511475, 'rewards/recall_reward/std': 0.0, 'reward': -0.36000001430511475, 'reward_std': 0.0, 'frac_reward_zero_std': 1.0, 'completion_length': 154.875, 'kl': 0.00075789781203639, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.38}
+
+
+                                                
+[A
+
+
+ 38%|███▊      | 38/100 [09:16<15:00, 14.53s/it][A
+
+
+ 39%|███▉      | 39/100 [09:34<15:54, 15.65s/it][A
+
+{'loss': 0.0005, 'grad_norm': 0.2182784080505371, 'learning_rate': 3.444444444444445e-06, 'num_tokens': 214162.0, 'completions/mean_length': 251.875, 'completions/min_length': 150.0, 'completions/max_length': 469.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 251.875, 'completions/min_terminated_length': 150.0, 'completions/max_terminated_length': 469.0, 'rewards/recall_reward/mean': -0.49000000953674316, 'rewards/recall_reward/std': 0.24911271035671234, 'reward': -0.49000000953674316, 'reward_std': 0.24911271035671234, 'frac_reward_zero_std': 0.0, 'completion_length': 251.875, 'kl': 0.0003750108735403046, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0008333333535119891, 'clip_ratio/high_max': 0.0008333333535119891, 'clip_ratio/region_mean': 0.0008333333535119891, 'epoch': 0.39}
+
+
+                                                
+[A
+
+
+ 39%|███▉      | 39/100 [09:34<15:54, 15.65s/it][A
+
+
+ 40%|████      | 40/100 [09:47<14:40, 14.68s/it][A
+
+{'loss': 0.0007, 'grad_norm': 0.4333479106426239, 'learning_rate': 3.3888888888888893e-06, 'num_tokens': 219433.0, 'completions/mean_length': 182.875, 'completions/min_length': 155.0, 'completions/max_length': 235.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 182.875, 'completions/min_terminated_length': 155.0, 'completions/max_terminated_length': 235.0, 'rewards/recall_reward/mean': -0.4150000214576721, 'rewards/recall_reward/std': 0.24651861190795898, 'reward': -0.4150000214576721, 'reward_std': 0.24651861190795898, 'frac_reward_zero_std': 0.0, 'completion_length': 182.875, 'kl': 0.0007882873214839492, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0037429858930408955, 'clip_ratio/high_max': 0.0037429858930408955, 'clip_ratio/region_mean': 0.0037429858930408955, 'epoch': 0.4}
+
+
+                                                
+[A
+
+    Reward error (seed=1042): Server error: 'NoneType' object has no attribute 'strip' (code: EXECUTION_ERROR)
+
+
+ 40%|████      | 40/100 [09:47<14:40, 14.68s/it][A
+
+
+ 41%|████      | 41/100 [09:57<13:13, 13.46s/it][A
+
+{'loss': 0.0014, 'grad_norm': 0.47789466381073, 'learning_rate': 3.3333333333333333e-06, 'num_tokens': 224285.0, 'completions/mean_length': 142.5, 'completions/min_length': 94.0, 'completions/max_length': 159.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 142.5, 'completions/min_terminated_length': 94.0, 'completions/max_terminated_length': 159.0, 'rewards/recall_reward/mean': -0.5699999928474426, 'rewards/recall_reward/std': 0.3803757429122925, 'reward': -0.5699999928474426, 'reward_std': 0.3803757429122925, 'frac_reward_zero_std': 0.0, 'completion_length': 142.5, 'kl': 0.00148982223981875, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0007961783558130264, 'clip_ratio/high_max': 0.0007961783558130264, 'clip_ratio/region_mean': 0.0007961783558130264, 'epoch': 0.41}
+
+
+                                                
+[A
+
+
+ 41%|████      | 41/100 [09:57<13:13, 13.46s/it][A
+
+
+ 42%|████▏     | 42/100 [10:14<13:51, 14.33s/it][A
+
+{'loss': 0.0004, 'grad_norm': 0.3577151894569397, 'learning_rate': 3.277777777777778e-06, 'num_tokens': 229836.0, 'completions/mean_length': 211.875, 'completions/min_length': 141.0, 'completions/max_length': 490.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 211.875, 'completions/min_terminated_length': 141.0, 'completions/max_terminated_length': 490.0, 'rewards/recall_reward/mean': -0.46000000834465027, 'rewards/recall_reward/std': 0.10690449178218842, 'reward': -0.46000000834465027, 'reward_std': 0.10690449178218842, 'frac_reward_zero_std': 0.0, 'completion_length': 211.875, 'kl': 0.0025981372099295186, 'clip_ratio/low_mean': 0.0008503401186317205, 'clip_ratio/low_min': 0.0008503401186317205, 'clip_ratio/high_mean': 0.0007961783558130264, 'clip_ratio/high_max': 0.0007961783558130264, 'clip_ratio/region_mean': 0.001646518474444747, 'epoch': 0.42}
+
+
+                                                
+[A
+
+
+ 42%|████▏     | 42/100 [10:14<13:51, 14.33s/it][A
+
+
+ 43%|████▎     | 43/100 [10:29<13:47, 14.51s/it][A
+
+{'loss': -0.0001, 'grad_norm': 0.5234086513519287, 'learning_rate': 3.2222222222222227e-06, 'num_tokens': 234961.0, 'completions/mean_length': 190.625, 'completions/min_length': 134.0, 'completions/max_length': 392.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 190.625, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 392.0, 'rewards/recall_reward/mean': -0.3799999952316284, 'rewards/recall_reward/std': 0.27318230271339417, 'reward': -0.3799999952316284, 'reward_std': 0.27318230271339417, 'frac_reward_zero_std': 0.0, 'completion_length': 190.625, 'kl': 0.0008079922536126105, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0017249182856176049, 'clip_ratio/high_max': 0.0017249182856176049, 'clip_ratio/region_mean': 0.0017249182856176049, 'epoch': 0.43}
+
+
+                                                
+[A
+
+
+ 43%|████▎     | 43/100 [10:29<13:47, 14.51s/it][A
+
+
+ 44%|████▍     | 44/100 [10:42<13:16, 14.22s/it][A
+
+{'loss': 0.0003, 'grad_norm': 0.3895651400089264, 'learning_rate': 3.1666666666666667e-06, 'num_tokens': 240142.0, 'completions/mean_length': 194.625, 'completions/min_length': 156.0, 'completions/max_length': 307.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 194.625, 'completions/min_terminated_length': 156.0, 'completions/max_terminated_length': 307.0, 'rewards/recall_reward/mean': -0.38749998807907104, 'rewards/recall_reward/std': 0.2651010751724243, 'reward': -0.38749998807907104, 'reward_std': 0.26510104537010193, 'frac_reward_zero_std': 0.0, 'completion_length': 194.625, 'kl': 0.0009312045658589341, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.002901886706240475, 'clip_ratio/high_max': 0.002901886706240475, 'clip_ratio/region_mean': 0.002901886706240475, 'epoch': 0.44}
+
+
+                                                
+[A
+
+
+ 44%|████▍     | 44/100 [10:42<13:16, 14.22s/it][A
+
+
+ 45%|████▌     | 45/100 [10:58<13:23, 14.62s/it][A
+
+{'loss': 0.0002, 'grad_norm': 0.264844685792923, 'learning_rate': 3.1111111111111116e-06, 'num_tokens': 245456.0, 'completions/mean_length': 214.25, 'completions/min_length': 134.0, 'completions/max_length': 345.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 214.25, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 345.0, 'rewards/recall_reward/mean': -0.41499999165534973, 'rewards/recall_reward/std': 0.24651862680912018, 'reward': -0.41499999165534973, 'reward_std': 0.24651861190795898, 'frac_reward_zero_std': 0.0, 'completion_length': 214.25, 'kl': 0.0005034390378568787, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0005760368658229709, 'clip_ratio/high_max': 0.0005760368658229709, 'clip_ratio/region_mean': 0.0005760368658229709, 'epoch': 0.45}
+
+
+                                                
+[A
+
+
+ 45%|████▌     | 45/100 [10:58<13:23, 14.62s/it][A
+
+
+ 46%|████▌     | 46/100 [11:16<14:16, 15.87s/it][A
+
+{'loss': 0.0005, 'grad_norm': 0.3084467649459839, 'learning_rate': 3.055555555555556e-06, 'num_tokens': 251080.0, 'completions/mean_length': 239.0, 'completions/min_length': 160.0, 'completions/max_length': 458.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 239.0, 'completions/min_terminated_length': 160.0, 'completions/max_terminated_length': 458.0, 'rewards/recall_reward/mean': -0.39000001549720764, 'rewards/recall_reward/std': 0.2625153362751007, 'reward': -0.39000001549720764, 'reward_std': 0.2625153064727783, 'frac_reward_zero_std': 0.0, 'completion_length': 239.0, 'kl': 0.0009259394751097716, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0014643101021647453, 'clip_ratio/high_max': 0.0014643101021647453, 'clip_ratio/region_mean': 0.0014643101021647453, 'epoch': 0.46}
+
+
+                                                
+[A
+
+
+ 46%|████▌     | 46/100 [11:16<14:16, 15.87s/it][A
+
+
+ 47%|████▋     | 47/100 [11:32<13:52, 15.70s/it][A
+
+{'loss': 0.0004, 'grad_norm': 0.4507898688316345, 'learning_rate': 3e-06, 'num_tokens': 256518.0, 'completions/mean_length': 189.75, 'completions/min_length': 138.0, 'completions/max_length': 484.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 189.75, 'completions/min_terminated_length': 138.0, 'completions/max_terminated_length': 484.0, 'rewards/recall_reward/mean': -0.45249998569488525, 'rewards/recall_reward/std': 0.3735447824001312, 'reward': -0.45249998569488525, 'reward_std': 0.3735447824001312, 'frac_reward_zero_std': 0.0, 'completion_length': 189.75, 'kl': 0.0006946754729142413, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0025142686208710074, 'clip_ratio/high_max': 0.0025142686208710074, 'clip_ratio/region_mean': 0.0025142686208710074, 'epoch': 0.47}
+
+
+                                                
+[A
+
+
+ 47%|████▋     | 47/100 [11:32<13:52, 15.70s/it][A
+
+
+ 48%|████▊     | 48/100 [11:46<13:21, 15.42s/it][A
+
+{'loss': -0.0011, 'grad_norm': 0.3427916467189789, 'learning_rate': 2.944444444444445e-06, 'num_tokens': 261988.0, 'completions/mean_length': 187.75, 'completions/min_length': 134.0, 'completions/max_length': 389.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 187.75, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 389.0, 'rewards/recall_reward/mean': -0.3824999928474426, 'rewards/recall_reward/std': 0.2703304886817932, 'reward': -0.3824999928474426, 'reward_std': 0.2703304886817932, 'frac_reward_zero_std': 0.0, 'completion_length': 187.75, 'kl': 0.0014204530234565027, 'clip_ratio/low_mean': 0.0005813953466713428, 'clip_ratio/low_min': 0.0005813953466713428, 'clip_ratio/high_mean': 0.0008503401186317205, 'clip_ratio/high_max': 0.0008503401186317205, 'clip_ratio/region_mean': 0.0014317354653030634, 'epoch': 0.48}
+
+
+                                                
+[A
+
+
+ 48%|████▊     | 48/100 [11:46<13:21, 15.42s/it][A
+
+
+ 49%|████▉     | 49/100 [12:04<13:44, 16.16s/it][A
+
+{'loss': -0.0008, 'grad_norm': 0.5012750029563904, 'learning_rate': 2.888888888888889e-06, 'num_tokens': 267575.0, 'completions/mean_length': 222.375, 'completions/min_length': 134.0, 'completions/max_length': 485.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 222.375, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 485.0, 'rewards/recall_reward/mean': -0.5674999952316284, 'rewards/recall_reward/std': 0.4624083340167999, 'reward': -0.5674999952316284, 'reward_std': 0.46240827441215515, 'frac_reward_zero_std': 0.0, 'completion_length': 222.375, 'kl': 0.0047465881070820615, 'clip_ratio/low_mean': 0.003023022669367492, 'clip_ratio/low_min': 0.003023022669367492, 'clip_ratio/high_mean': 0.0036242541391402483, 'clip_ratio/high_max': 0.0036242541391402483, 'clip_ratio/region_mean': 0.0066472768085077405, 'epoch': 0.49}
+
+
+                                                
+[A
+
+
+ 49%|████▉     | 49/100 [12:04<13:44, 16.16s/it][A
+
+  EVAL @ step 50: reward_mean=-0.4399999976158142, reward_std=0.2721344232559204
+
+{'loss': 0.0001, 'grad_norm': 0.2192247211933136, 'learning_rate': 2.8333333333333335e-06, 'num_tokens': 274357.0, 'completions/mean_length': 374.75, 'completions/min_length': 179.0, 'completions/max_length': 483.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 374.75, 'completions/min_terminated_length': 179.0, 'completions/max_terminated_length': 483.0, 'rewards/recall_reward/mean': -0.4399999976158142, 'rewards/recall_reward/std': 0.2721344232559204, 'reward': -0.4399999976158142, 'reward_std': 0.2721344232559204, 'frac_reward_zero_std': 0.0, 'completion_length': 374.75, 'kl': 0.0005195851696271347, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.002147679275367409, 'clip_ratio/high_max': 0.002147679275367409, 'clip_ratio/region_mean': 0.002147679275367409, 'epoch': 0.5}
+
+
+ 50%|█████     | 50/100 [12:24<14:20, 17.21s/it][A
+
+
+                                                
+[A
+
+    Reward error (seed=1022): Server error: 'NoneType' object has no attribute 'strip' (code: EXECUTION_ERROR)
+
+
+ 50%|█████     | 50/100 [12:24<14:20, 17.21s/it][A
+
+
+ 51%|█████     | 51/100 [12:35<12:35, 15.42s/it][A
+
+{'loss': 0.0008, 'grad_norm': 0.6095557808876038, 'learning_rate': 2.7777777777777783e-06, 'num_tokens': 279256.0, 'completions/mean_length': 130.375, 'completions/min_length': 94.0, 'completions/max_length': 145.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 130.375, 'completions/min_terminated_length': 94.0, 'completions/max_terminated_length': 145.0, 'rewards/recall_reward/mean': -0.35999998450279236, 'rewards/recall_reward/std': 0.27938708662986755, 'reward': -0.35999998450279236, 'reward_std': 0.27938708662986755, 'frac_reward_zero_std': 0.0, 'completion_length': 130.375, 'kl': 0.0012942410721734632, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0009328357991762459, 'clip_ratio/high_max': 0.0009328357991762459, 'clip_ratio/region_mean': 0.0009328357991762459, 'epoch': 0.51}
+
+
+                                                
+[A
+
+
+ 51%|█████     | 51/100 [12:35<12:35, 15.42s/it][A
+
+
+ 52%|█████▏    | 52/100 [12:46<11:15, 14.07s/it][A
+
+{'loss': -0.0001, 'grad_norm': 0.4979417622089386, 'learning_rate': 2.7222222222222224e-06, 'num_tokens': 284158.0, 'completions/mean_length': 148.75, 'completions/min_length': 98.0, 'completions/max_length': 173.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 148.75, 'completions/min_terminated_length': 98.0, 'completions/max_terminated_length': 173.0, 'rewards/recall_reward/mean': -0.5950000286102295, 'rewards/recall_reward/std': 0.28720328211784363, 'reward': -0.5950000286102295, 'reward_std': 0.28720325231552124, 'frac_reward_zero_std': 0.0, 'completion_length': 148.75, 'kl': 0.007877027390350122, 'clip_ratio/low_mean': 0.0012755101779475808, 'clip_ratio/low_min': 0.0012755101779475808, 'clip_ratio/high_mean': 0.0015449117636308074, 'clip_ratio/high_max': 0.0015449117636308074, 'clip_ratio/region_mean': 0.002820421941578388, 'epoch': 0.52}
+
+
+                                                
+[A
+
+
+ 52%|█████▏    | 52/100 [12:46<11:15, 14.07s/it][A
+
+
+ 53%|█████▎    | 53/100 [13:05<12:05, 15.44s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0005, 'grad_norm': 0.2373446673154831, 'learning_rate': 2.666666666666667e-06, 'num_tokens': 290260.0, 'completions/mean_length': 292.75, 'completions/min_length': 122.0, 'completions/max_length': 446.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 292.75, 'completions/min_terminated_length': 122.0, 'completions/max_terminated_length': 446.0, 'rewards/recall_reward/mean': -0.18250000476837158, 'rewards/recall_reward/std': 0.07206148654222488, 'reward': -0.18250000476837158, 'reward_std': 0.07206147909164429, 'frac_reward_zero_std': 0.0, 'completion_length': 292.75, 'kl': 0.002241684138425626, 'clip_ratio/low_mean': 0.0003955696302000433, 'clip_ratio/low_min': 0.0003955696302000433, 'clip_ratio/high_mean': 0.00188084488036111, 'clip_ratio/high_max': 0.00188084488036111, 'clip_ratio/region_mean': 0.0022764145105611533, 'epoch': 0.53}
+
+
+ 53%|█████▎    | 53/100 [13:05<12:05, 15.44s/it][A
+
+
+ 54%|█████▍    | 54/100 [13:24<12:40, 16.53s/it][A
+
+{'loss': 0.0001, 'grad_norm': 0.2595026195049286, 'learning_rate': 2.6111111111111113e-06, 'num_tokens': 296180.0, 'completions/mean_length': 270.0, 'completions/min_length': 148.0, 'completions/max_length': 494.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 270.0, 'completions/min_terminated_length': 148.0, 'completions/max_terminated_length': 494.0, 'rewards/recall_reward/mean': -0.4399999976158142, 'rewards/recall_reward/std': 0.2502570152282715, 'reward': -0.4399999976158142, 'reward_std': 0.2502570152282715, 'frac_reward_zero_std': 0.0, 'completion_length': 270.0, 'kl': 0.002478418839018559, 'clip_ratio/low_mean': 0.0002530364436097443, 'clip_ratio/low_min': 0.0002530364436097443, 'clip_ratio/high_mean': 0.0034146985854022205, 'clip_ratio/high_max': 0.0034146985854022205, 'clip_ratio/region_mean': 0.003667735029011965, 'epoch': 0.54}
+
+
+                                                
+[A
+
+
+ 54%|█████▍    | 54/100 [13:24<12:40, 16.53s/it][A
+
+
+ 55%|█████▌    | 55/100 [13:44<13:10, 17.57s/it][A
+
+{'loss': -0.0001, 'grad_norm': 0.5487884283065796, 'learning_rate': 2.5555555555555557e-06, 'num_tokens': 302250.0, 'completions/mean_length': 269.75, 'completions/min_length': 169.0, 'completions/max_length': 497.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 269.75, 'completions/min_terminated_length': 169.0, 'completions/max_terminated_length': 497.0, 'rewards/recall_reward/mean': -0.4399999976158142, 'rewards/recall_reward/std': 0.2502570152282715, 'reward': -0.4399999976158142, 'reward_std': 0.2502570152282715, 'frac_reward_zero_std': 0.0, 'completion_length': 269.75, 'kl': 0.0010791990425786935, 'clip_ratio/low_mean': 0.0006720430101267993, 'clip_ratio/low_min': 0.0006720430101267993, 'clip_ratio/high_mean': 0.0017264481575693935, 'clip_ratio/high_max': 0.0017264481575693935, 'clip_ratio/region_mean': 0.002398491167696193, 'epoch': 0.55}
+
+
+                                                
+[A
+
+
+ 55%|█████▌    | 55/100 [13:44<13:10, 17.57s/it][A
+
+
+ 56%|█████▌    | 56/100 [13:59<12:24, 16.91s/it][A
+
+{'loss': -0.0006, 'grad_norm': 0.4305160939693451, 'learning_rate': 2.5e-06, 'num_tokens': 307514.0, 'completions/mean_length': 189.0, 'completions/min_length': 114.0, 'completions/max_length': 461.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 189.0, 'completions/min_terminated_length': 114.0, 'completions/max_terminated_length': 461.0, 'rewards/recall_reward/mean': -0.22750000655651093, 'rewards/recall_reward/std': 0.3123985528945923, 'reward': -0.22750000655651093, 'reward_std': 0.3123985528945923, 'frac_reward_zero_std': 0.0, 'completion_length': 189.0, 'kl': 0.002880753938370617, 'clip_ratio/low_mean': 0.0007183908019214869, 'clip_ratio/low_min': 0.0007183908019214869, 'clip_ratio/high_mean': 0.0027509030187502503, 'clip_ratio/high_max': 0.0027509030187502503, 'clip_ratio/region_mean': 0.003469293820671737, 'epoch': 0.56}
+
+
+                                                
+[A
+
+
+ 56%|█████▌    | 56/100 [13:59<12:24, 16.91s/it][A
+
+
+ 57%|█████▋    | 57/100 [14:20<12:53, 17.99s/it][A
+
+{'loss': 0.0001, 'grad_norm': 0.12760835886001587, 'learning_rate': 2.4444444444444447e-06, 'num_tokens': 314298.0, 'completions/mean_length': 344.0, 'completions/min_length': 130.0, 'completions/max_length': 512.0, 'completions/clipped_ratio': 0.125, 'completions/mean_terminated_length': 320.0, 'completions/min_terminated_length': 130.0, 'completions/max_terminated_length': 512.0, 'rewards/recall_reward/mean': -0.4399999976158142, 'rewards/recall_reward/std': 0.22627416253089905, 'reward': -0.4399999976158142, 'reward_std': 0.22627416253089905, 'frac_reward_zero_std': 0.0, 'completion_length': 344.0, 'kl': 0.0006850108802609611, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.57}
+
+
+                                                
+[A
+
+
+ 57%|█████▋    | 57/100 [14:20<12:53, 17.99s/it][A
+
+
+ 58%|█████▊    | 58/100 [14:39<12:52, 18.40s/it][A
+
+
+                                                
+[A
+
+{'loss': 0.0006, 'grad_norm': 0.2921238839626312, 'learning_rate': 2.388888888888889e-06, 'num_tokens': 320660.0, 'completions/mean_length': 322.25, 'completions/min_length': 170.0, 'completions/max_length': 471.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 322.25, 'completions/min_terminated_length': 170.0, 'completions/max_terminated_length': 471.0, 'rewards/recall_reward/mean': -0.12999999523162842, 'rewards/recall_reward/std': 0.010690451599657536, 'reward': -0.12999999523162842, 'reward_std': 0.010690447874367237, 'frac_reward_zero_std': 0.0, 'completion_length': 322.25, 'kl': 0.0012812492368539097, 'clip_ratio/low_mean': 0.000735294132027775, 'clip_ratio/low_min': 0.000735294132027775, 'clip_ratio/high_mean': 0.0012124838249292225, 'clip_ratio/high_max': 0.0012124838249292225, 'clip_ratio/region_mean': 0.0019477779569569975, 'epoch': 0.58}
+
+
+ 58%|█████▊    | 58/100 [14:39<12:52, 18.40s/it][A
+
+
+ 59%|█████▉    | 59/100 [14:57<12:25, 18.18s/it][A
+
+
+                                                
+[A
+
+{'loss': 0.0013, 'grad_norm': 0.3358008861541748, 'learning_rate': 2.3333333333333336e-06, 'num_tokens': 326324.0, 'completions/mean_length': 242.0, 'completions/min_length': 135.0, 'completions/max_length': 467.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 242.0, 'completions/min_terminated_length': 135.0, 'completions/max_terminated_length': 467.0, 'rewards/recall_reward/mean': -0.16249999403953552, 'rewards/recall_reward/std': 0.08031190186738968, 'reward': -0.16249999403953552, 'reward_std': 0.08031190186738968, 'frac_reward_zero_std': 0.0, 'completion_length': 242.0, 'kl': 0.006911166848112771, 'clip_ratio/low_mean': 0.000621890532784164, 'clip_ratio/low_min': 0.000621890532784164, 'clip_ratio/high_mean': 0.0030380967655219138, 'clip_ratio/high_max': 0.0030380967655219138, 'clip_ratio/region_mean': 0.0036599872983060777, 'epoch': 0.59}
+
+    Reward error (seed=1084): Server error: 'NoneType' object has no attribute 'strip' (code: EXECUTION_ERROR)
+
+
+ 59%|█████▉    | 59/100 [14:57<12:25, 18.18s/it][A
+
+
+ 60%|██████    | 60/100 [15:15<12:01, 18.05s/it][A
+
+{'loss': 0.0006, 'grad_norm': 0.4150274693965912, 'learning_rate': 2.277777777777778e-06, 'num_tokens': 331887.0, 'completions/mean_length': 239.375, 'completions/min_length': 122.0, 'completions/max_length': 448.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 239.375, 'completions/min_terminated_length': 122.0, 'completions/max_terminated_length': 448.0, 'rewards/recall_reward/mean': -0.38749998807907104, 'rewards/recall_reward/std': 0.385292112827301, 'reward': -0.38749998807907104, 'reward_std': 0.385292112827301, 'frac_reward_zero_std': 0.0, 'completion_length': 239.375, 'kl': 0.0008560181595385075, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0024474859528709203, 'clip_ratio/high_max': 0.0024474859528709203, 'clip_ratio/region_mean': 0.0024474859528709203, 'epoch': 0.6}
+
+
+                                                
+[A
+
+
+ 60%|██████    | 60/100 [15:15<12:01, 18.05s/it][A
+
+
+ 61%|██████    | 61/100 [15:30<11:08, 17.14s/it][A
+
+
+                                                
+[A
+
+{'loss': 0.0008, 'grad_norm': 0.5610100030899048, 'learning_rate': 2.222222222222222e-06, 'num_tokens': 337033.0, 'completions/mean_length': 193.25, 'completions/min_length': 150.0, 'completions/max_length': 451.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 193.25, 'completions/min_terminated_length': 150.0, 'completions/max_terminated_length': 451.0, 'rewards/recall_reward/mean': -0.19749999046325684, 'rewards/recall_reward/std': 0.10222525149583817, 'reward': -0.19749999046325684, 'reward_std': 0.10222524404525757, 'frac_reward_zero_std': 0.0, 'completion_length': 193.25, 'kl': 0.0033475647724117152, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0007861634949222207, 'clip_ratio/high_max': 0.0007861634949222207, 'clip_ratio/region_mean': 0.0007861634949222207, 'epoch': 0.61}
+
+
+ 61%|██████    | 61/100 [15:30<11:08, 17.14s/it][A
+
+
+ 62%|██████▏   | 62/100 [15:41<09:43, 15.36s/it][A
+
+{'loss': -0.0008, 'grad_norm': 0.43035298585891724, 'learning_rate': 2.166666666666667e-06, 'num_tokens': 342066.0, 'completions/mean_length': 158.125, 'completions/min_length': 137.0, 'completions/max_length': 179.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 158.125, 'completions/min_terminated_length': 137.0, 'completions/max_terminated_length': 179.0, 'rewards/recall_reward/mean': -0.2800000011920929, 'rewards/recall_reward/std': 0.11109842360019684, 'reward': -0.2800000011920929, 'reward_std': 0.11109842360019684, 'frac_reward_zero_std': 0.0, 'completion_length': 158.125, 'kl': 0.0022821101956651546, 'clip_ratio/low_mean': 0.0036266293609514832, 'clip_ratio/low_min': 0.0036266293609514832, 'clip_ratio/high_mean': 0.0029966982547193766, 'clip_ratio/high_max': 0.0029966982547193766, 'clip_ratio/region_mean': 0.00662332761567086, 'epoch': 0.62}
+
+
+                                                
+[A
+
+
+ 62%|██████▏   | 62/100 [15:41<09:43, 15.36s/it][A
+
+
+ 63%|██████▎   | 63/100 [15:51<08:30, 13.80s/it][A
+
+{'loss': 0.002, 'grad_norm': 0.5847101807594299, 'learning_rate': 2.1111111111111114e-06, 'num_tokens': 346886.0, 'completions/mean_length': 135.5, 'completions/min_length': 130.0, 'completions/max_length': 147.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 135.5, 'completions/min_terminated_length': 130.0, 'completions/max_terminated_length': 147.0, 'rewards/recall_reward/mean': -0.5199999809265137, 'rewards/recall_reward/std': 0.2962624430656433, 'reward': -0.5199999809265137, 'reward_std': 0.2962624132633209, 'frac_reward_zero_std': 0.0, 'completion_length': 135.5, 'kl': 0.0022464344310719753, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0009541984763927758, 'clip_ratio/high_max': 0.0009541984763927758, 'clip_ratio/region_mean': 0.0009541984763927758, 'epoch': 0.63}
+
+
+                                                
+[A
+
+
+ 63%|██████▎   | 63/100 [15:51<08:30, 13.80s/it][A
+
+
+ 64%|██████▍   | 64/100 [16:07<08:45, 14.59s/it][A
+
+{'loss': -0.0004, 'grad_norm': 0.3655444085597992, 'learning_rate': 2.0555555555555555e-06, 'num_tokens': 352489.0, 'completions/mean_length': 208.375, 'completions/min_length': 134.0, 'completions/max_length': 404.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 208.375, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 404.0, 'rewards/recall_reward/mean': -0.6675000190734863, 'rewards/recall_reward/std': 0.31621646881103516, 'reward': -0.6675000190734863, 'reward_std': 0.31621646881103516, 'frac_reward_zero_std': 0.0, 'completion_length': 208.375, 'kl': 0.006371800984197762, 'clip_ratio/low_mean': 0.0022774022072553635, 'clip_ratio/low_min': 0.0022774022072553635, 'clip_ratio/high_mean': 0.001734883349854499, 'clip_ratio/high_max': 0.001734883349854499, 'clip_ratio/region_mean': 0.0040122855571098626, 'epoch': 0.64}
+
+
+                                                
+[A
+
+
+ 64%|██████▍   | 64/100 [16:07<08:45, 14.59s/it][A
+
+
+ 65%|██████▌   | 65/100 [16:22<08:32, 14.65s/it][A
+
+{'loss': -0.0006, 'grad_norm': 0.4044783413410187, 'learning_rate': 2.0000000000000003e-06, 'num_tokens': 357940.0, 'completions/mean_length': 191.375, 'completions/min_length': 147.0, 'completions/max_length': 425.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 191.375, 'completions/min_terminated_length': 147.0, 'completions/max_terminated_length': 425.0, 'rewards/recall_reward/mean': -0.3850000202655792, 'rewards/recall_reward/std': 0.0707106739282608, 'reward': -0.3850000202655792, 'reward_std': 0.0707106739282608, 'frac_reward_zero_std': 0.0, 'completion_length': 191.375, 'kl': 0.0022854290145915, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.004012009361758828, 'clip_ratio/high_max': 0.004012009361758828, 'clip_ratio/region_mean': 0.004012009361758828, 'epoch': 0.65}
+
+
+                                                
+[A
+
+
+ 65%|██████▌   | 65/100 [16:22<08:32, 14.65s/it][A
+
+
+ 66%|██████▌   | 66/100 [16:34<07:45, 13.69s/it][A
+
+{'loss': -0.0009, 'grad_norm': 0.43653604388237, 'learning_rate': 1.944444444444445e-06, 'num_tokens': 363117.0, 'completions/mean_length': 155.125, 'completions/min_length': 136.0, 'completions/max_length': 198.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 155.125, 'completions/min_terminated_length': 136.0, 'completions/max_terminated_length': 198.0, 'rewards/recall_reward/mean': -0.36250001192092896, 'rewards/recall_reward/std': 0.2772183120250702, 'reward': -0.36250001192092896, 'reward_std': 0.2772183418273926, 'frac_reward_zero_std': 0.0, 'completion_length': 155.125, 'kl': 0.002929783338913694, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0023574954248033464, 'clip_ratio/high_max': 0.0023574954248033464, 'clip_ratio/region_mean': 0.0023574954248033464, 'epoch': 0.66}
+
+
+                                                
+[A
+
+
+ 66%|██████▌   | 66/100 [16:34<07:45, 13.69s/it][A
+
+
+ 67%|██████▋   | 67/100 [16:44<07:01, 12.76s/it][A
+
+{'loss': -0.0021, 'grad_norm': 0.5446509718894958, 'learning_rate': 1.888888888888889e-06, 'num_tokens': 368306.0, 'completions/mean_length': 144.625, 'completions/min_length': 134.0, 'completions/max_length': 155.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 144.625, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 155.0, 'rewards/recall_reward/mean': -0.33500000834465027, 'rewards/recall_reward/std': 0.0707106813788414, 'reward': -0.33500000834465027, 'reward_std': 0.070710688829422, 'frac_reward_zero_std': 0.0, 'completion_length': 144.625, 'kl': 0.0028044952578056837, 'clip_ratio/low_mean': 0.0008741258643567562, 'clip_ratio/low_min': 0.0008741258643567562, 'clip_ratio/high_mean': 0.0008802816737443209, 'clip_ratio/high_max': 0.0008802816737443209, 'clip_ratio/region_mean': 0.001754407538101077, 'epoch': 0.67}
+
+
+                                                
+[A
+
+
+ 67%|██████▋   | 67/100 [16:44<07:01, 12.76s/it][A
+
+
+ 68%|██████▊   | 68/100 [16:55<06:28, 12.13s/it][A
+
+{'loss': 0.0, 'grad_norm': 0.0005589313223026693, 'learning_rate': 1.8333333333333333e-06, 'num_tokens': 373519.0, 'completions/mean_length': 148.625, 'completions/min_length': 140.0, 'completions/max_length': 155.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 148.625, 'completions/min_terminated_length': 140.0, 'completions/max_terminated_length': 155.0, 'rewards/recall_reward/mean': -0.36000001430511475, 'rewards/recall_reward/std': 0.0, 'reward': -0.36000001430511475, 'reward_std': 0.0, 'frac_reward_zero_std': 1.0, 'completion_length': 148.625, 'kl': 0.005188048380659893, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.68}
+
+
+                                                
+[A
+
+
+ 68%|██████▊   | 68/100 [16:55<06:28, 12.13s/it][A
+
+
+ 69%|██████▉   | 69/100 [17:06<06:04, 11.76s/it][A
+
+{'loss': 0.0002, 'grad_norm': 0.36256593465805054, 'learning_rate': 1.777777777777778e-06, 'num_tokens': 378579.0, 'completions/mean_length': 148.5, 'completions/min_length': 134.0, 'completions/max_length': 167.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 148.5, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 167.0, 'rewards/recall_reward/mean': -0.33000001311302185, 'rewards/recall_reward/std': 0.08485282212495804, 'reward': -0.33000001311302185, 'reward_std': 0.08485281467437744, 'frac_reward_zero_std': 0.0, 'completion_length': 148.5, 'kl': 0.004163043398875743, 'clip_ratio/low_mean': 0.005178846069611609, 'clip_ratio/low_min': 0.005178846069611609, 'clip_ratio/high_mean': 0.0007485030218958855, 'clip_ratio/high_max': 0.0007485030218958855, 'clip_ratio/region_mean': 0.0059273490915074944, 'epoch': 0.69}
+
+
+                                                
+[A
+
+
+ 69%|██████▉   | 69/100 [17:06<06:04, 11.76s/it][A
+
+
+ 70%|███████   | 70/100 [17:24<06:53, 13.77s/it][A
+
+{'loss': 0.0003, 'grad_norm': 0.2824690043926239, 'learning_rate': 1.7222222222222224e-06, 'num_tokens': 384239.0, 'completions/mean_length': 248.5, 'completions/min_length': 134.0, 'completions/max_length': 467.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 248.5, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 467.0, 'rewards/recall_reward/mean': -0.17000000178813934, 'rewards/recall_reward/std': 0.07782765477895737, 'reward': -0.17000000178813934, 'reward_std': 0.07782764732837677, 'frac_reward_zero_std': 0.0, 'completion_length': 248.5, 'kl': 0.0012245880461705383, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0015838774852454662, 'clip_ratio/high_max': 0.0015838774852454662, 'clip_ratio/region_mean': 0.0015838774852454662, 'epoch': 0.7}
+
+
+                                                
+[A
+
+
+ 70%|███████   | 70/100 [17:24<06:53, 13.77s/it][A
+
+
+ 71%|███████   | 71/100 [17:43<07:25, 15.35s/it][A
+
+{'loss': 0.001, 'grad_norm': 0.37812358140945435, 'learning_rate': 1.6666666666666667e-06, 'num_tokens': 391197.0, 'completions/mean_length': 409.75, 'completions/min_length': 165.0, 'completions/max_length': 469.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 409.75, 'completions/min_terminated_length': 165.0, 'completions/max_terminated_length': 469.0, 'rewards/recall_reward/mean': -0.3425000011920929, 'rewards/recall_reward/std': 0.4060172736644745, 'reward': -0.3425000011920929, 'reward_std': 0.4060172438621521, 'frac_reward_zero_std': 0.0, 'completion_length': 409.75, 'kl': 0.0009929752231983002, 'clip_ratio/low_mean': 0.0010516933689359576, 'clip_ratio/low_min': 0.0010516933689359576, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0010516933689359576, 'epoch': 0.71}
+
+
+                                                
+[A
+
+
+ 71%|███████   | 71/100 [17:43<07:25, 15.35s/it][A
+
+
+ 72%|███████▏  | 72/100 [17:59<07:09, 15.35s/it][A
+
+{'loss': -0.0008, 'grad_norm': 0.4004620611667633, 'learning_rate': 1.6111111111111113e-06, 'num_tokens': 396383.0, 'completions/mean_length': 188.25, 'completions/min_length': 122.0, 'completions/max_length': 470.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 188.25, 'completions/min_terminated_length': 122.0, 'completions/max_terminated_length': 470.0, 'rewards/recall_reward/mean': -0.4650000035762787, 'rewards/recall_reward/std': 0.3438853621482849, 'reward': -0.4650000035762787, 'reward_std': 0.3438853621482849, 'frac_reward_zero_std': 0.0, 'completion_length': 188.25, 'kl': 0.0009224922141584102, 'clip_ratio/low_mean': 0.0009191176504828036, 'clip_ratio/low_min': 0.0009191176504828036, 'clip_ratio/high_mean': 0.001612903201021254, 'clip_ratio/high_max': 0.001612903201021254, 'clip_ratio/region_mean': 0.0025320208515040576, 'epoch': 0.72}
+
+
+                                                
+[A
+
+
+ 72%|███████▏  | 72/100 [17:59<07:09, 15.35s/it][A
+
+
+ 73%|███████▎  | 73/100 [18:12<06:36, 14.69s/it][A
+
+
+                                                
+[A
+
+{'loss': 0.001, 'grad_norm': 0.6661904454231262, 'learning_rate': 1.5555555555555558e-06, 'num_tokens': 401551.0, 'completions/mean_length': 170.0, 'completions/min_length': 140.0, 'completions/max_length': 298.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 170.0, 'completions/min_terminated_length': 140.0, 'completions/max_terminated_length': 298.0, 'rewards/recall_reward/mean': -0.3149999976158142, 'rewards/recall_reward/std': 0.2911553382873535, 'reward': -0.3149999976158142, 'reward_std': 0.2911553382873535, 'frac_reward_zero_std': 0.0, 'completion_length': 170.0, 'kl': 0.0014051683829165995, 'clip_ratio/low_mean': 0.0008928571478463709, 'clip_ratio/low_min': 0.0008928571478463709, 'clip_ratio/high_mean': 0.0021557918516919017, 'clip_ratio/high_max': 0.0021557918516919017, 'clip_ratio/region_mean': 0.0030486489995382726, 'epoch': 0.73}
+
+
+ 73%|███████▎  | 73/100 [18:12<06:36, 14.69s/it][A
+
+
+ 74%|███████▍  | 74/100 [18:28<06:33, 15.15s/it][A
+
+{'loss': 0.0016, 'grad_norm': 0.5169817209243774, 'learning_rate': 1.5e-06, 'num_tokens': 407253.0, 'completions/mean_length': 214.75, 'completions/min_length': 153.0, 'completions/max_length': 502.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 214.75, 'completions/min_terminated_length': 153.0, 'completions/max_terminated_length': 502.0, 'rewards/recall_reward/mean': -0.2800000011920929, 'rewards/recall_reward/std': 0.300665944814682, 'reward': -0.2800000011920929, 'reward_std': 0.300665944814682, 'frac_reward_zero_std': 0.0, 'completion_length': 214.75, 'kl': 0.002079944904835429, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0028410920640453696, 'clip_ratio/high_max': 0.0028410920640453696, 'clip_ratio/region_mean': 0.0028410920640453696, 'epoch': 0.74}
+
+
+                                                
+[A
+
+
+ 74%|███████▍  | 74/100 [18:28<06:33, 15.15s/it][A
+
+  EVAL @ step 75: reward_mean=-0.30250000953674316, reward_std=0.1076701357960701
+
+
+ 75%|███████▌  | 75/100 [18:40<05:51, 14.07s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0006, 'grad_norm': 0.4095460772514343, 'learning_rate': 1.4444444444444445e-06, 'num_tokens': 412456.0, 'completions/mean_length': 163.375, 'completions/min_length': 130.0, 'completions/max_length': 186.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 163.375, 'completions/min_terminated_length': 130.0, 'completions/max_terminated_length': 186.0, 'rewards/recall_reward/mean': -0.30250000953674316, 'rewards/recall_reward/std': 0.1076701432466507, 'reward': -0.30250000953674316, 'reward_std': 0.1076701357960701, 'frac_reward_zero_std': 0.0, 'completion_length': 163.375, 'kl': 0.0021858371619600803, 'clip_ratio/low_mean': 0.002140798431355506, 'clip_ratio/low_min': 0.002140798431355506, 'clip_ratio/high_mean': 0.0006793478387407959, 'clip_ratio/high_max': 0.0006793478387407959, 'clip_ratio/region_mean': 0.002820146270096302, 'epoch': 0.75}
+
+
+ 75%|███████▌  | 75/100 [18:40<05:51, 14.07s/it][A
+
+
+ 76%|███████▌  | 76/100 [18:55<05:44, 14.35s/it][A
+
+{'loss': -0.0002, 'grad_norm': 0.6443329453468323, 'learning_rate': 1.3888888888888892e-06, 'num_tokens': 417346.0, 'completions/mean_length': 188.25, 'completions/min_length': 126.0, 'completions/max_length': 333.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 188.25, 'completions/min_terminated_length': 126.0, 'completions/max_terminated_length': 333.0, 'rewards/recall_reward/mean': -0.20749999582767487, 'rewards/recall_reward/std': 0.14260335266590118, 'reward': -0.20749999582767487, 'reward_std': 0.14260335266590118, 'frac_reward_zero_std': 0.0, 'completion_length': 188.25, 'kl': 0.024660382092406508, 'clip_ratio/low_mean': 0.000806451600510627, 'clip_ratio/low_min': 0.000806451600510627, 'clip_ratio/high_mean': 0.0019841270986944437, 'clip_ratio/high_max': 0.0019841270986944437, 'clip_ratio/region_mean': 0.0027905786992050707, 'epoch': 0.76}
+
+
+                                                
+[A
+
+
+ 76%|███████▌  | 76/100 [18:55<05:44, 14.35s/it][A
+
+
+ 77%|███████▋  | 77/100 [19:15<06:11, 16.15s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0004, 'grad_norm': 0.16018681228160858, 'learning_rate': 1.3333333333333334e-06, 'num_tokens': 424166.0, 'completions/mean_length': 346.5, 'completions/min_length': 114.0, 'completions/max_length': 504.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 346.5, 'completions/min_terminated_length': 114.0, 'completions/max_terminated_length': 504.0, 'rewards/recall_reward/mean': -0.2849999964237213, 'rewards/recall_reward/std': 0.31744518876075745, 'reward': -0.2849999964237213, 'reward_std': 0.31744518876075745, 'frac_reward_zero_std': 0.0, 'completion_length': 346.5, 'kl': 0.0053272051372914575, 'clip_ratio/low_mean': 0.0010869564721360803, 'clip_ratio/low_min': 0.0010869564721360803, 'clip_ratio/high_mean': 0.0014499893586616963, 'clip_ratio/high_max': 0.0014499893586616963, 'clip_ratio/region_mean': 0.0025369458307977766, 'epoch': 0.77}
+
+
+ 77%|███████▋  | 77/100 [19:15<06:11, 16.15s/it][A
+
+
+ 78%|███████▊  | 78/100 [19:32<05:58, 16.30s/it][A
+
+{'loss': 0.0002, 'grad_norm': 0.6602885723114014, 'learning_rate': 1.2777777777777779e-06, 'num_tokens': 430112.0, 'completions/mean_length': 233.25, 'completions/min_length': 165.0, 'completions/max_length': 512.0, 'completions/clipped_ratio': 0.125, 'completions/mean_terminated_length': 193.42857360839844, 'completions/min_terminated_length': 165.0, 'completions/max_terminated_length': 225.0, 'rewards/recall_reward/mean': -0.4925000071525574, 'rewards/recall_reward/std': 0.322301983833313, 'reward': -0.4925000071525574, 'reward_std': 0.322301983833313, 'frac_reward_zero_std': 0.0, 'completion_length': 233.25, 'kl': 0.021430274966405705, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0012134503340348601, 'clip_ratio/high_max': 0.0012134503340348601, 'clip_ratio/region_mean': 0.0012134503340348601, 'epoch': 0.78}
+
+
+                                                
+[A
+
+
+ 78%|███████▊  | 78/100 [19:32<05:58, 16.30s/it][A
+
+
+ 79%|███████▉  | 79/100 [19:42<05:06, 14.59s/it][A
+
+{'loss': -0.0004, 'grad_norm': 0.4650750160217285, 'learning_rate': 1.2222222222222223e-06, 'num_tokens': 435140.0, 'completions/mean_length': 144.5, 'completions/min_length': 134.0, 'completions/max_length': 151.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 144.5, 'completions/min_terminated_length': 134.0, 'completions/max_terminated_length': 151.0, 'rewards/recall_reward/mean': -0.20999999344348907, 'rewards/recall_reward/std': 0.09258201718330383, 'reward': -0.20999999344348907, 'reward_std': 0.09258200973272324, 'frac_reward_zero_std': 0.0, 'completion_length': 144.5, 'kl': 0.003464342989900615, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0008561643771827221, 'clip_ratio/high_max': 0.0008561643771827221, 'clip_ratio/region_mean': 0.0008561643771827221, 'epoch': 0.79}
+
+
+                                                
+[A
+
+
+ 79%|███████▉  | 79/100 [19:42<05:06, 14.59s/it][A
+
+
+ 80%|████████  | 80/100 [20:01<05:16, 15.85s/it][A
+
+{'loss': 0.0003, 'grad_norm': 0.4058331847190857, 'learning_rate': 1.1666666666666668e-06, 'num_tokens': 440712.0, 'completions/mean_length': 231.5, 'completions/min_length': 142.0, 'completions/max_length': 474.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 231.5, 'completions/min_terminated_length': 142.0, 'completions/max_terminated_length': 474.0, 'rewards/recall_reward/mean': -0.2199999988079071, 'rewards/recall_reward/std': 0.1166190430521965, 'reward': -0.2199999988079071, 'reward_std': 0.1166190430521965, 'frac_reward_zero_std': 0.0, 'completion_length': 231.5, 'kl': 0.004251787613611668, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0034601803636178374, 'clip_ratio/high_max': 0.0034601803636178374, 'clip_ratio/region_mean': 0.0034601803636178374, 'epoch': 0.8}
+
+
+                                                
+[A
+
+
+ 80%|████████  | 80/100 [20:01<05:16, 15.85s/it][A
+
+
+ 81%|████████  | 81/100 [20:20<05:21, 16.92s/it][A
+
+{'loss': 0.0003, 'grad_norm': 0.5794138312339783, 'learning_rate': 1.111111111111111e-06, 'num_tokens': 446716.0, 'completions/mean_length': 259.5, 'completions/min_length': 131.0, 'completions/max_length': 496.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 259.5, 'completions/min_terminated_length': 131.0, 'completions/max_terminated_length': 496.0, 'rewards/recall_reward/mean': -0.3500000238418579, 'rewards/recall_reward/std': 0.2884441018104553, 'reward': -0.3500000238418579, 'reward_std': 0.2884441018104553, 'frac_reward_zero_std': 0.0, 'completion_length': 259.5, 'kl': 0.0033803163933043834, 'clip_ratio/low_mean': 0.001574569207150489, 'clip_ratio/low_min': 0.001574569207150489, 'clip_ratio/high_mean': 0.00025201612152159214, 'clip_ratio/high_max': 0.00025201612152159214, 'clip_ratio/region_mean': 0.0018265853286720812, 'epoch': 0.81}
+
+
+                                                
+[A
+
+
+ 81%|████████  | 81/100 [20:20<05:21, 16.92s/it][A
+
+
+ 82%|████████▏ | 82/100 [20:35<04:53, 16.30s/it][A
+
+{'loss': -0.0006, 'grad_norm': 0.23600459098815918, 'learning_rate': 1.0555555555555557e-06, 'num_tokens': 452266.0, 'completions/mean_length': 220.75, 'completions/min_length': 145.0, 'completions/max_length': 346.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 220.75, 'completions/min_terminated_length': 145.0, 'completions/max_terminated_length': 346.0, 'rewards/recall_reward/mean': -0.18000000715255737, 'rewards/recall_reward/std': 0.07329004257917404, 'reward': -0.18000000715255737, 'reward_std': 0.07329003512859344, 'frac_reward_zero_std': 0.0, 'completion_length': 220.75, 'kl': 0.0014295478613348678, 'clip_ratio/low_mean': 0.0005060728872194886, 'clip_ratio/low_min': 0.0005060728872194886, 'clip_ratio/high_mean': 0.001700995140708983, 'clip_ratio/high_max': 0.001700995140708983, 'clip_ratio/region_mean': 0.0022070680279284716, 'epoch': 0.82}
+
+
+                                                
+[A
+
+
+ 82%|████████▏ | 82/100 [20:35<04:53, 16.30s/it][A
+
+
+ 83%|████████▎ | 83/100 [20:51<04:34, 16.14s/it][A
+
+
+                                                
+[A
+
+{'loss': 0.0001, 'grad_norm': 0.185814768075943, 'learning_rate': 1.0000000000000002e-06, 'num_tokens': 458231.0, 'completions/mean_length': 261.625, 'completions/min_length': 135.0, 'completions/max_length': 355.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 261.625, 'completions/min_terminated_length': 135.0, 'completions/max_terminated_length': 355.0, 'rewards/recall_reward/mean': -0.4124999940395355, 'rewards/recall_reward/std': 0.2495567500591278, 'reward': -0.4124999940395355, 'reward_std': 0.2495567500591278, 'frac_reward_zero_std': 0.0, 'completion_length': 261.625, 'kl': 0.0020818625125684775, 'clip_ratio/low_mean': 0.00035211266367696226, 'clip_ratio/low_min': 0.00035211266367696226, 'clip_ratio/high_mean': 0.0016202316037379205, 'clip_ratio/high_max': 0.0016202316037379205, 'clip_ratio/region_mean': 0.0019723442674148828, 'epoch': 0.83}
+
+
+ 83%|████████▎ | 83/100 [20:51<04:34, 16.14s/it][A
+
+
+ 84%|████████▍ | 84/100 [21:05<04:10, 15.63s/it][A
+
+{'loss': 0.0004, 'grad_norm': 0.4269202947616577, 'learning_rate': 9.444444444444445e-07, 'num_tokens': 463410.0, 'completions/mean_length': 188.375, 'completions/min_length': 132.0, 'completions/max_length': 389.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 188.375, 'completions/min_terminated_length': 132.0, 'completions/max_terminated_length': 389.0, 'rewards/recall_reward/mean': -0.41249996423721313, 'rewards/recall_reward/std': 0.38956937193870544, 'reward': -0.41249996423721313, 'reward_std': 0.38956934213638306, 'frac_reward_zero_std': 0.0, 'completion_length': 188.375, 'kl': 0.16448509349720553, 'clip_ratio/low_mean': 0.002422667108476162, 'clip_ratio/low_min': 0.002422667108476162, 'clip_ratio/high_mean': 0.001565781596582383, 'clip_ratio/high_max': 0.001565781596582383, 'clip_ratio/region_mean': 0.003988448705058545, 'epoch': 0.84}
+
+
+                                                
+[A
+
+
+ 84%|████████▍ | 84/100 [21:05<04:10, 15.63s/it][A
+
+
+ 85%|████████▌ | 85/100 [21:21<03:54, 15.63s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0011, 'grad_norm': 0.39289695024490356, 'learning_rate': 8.88888888888889e-07, 'num_tokens': 468915.0, 'completions/mean_length': 191.125, 'completions/min_length': 130.0, 'completions/max_length': 491.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 191.125, 'completions/min_terminated_length': 130.0, 'completions/max_terminated_length': 491.0, 'rewards/recall_reward/mean': -0.41499999165534973, 'rewards/recall_reward/std': 0.24651862680912018, 'reward': -0.41499999165534973, 'reward_std': 0.24651861190795898, 'frac_reward_zero_std': 0.0, 'completion_length': 191.125, 'kl': 0.0013659680234923144, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0027561246533878148, 'clip_ratio/high_max': 0.0027561246533878148, 'clip_ratio/region_mean': 0.0027561246533878148, 'epoch': 0.85}
+
+    Reward error (seed=1011): Server error: 'NoneType' object has no attribute 'strip' (code: EXECUTION_ERROR)
+
+
+ 85%|████████▌ | 85/100 [21:21<03:54, 15.63s/it][A
+
+
+ 86%|████████▌ | 86/100 [21:36<03:36, 15.45s/it][A
+
+{'loss': 0.0001, 'grad_norm': 0.6495634913444519, 'learning_rate': 8.333333333333333e-07, 'num_tokens': 474379.0, 'completions/mean_length': 182.0, 'completions/min_length': 103.0, 'completions/max_length': 327.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 182.0, 'completions/min_terminated_length': 103.0, 'completions/max_terminated_length': 327.0, 'rewards/recall_reward/mean': -0.3349999785423279, 'rewards/recall_reward/std': 0.2881963551044464, 'reward': -0.3349999785423279, 'reward_std': 0.2881963849067688, 'frac_reward_zero_std': 0.0, 'completion_length': 182.0, 'kl': 0.0024847194290487096, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.86}
+
+
+                                                
+[A
+
+
+ 86%|████████▌ | 86/100 [21:36<03:36, 15.45s/it][A
+
+
+ 87%|████████▋ | 87/100 [21:48<03:06, 14.31s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0008, 'grad_norm': 0.3483976721763611, 'learning_rate': 7.777777777777779e-07, 'num_tokens': 479437.0, 'completions/mean_length': 147.25, 'completions/min_length': 122.0, 'completions/max_length': 218.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 147.25, 'completions/min_terminated_length': 122.0, 'completions/max_terminated_length': 218.0, 'rewards/recall_reward/mean': -0.13749998807907104, 'rewards/recall_reward/std': 0.0070710694417357445, 'reward': -0.13749998807907104, 'reward_std': 0.007071071770042181, 'frac_reward_zero_std': 0.0, 'completion_length': 147.25, 'kl': 0.0033184805361088365, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.87}
+
+    Reward error (seed=1035): Server error: 'NoneType' object has no attribute 'strip' (code: EXECUTION_ERROR)
+
+
+ 87%|████████▋ | 87/100 [21:48<03:06, 14.31s/it][A
+
+
+ 88%|████████▊ | 88/100 [22:07<03:08, 15.72s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0006, 'grad_norm': 0.42624300718307495, 'learning_rate': 7.222222222222222e-07, 'num_tokens': 485217.0, 'completions/mean_length': 269.5, 'completions/min_length': 94.0, 'completions/max_length': 462.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 269.5, 'completions/min_terminated_length': 94.0, 'completions/max_terminated_length': 462.0, 'rewards/recall_reward/mean': -0.38749998807907104, 'rewards/recall_reward/std': 0.26510104537010193, 'reward': -0.38749998807907104, 'reward_std': 0.26510104537010193, 'frac_reward_zero_std': 0.0, 'completion_length': 269.5, 'kl': 0.0020263143633201253, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0030265867826528847, 'clip_ratio/high_max': 0.0030265867826528847, 'clip_ratio/region_mean': 0.0030265867826528847, 'epoch': 0.88}
+
+
+ 88%|████████▊ | 88/100 [22:07<03:08, 15.72s/it][A
+
+
+ 89%|████████▉ | 89/100 [22:27<03:08, 17.09s/it][A
+
+
+                                                
+[A
+
+{'loss': 0.0007, 'grad_norm': 0.2164609730243683, 'learning_rate': 6.666666666666667e-07, 'num_tokens': 491709.0, 'completions/mean_length': 320.5, 'completions/min_length': 130.0, 'completions/max_length': 508.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 320.5, 'completions/min_terminated_length': 130.0, 'completions/max_terminated_length': 508.0, 'rewards/recall_reward/mean': -0.2775000035762787, 'rewards/recall_reward/std': 0.11436159163713455, 'reward': -0.2775000035762787, 'reward_std': 0.11436158418655396, 'frac_reward_zero_std': 0.0, 'completion_length': 320.5, 'kl': 0.0015084530186868506, 'clip_ratio/low_mean': 0.0002460629912093282, 'clip_ratio/low_min': 0.0002460629912093282, 'clip_ratio/high_mean': 0.00025050100521184504, 'clip_ratio/high_max': 0.00025050100521184504, 'clip_ratio/region_mean': 0.0004965639964211732, 'epoch': 0.89}
+
+
+ 89%|████████▉ | 89/100 [22:27<03:08, 17.09s/it][A
+
+
+ 90%|█████████ | 90/100 [22:39<02:35, 15.59s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0, 'grad_norm': 0.32800182700157166, 'learning_rate': 6.111111111111112e-07, 'num_tokens': 496812.0, 'completions/mean_length': 170.875, 'completions/min_length': 136.0, 'completions/max_length': 227.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 170.875, 'completions/min_terminated_length': 136.0, 'completions/max_terminated_length': 227.0, 'rewards/recall_reward/mean': -0.4449999928474426, 'rewards/recall_reward/std': 0.35484403371810913, 'reward': -0.4449999928474426, 'reward_std': 0.35484403371810913, 'frac_reward_zero_std': 0.0, 'completion_length': 170.875, 'kl': 0.0038037962367525324, 'clip_ratio/low_mean': 0.0005506607703864574, 'clip_ratio/low_min': 0.0005506607703864574, 'clip_ratio/high_mean': 0.002221201022621244, 'clip_ratio/high_max': 0.002221201022621244, 'clip_ratio/region_mean': 0.0027718617930077016, 'epoch': 0.9}
+
+
+ 90%|█████████ | 90/100 [22:39<02:35, 15.59s/it][A
+
+
+ 91%|█████████ | 91/100 [22:52<02:12, 14.71s/it][A
+
+{'loss': 0.0011, 'grad_norm': 0.3976666033267975, 'learning_rate': 5.555555555555555e-07, 'num_tokens': 501634.0, 'completions/mean_length': 154.75, 'completions/min_length': 124.0, 'completions/max_length': 244.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 154.75, 'completions/min_terminated_length': 124.0, 'completions/max_terminated_length': 244.0, 'rewards/recall_reward/mean': -0.2475000023841858, 'rewards/recall_reward/std': 0.30405592918395996, 'reward': -0.2475000023841858, 'reward_std': 0.30405592918395996, 'frac_reward_zero_std': 0.0, 'completion_length': 154.75, 'kl': 0.0019324744789628312, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.002016128972172737, 'clip_ratio/high_max': 0.002016128972172737, 'clip_ratio/region_mean': 0.002016128972172737, 'epoch': 0.91}
+
+
+                                                
+[A
+
+
+ 91%|█████████ | 91/100 [22:52<02:12, 14.71s/it][A
+
+
+ 92%|█████████▏| 92/100 [23:03<01:49, 13.63s/it][A
+
+{'loss': 0.0, 'grad_norm': 0.637137770652771, 'learning_rate': 5.000000000000001e-07, 'num_tokens': 506394.0, 'completions/mean_length': 147.0, 'completions/min_length': 102.0, 'completions/max_length': 187.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 147.0, 'completions/min_terminated_length': 102.0, 'completions/max_terminated_length': 187.0, 'rewards/recall_reward/mean': -0.5099999904632568, 'rewards/recall_reward/std': 0.31784993410110474, 'reward': -0.5099999904632568, 'reward_std': 0.31784993410110474, 'frac_reward_zero_std': 0.0, 'completion_length': 147.0, 'kl': 0.021934191638138145, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0018366581643931568, 'clip_ratio/high_max': 0.0018366581643931568, 'clip_ratio/region_mean': 0.0018366581643931568, 'epoch': 0.92}
+
+
+                                                
+[A
+
+
+ 92%|█████████▏| 92/100 [23:03<01:49, 13.63s/it][A
+
+
+ 93%|█████████▎| 93/100 [23:14<01:30, 12.88s/it][A
+
+{'loss': 0.0003, 'grad_norm': 0.40455329418182373, 'learning_rate': 4.444444444444445e-07, 'num_tokens': 511548.0, 'completions/mean_length': 154.25, 'completions/min_length': 143.0, 'completions/max_length': 185.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 154.25, 'completions/min_terminated_length': 143.0, 'completions/max_terminated_length': 185.0, 'rewards/recall_reward/mean': -0.14000000059604645, 'rewards/recall_reward/std': 0.09071148186922073, 'reward': -0.14000000059604645, 'reward_std': 0.09071147441864014, 'frac_reward_zero_std': 0.0, 'completion_length': 154.25, 'kl': 0.005758888641139492, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.003274267539381981, 'clip_ratio/high_max': 0.003274267539381981, 'clip_ratio/region_mean': 0.003274267539381981, 'epoch': 0.93}
+
+
+                                                
+[A
+
+
+ 93%|█████████▎| 93/100 [23:14<01:30, 12.88s/it][A
+
+
+ 94%|█████████▍| 94/100 [23:27<01:17, 12.87s/it][A
+
+{'loss': -0.0005, 'grad_norm': 0.34405699372291565, 'learning_rate': 3.8888888888888895e-07, 'num_tokens': 516887.0, 'completions/mean_length': 198.375, 'completions/min_length': 151.0, 'completions/max_length': 244.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 198.375, 'completions/min_terminated_length': 151.0, 'completions/max_terminated_length': 244.0, 'rewards/recall_reward/mean': -0.3475000262260437, 'rewards/recall_reward/std': 0.29060283303260803, 'reward': -0.3475000262260437, 'reward_std': 0.29060283303260803, 'frac_reward_zero_std': 0.0, 'completion_length': 198.375, 'kl': 0.002413058897218434, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.94}
+
+
+                                                
+[A
+
+
+ 94%|█████████▍| 94/100 [23:27<01:17, 12.87s/it][A
+
+
+ 95%|█████████▌| 95/100 [23:38<01:01, 12.28s/it][A
+
+
+                                                
+[A
+
+{'loss': 0.0006, 'grad_norm': 0.6350381970405579, 'learning_rate': 3.3333333333333335e-07, 'num_tokens': 521838.0, 'completions/mean_length': 150.875, 'completions/min_length': 137.0, 'completions/max_length': 168.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 150.875, 'completions/min_terminated_length': 137.0, 'completions/max_terminated_length': 168.0, 'rewards/recall_reward/mean': -0.24250000715255737, 'rewards/recall_reward/std': 0.19637790322303772, 'reward': -0.24250000715255737, 'reward_std': 0.1963779330253601, 'frac_reward_zero_std': 0.0, 'completion_length': 150.875, 'kl': 0.007491447013308061, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0031966823735274374, 'clip_ratio/high_max': 0.0031966823735274374, 'clip_ratio/region_mean': 0.0031966823735274374, 'epoch': 0.95}
+
+
+ 95%|█████████▌| 95/100 [23:38<01:01, 12.28s/it][A
+
+
+ 96%|█████████▌| 96/100 [23:53<00:52, 13.04s/it][A
+
+{'loss': -0.0001, 'grad_norm': 0.25284343957901, 'learning_rate': 2.7777777777777776e-07, 'num_tokens': 527080.0, 'completions/mean_length': 176.25, 'completions/min_length': 130.0, 'completions/max_length': 402.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 176.25, 'completions/min_terminated_length': 130.0, 'completions/max_terminated_length': 402.0, 'rewards/recall_reward/mean': -0.4124999940395355, 'rewards/recall_reward/std': 0.2495567500591278, 'reward': -0.4124999940395355, 'reward_std': 0.2495567500591278, 'frac_reward_zero_std': 0.0, 'completion_length': 176.25, 'kl': 0.004205046730930917, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0009328357991762459, 'clip_ratio/high_max': 0.0009328357991762459, 'clip_ratio/region_mean': 0.0009328357991762459, 'epoch': 0.96}
+
+
+                                                
+[A
+
+
+ 96%|█████████▌| 96/100 [23:53<00:52, 13.04s/it][A
+
+
+ 97%|█████████▋| 97/100 [24:06<00:39, 13.09s/it][A
+
+
+                                                
+[A
+
+{'loss': -0.0003, 'grad_norm': 0.5979787707328796, 'learning_rate': 2.2222222222222224e-07, 'num_tokens': 532441.0, 'completions/mean_length': 202.125, 'completions/min_length': 139.0, 'completions/max_length': 259.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 202.125, 'completions/min_terminated_length': 139.0, 'completions/max_terminated_length': 259.0, 'rewards/recall_reward/mean': -0.42750000953674316, 'rewards/recall_reward/std': 0.2878367602825165, 'reward': -0.42750000953674316, 'reward_std': 0.2878367602825165, 'frac_reward_zero_std': 0.0, 'completion_length': 202.125, 'kl': 0.020543496153550223, 'clip_ratio/low_mean': 0.0005555555690079927, 'clip_ratio/low_min': 0.0005555555690079927, 'clip_ratio/high_mean': 0.003625894634751603, 'clip_ratio/high_max': 0.003625894634751603, 'clip_ratio/region_mean': 0.004181450203759596, 'epoch': 0.97}
+
+
+ 97%|█████████▋| 97/100 [24:06<00:39, 13.09s/it][A
+
+
+ 98%|█████████▊| 98/100 [24:18<00:25, 12.77s/it][A
+
+
+                                                
+[A
+
+{'loss': 0.0004, 'grad_norm': 0.48759832978248596, 'learning_rate': 1.6666666666666668e-07, 'num_tokens': 537464.0, 'completions/mean_length': 163.875, 'completions/min_length': 146.0, 'completions/max_length': 215.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 163.875, 'completions/min_terminated_length': 146.0, 'completions/max_terminated_length': 215.0, 'rewards/recall_reward/mean': -0.4399999976158142, 'rewards/recall_reward/std': 0.22627416253089905, 'reward': -0.4399999976158142, 'reward_std': 0.22627416253089905, 'frac_reward_zero_std': 0.0, 'completion_length': 163.875, 'kl': 0.0014229491353034973, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0008503401186317205, 'clip_ratio/high_max': 0.0008503401186317205, 'clip_ratio/region_mean': 0.0008503401186317205, 'epoch': 0.98}
+
+
+ 98%|█████████▊| 98/100 [24:18<00:25, 12.77s/it][A
+
+
+ 99%|█████████▉| 99/100 [24:36<00:14, 14.44s/it][A
+
+{'loss': 0.0006, 'grad_norm': 0.3875636160373688, 'learning_rate': 1.1111111111111112e-07, 'num_tokens': 542944.0, 'completions/mean_length': 224.0, 'completions/min_length': 143.0, 'completions/max_length': 455.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 224.0, 'completions/min_terminated_length': 143.0, 'completions/max_terminated_length': 455.0, 'rewards/recall_reward/mean': -0.27250000834465027, 'rewards/recall_reward/std': 0.12186058610677719, 'reward': -0.27250000834465027, 'reward_std': 0.1218605786561966, 'frac_reward_zero_std': 0.0, 'completion_length': 224.0, 'kl': 0.00412290283566108, 'clip_ratio/low_mean': 0.0008503401186317205, 'clip_ratio/low_min': 0.0008503401186317205, 'clip_ratio/high_mean': 0.0017249876109417528, 'clip_ratio/high_max': 0.0017249876109417528, 'clip_ratio/region_mean': 0.0025753277295734733, 'epoch': 0.99}
+
+
+                                                
+[A
+
+
+ 99%|█████████▉| 99/100 [24:36<00:14, 14.44s/it][A
+
+  EVAL @ step 100: reward_mean=-0.1899999976158142, reward_std=0.10690449923276901
+
+
+100%|██████████| 100/100 [24:47<00:00, 13.44s/it][A
+
+{'loss': 0.0006, 'grad_norm': 0.5279011726379395, 'learning_rate': 5.555555555555556e-08, 'num_tokens': 548112.0, 'completions/mean_length': 157.0, 'completions/min_length': 126.0, 'completions/max_length': 175.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 157.0, 'completions/min_terminated_length': 126.0, 'completions/max_terminated_length': 175.0, 'rewards/recall_reward/mean': -0.1899999976158142, 'rewards/recall_reward/std': 0.10690450668334961, 'reward': -0.1899999976158142, 'reward_std': 0.10690449923276901, 'frac_reward_zero_std': 0.0, 'completion_length': 157.0, 'kl': 0.007679767164518125, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.004501895047724247, 'clip_ratio/high_max': 0.004501895047724247, 'clip_ratio/region_mean': 0.004501895047724247, 'epoch': 1.0}
+
+
+                                                 
+[A
+
+  EVAL @ step 100: reward_mean=N/A, reward_std=N/A
+
+
+100%|██████████| 100/100 [24:47<00:00, 13.44s/it][A
+
+{'train_runtime': 1488.7014, 'train_samples_per_second': 0.067, 'train_steps_per_second': 0.067, 'train_loss': 8.905314860228941e-05, 'epoch': 1.0}
+
+
+                                                 
+[A
+
+
+100%|██████████| 100/100 [24:48<00:00, 13.44s/it][A
+100%|██████████| 100/100 [24:48<00:00, 14.89s/it]
+
+  Pushing adapter to s1nn3rx69/recall-policy-l1...
+
+
+Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
+
+
+New Data Upload               : |          |  0.00B /  0.00B            [A
+
+
+  ...call_l1/training_args.bin: 100%|██████████| 7.44kB / 7.44kB            [A[A
+
+
+  .../recall_l1/tokenizer.json: 100%|██████████| 11.4MB / 11.4MB            [A[A[A
+
+
+  ...adapter_model.safetensors:  30%|██▉       | 48.0MB /  162MB            [A[A[A[A
+
+
+  ...call_l1/training_args.bin: 100%|██████████| 7.44kB / 7.44kB            [A[A
+
+
+  .../recall_l1/tokenizer.json: 100%|██████████| 11.4MB / 11.4MB            [A[A[A
+
+
+  ...adapter_model.safetensors:  30%|██▉       | 48.0MB /  162MB            [A[A[A[A
+
+
+  ...call_l1/training_args.bin: 100%|██████████| 7.44kB / 7.44kB            [A[A
+
+
+  .../recall_l1/tokenizer.json: 100%|██████████| 11.4MB / 11.4MB            [A[A[A
+
+
+  ...adapter_model.safetensors:  64%|██████▍   |  104MB /  162MB            [A[A[A[A
+
+
+  ...call_l1/training_args.bin: 100%|██████████| 7.44kB / 7.44kB            [A[A
+
+
+  .../recall_l1/tokenizer.json: 100%|██████████| 11.4MB / 11.4MB            [A[A[A
+
+
+  ...adapter_model.safetensors:  94%|█████████▍|  152MB /  162MB            [A[A[A[A
+
+
+  ...call_l1/training_args.bin: 100%|██████████| 7.44kB / 7.44kB            [A[A
+
+
+  .../recall_l1/tokenizer.json: 100%|██████████| 11.4MB / 11.4MB            [A[A[A
+
+
+  ...adapter_model.safetensors: 100%|██████████|  162MB /  162MB            [A[A[A[A
+
+
+  ...call_l1/training_args.bin: 100%|██████████| 7.44kB / 7.44kB            [A[A
+
+
+  .../recall_l1/tokenizer.json: 100%|██████████| 11.4MB / 11.4MB            [A[A[A
+
+
+  ...adapter_model.safetensors: 100%|██████████|  162MB /  162MB            [A[A[A[A
+Processing Files (3 / 3)      : 100%|██████████|  173MB /  173MB,  189MB/s  
+
+
+New Data Upload               : |          |  0.00B /  0.00B,  0.00B/s  
+
+
+  ...call_l1/training_args.bin: 100%|██████████| 7.44kB / 7.44kB            
+
+
+  .../recall_l1/tokenizer.json: 100%|██████████| 11.4MB / 11.4MB            
+
+
+  ...adapter_model.safetensors: 100%|██████████|  162MB /  162MB            
+
+No files have been modified since last commit. Skipping to prevent empty commit.
+
+[huggingface_hub.hf_api|WARNING]No files have been modified since last commit. Skipping to prevent empty commit.
+
+=== L1 DONE: 100 steps, final mean reward N/A, pushed to s1nn3rx69/recall-policy-l1, took 28.1 min ===

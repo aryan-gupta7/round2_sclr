@@ -59,6 +59,8 @@ class MemoryBackend:
         if len(self.items) >= self.budget:
             return None
         
+        if not anchor:
+            return None
         anchor = anchor.strip()
         if not anchor:
             return None
