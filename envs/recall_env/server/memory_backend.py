@@ -18,6 +18,10 @@ class MemoryItem:
     anchor_tokens: Counter         # tokenized anchor for BM25 scoring
     stored_at_step: int            # for analysis only, NOT used in retrieval
     is_prefilled: bool             # True if seeded by reset(), False if agent-stored
+    tag: str = "untagged"          # F1
+    permanence: str = "working"    # F2
+    strength: float = 1.0
+    reinforcement_count: int = 0
 
 
 def _tokenize(text: str) -> List[str]:
@@ -34,16 +38,26 @@ def _tokenize(text: str) -> List[str]:
 
 
 class MemoryBackend:
+    REINFORCE_THRESHOLD = 0.85
+    REINFORCE_INCREMENT = 0.2
+    STRENGTH_CAP = 3.0
+
     def __init__(self, budget: int, embedding_model: str,
                  embedding_dim: Optional[int] = None, seed: int = 0,
-                 retrieval_mode: str = "hybrid"):
+                 retrieval_mode: str = "hybrid",
+                 max_core: Optional[int] = None,
+                 max_working: Optional[int] = None):
         """
         retrieval_mode:
             "embedding" - pure cosine similarity (original behavior)
             "bm25"      - pure BM25 keyword matching
             "hybrid"    - 0.5 * bm25_score + 0.5 * cosine_sim (default)
         """
+        from collections import deque
         self.budget = budget
+        self.max_core = max_core if max_core is not None else budget
+        self.max_working = max_working if max_working is not None else budget
+        self.working_queue = deque()
         self.items: List[MemoryItem] = []
         self.retrieval_mode = retrieval_mode
 
@@ -107,9 +121,15 @@ class MemoryBackend:
 
         return score
 
-    def store(self, anchor: str, content: str, step: int = 0, is_prefilled: bool = False) -> Optional[int]:
-        if len(self.items) >= self.budget:
-            return None
+    def store(self, anchor: str, content: str, step: int = 0, is_prefilled: bool = False, tag: str = "untagged", permanence: str = "working") -> Optional[int]:
+        if permanence == "core":
+            core_count = sum(1 for i in self.items if i.permanence == "core")
+            if core_count >= self.max_core:
+                return None
+        else: # working
+            working_items = [i for i in self.items if i.permanence == "working"]
+            if len(working_items) >= self.max_working:
+                self._evict_oldest_working()
 
         if not anchor:
             return None
@@ -132,10 +152,69 @@ class MemoryBackend:
             anchor_embedding=emb,
             anchor_tokens=tokens,
             stored_at_step=step,
-            is_prefilled=is_prefilled
+            is_prefilled=is_prefilled,
+            tag=tag,
+            permanence=permanence
         )
         self.items.append(item)
+        if permanence == "working":
+            self.working_queue.append(item.slot_id)
         return slot_id
+
+    def _evict_oldest_working(self):
+        while self.working_queue:
+            oldest_id = self.working_queue.popleft()
+            item = next((i for i in self.items if i.slot_id == oldest_id), None)
+            if item is not None and item.permanence == "working":
+                self.items.remove(item)
+                return
+
+    def overwrite(self, slot_id: int, anchor: str, content: str, step: int = 0, tag: Optional[str] = None, permanence: Optional[str] = None) -> bool:
+        item = next((i for i in self.items if i.slot_id == slot_id), None)
+        if item is None:
+            return False
+
+        if permanence is not None and permanence != item.permanence:
+            old_perm = item.permanence
+            if permanence == "core":
+                core_count = sum(1 for i in self.items if i.permanence == "core")
+                if core_count >= self.max_core:
+                    return False
+
+        item.anchor = anchor
+        item.content = content
+        
+        if self.retrieval_mode in ("bm25", "hybrid"):
+            from envs.recall_env.server.memory_backend import _tokenize
+            item.anchor_tokens = _tokenize(anchor)
+        if self.retrieval_mode in ("embedding", "hybrid") and self.embedder:
+            item.anchor_embedding = self._get_embedding(anchor)
+            
+        if tag is not None:
+            item.tag = tag
+
+        if permanence is not None and permanence != item.permanence:
+            old_perm = item.permanence
+            if permanence == "core":
+                core_count = sum(1 for i in self.items if i.permanence == "core")
+                if core_count >= self.max_core:
+                    return False
+                item.permanence = "core"
+                if old_perm == "working":
+                    try:
+                        self.working_queue.remove(item.slot_id)
+                    except ValueError:
+                        pass
+            else:
+                working_items = [i for i in self.items if i.permanence == "working"]
+                if len(working_items) >= self.max_working:
+                    self._evict_oldest_working()
+                item.permanence = "working"
+                self.working_queue.append(item.slot_id)
+
+        item.stored_at_step = step
+        item.strength = 1.0 # reset on overwrite
+        return True
 
     def delete(self, slot_id: int) -> bool:
         for i, item in enumerate(self.items):
@@ -144,9 +223,28 @@ class MemoryBackend:
                 return True
         return False
 
-    def retrieve(self, query: str, top_k: int) -> List[Dict]:
+    def check_and_reinforce(self, incoming_embedding: np.ndarray) -> List[int]:
+        reinforced = []
+        for item in self.items:
+            sim = float(np.dot(incoming_embedding, item.anchor_embedding))
+            if sim > self.REINFORCE_THRESHOLD:
+                item.strength = min(item.strength + self.REINFORCE_INCREMENT, self.STRENGTH_CAP)
+                item.reinforcement_count += 1
+                reinforced.append(item.slot_id)
+        return reinforced
+
+    def retrieve(self, query: str, top_k: int, tag_filter: Optional[str] = None) -> List[Dict]:
         if not self.items:
             return []
+
+        candidates = self.items
+        if tag_filter is not None:
+            filtered = [itm for itm in self.items if itm.tag == tag_filter]
+            if filtered:
+                candidates = filtered
+            else:
+                # Fallback to unfiltered if tag gives empty set
+                pass
 
         results = []
 
@@ -155,7 +253,7 @@ class MemoryBackend:
             query_tokens = _tokenize(query)
             avg_dl = np.mean([sum(item.anchor_tokens.values()) for item in self.items])
             bm25_scores = []
-            for item in self.items:
+            for item in candidates:
                 score = self._bm25_score(query_tokens, item.anchor_tokens, avg_dl)
                 bm25_scores.append(score)
             # Normalize BM25 to [0, 1]
@@ -163,19 +261,19 @@ class MemoryBackend:
             if max_bm25 > 0:
                 bm25_scores = [s / max_bm25 for s in bm25_scores]
         else:
-            bm25_scores = [0.0] * len(self.items)
+            bm25_scores = [0.0] * len(candidates)
 
         # Compute embedding scores
         if self.retrieval_mode in ("embedding", "hybrid") and self.embedder:
             query_emb = self._get_embedding(query)
-            emb_scores = [float(np.dot(query_emb, item.anchor_embedding)) for item in self.items]
+            emb_scores = [float(np.dot(query_emb, item.anchor_embedding)) for item in candidates]
             # Normalize to [0, 1] (cosine sim is already in [-1, 1], shift to [0, 1])
             emb_scores = [(s + 1) / 2 for s in emb_scores]
         else:
-            emb_scores = [0.0] * len(self.items)
+            emb_scores = [0.0] * len(candidates)
 
         # Combine scores
-        for i, item in enumerate(self.items):
+        for i, item in enumerate(candidates):
             if self.retrieval_mode == "bm25":
                 combined = bm25_scores[i]
             elif self.retrieval_mode == "embedding":
@@ -183,14 +281,22 @@ class MemoryBackend:
             else:  # hybrid
                 combined = 0.6 * bm25_scores[i] + 0.4 * emb_scores[i]
 
+            raw_sim = combined
+            adjusted = raw_sim * item.strength
+
             results.append({
                 "slot_id": item.slot_id,
                 "anchor": item.anchor,
                 "content": item.content,
-                "similarity": combined
+                "tag": item.tag,
+                "similarity": raw_sim,
+                "strength": item.strength,
+                "_adjusted_score": adjusted
             })
 
-        results.sort(key=lambda x: x["similarity"], reverse=True)
+        results.sort(key=lambda x: x["_adjusted_score"], reverse=True)
+        for r in results:
+            del r["_adjusted_score"]
         return results[:top_k]
 
     def prefill(self, items: List[Tuple[str, str]]) -> None:
@@ -203,5 +309,11 @@ class MemoryBackend:
     def current_anchors(self) -> List[str]:
         return [item.anchor for item in self.items]
 
-    def usage(self) -> Tuple[int, int]:
-        return len(self.items), self.budget
+    def usage(self) -> dict:
+        core_used = sum(1 for i in self.items if i.permanence == "core")
+        working_used = sum(1 for i in self.items if i.permanence == "working")
+        return {
+            "core_used": core_used, "max_core": self.max_core,
+            "working_used": working_used, "max_working": self.max_working,
+            "total_used": len(self.items), "budget": self.budget
+        }

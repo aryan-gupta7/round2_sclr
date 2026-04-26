@@ -67,11 +67,16 @@ class RecallEnvironment(Environment):
         
         self.facts, self.queries, self.gt = self.data_generator.generate(self.config, rng)
             
+        mc = getattr(self.config, 'max_core_slots', self.config.memory_budget) if getattr(self.config, 'permanence_enabled', False) else self.config.memory_budget
+        mw = getattr(self.config, 'max_working_slots', self.config.memory_budget) if getattr(self.config, 'permanence_enabled', False) else self.config.memory_budget
         self.memory = MemoryBackend(
             budget=self.config.memory_budget,
             embedding_model=self.config.embedding_model,
             embedding_dim=self.config.embedding_dim,
-            seed=seed
+            seed=seed,
+            retrieval_mode=getattr(self.config, 'retrieval_mode', 'hybrid'),
+            max_core=mc,
+            max_working=mw
         )
         
         if self.config.prefilled_memory_count > 0:
@@ -119,14 +124,15 @@ class RecallEnvironment(Environment):
             budget=self.config.memory_budget,
             embedding_model=self.config.embedding_model,
             embedding_dim=self.config.embedding_dim,
-            seed=self._state.seed if self._state else 0
+            seed=self._state.seed if self._state else 0,
+            retrieval_mode=getattr(self.config, 'retrieval_mode', 'hybrid'),
         )
         
         # FIFO: store facts in order until budget is full
         for fact in self.facts:
             if len(fifo_mem.items) >= self.config.memory_budget:
                 break
-            fifo_mem.store(fact.text[:60], fact.text, step=0)
+            fifo_mem.store(fact.text, fact.text, step=0)
         
         correct = 0
         for query in self.queries:
@@ -155,10 +161,43 @@ class RecallEnvironment(Environment):
             all_facts = [{"fact_id": f.fact_id, "text": f.text, "tags": f.tags} for f in self.facts]
             
         current_query = None
+        inferred_query_tag = None
         if self.phase == "query" and self.current_query_idx < len(self.queries):
             current_query = self.queries[self.current_query_idx].text
-            
-        used, total = self.memory.usage()
+            q_lower = current_query.lower()
+            if any(w in q_lower for w in ["when", "date", "scheduled", "before"]):
+                inferred_query_tag = "temporal"
+            elif any(w in q_lower for w in ["who", "architecture", "model", "which"]):
+                inferred_query_tag = "identity"
+            elif any(w in q_lower for w in ["relationship", "better than", "similar to", "compared"]):
+                inferred_query_tag = "relational"
+            elif any(w in q_lower for w in ["how", "steps", "fix for"]):
+                inferred_query_tag = "procedural"
+            else:
+                inferred_query_tag = "factual"
+
+        usage_dict = self.memory.usage()
+        if isinstance(usage_dict, dict):
+            used = usage_dict.get("total_used", 0)
+            core_used = usage_dict.get("core_used", 0)
+            core_tot = usage_dict.get("max_core", self.config.memory_budget)
+            work_used = usage_dict.get("working_used", 0)
+            work_tot = usage_dict.get("max_working", self.config.memory_budget)
+            total = usage_dict.get("budget", self.config.memory_budget)
+        else:
+            used, total = usage_dict
+            core_used, core_tot, work_used, work_tot = 0, 0, 0, 0
+        
+        memory_idx = None
+        if getattr(self.config, 'overwrite_enabled', False) and self.phase == "ingest":
+            memory_idx = []
+            for item in self.memory.items:
+                memory_idx.append({
+                    "slot_id": str(item.slot_id),
+                    "anchor": item.anchor,
+                    "tag": item.tag,
+                    "permanence": item.permanence
+                })
         
         return RecallObservation(
             done=(self.phase == "done"),
@@ -166,10 +205,16 @@ class RecallEnvironment(Environment):
             phase=self.phase,
             all_facts=all_facts,
             current_query=current_query,
+            inferred_query_tag=inferred_query_tag,
             retrieval_results=self.last_retrieval_results,
             memory_anchors=self.memory.current_anchors(),
             memory_used=used,
             memory_budget=total,
+            core_slots_used=core_used,
+            core_slots_total=core_tot,
+            working_slots_used=work_used,
+            working_slots_total=work_tot,
+            memory_index=memory_idx,
             queries_remaining=len(self.queries) - self.current_query_idx,
             queries_answered=self.current_query_idx,
             last_reward=self.last_reward,
@@ -230,15 +275,72 @@ class RecallEnvironment(Environment):
         if action.mode == "ingest":
             for d in action.decisions:
                 fact = next(f for f in self.facts if f.fact_id == d.fact_id)
-                decision_info = {"fact_id": d.fact_id, "decision": d.decision, "anchor": d.anchor}
+                # Auto-fill anchor from fact text if not provided
+                anchor = d.anchor if d.anchor else fact.text
+                decision_info = {"fact_id": d.fact_id, "decision": d.decision, "anchor": anchor}
+
+                # F1 Tagging
+                tag_to_store = "untagged"
+                if getattr(self.config, 'tagging_enabled', False):
+                    if d.tag is not None:
+                        valid_tags = getattr(self.config, 'tag_vocabulary', [])
+                        if valid_tags and d.tag in valid_tags:
+                            tag_to_store = d.tag
+                        else:
+                            self.malformed_count += 1
+                            tag_to_store = "untagged"
+                            decision_info["status"] = "malformed_tag"
+                
+                if d.tag is not None:
+                    decision_info["tag"] = d.tag
+
+                # F2 Permanence
+                permanence_to_store = "working"
+                if getattr(self.config, 'permanence_enabled', False):
+                    if d.permanence in ["core", "working"]:
+                        permanence_to_store = d.permanence
+                    elif d.permanence is not None:
+                        self.malformed_count += 1
+                        decision_info["status"] = "malformed_permanence"
+
+                fact_emb = self.memory._get_embedding(fact.text)
+                self.memory.check_and_reinforce(fact_emb)
+
                 if d.decision == "store":
-                    slot_id = self.memory.store(d.anchor, fact.text, step=self._state.step_count)
+                    slot_id = self.memory.store(anchor, fact.text, step=self._state.step_count, tag=tag_to_store, permanence=permanence_to_store)
                     if slot_id is None:
                         self.budget_overflow_count += 1
                         decision_info["status"] = "budget_full"
                     else:
                         decision_info["status"] = "stored"
                         decision_info["slot_id"] = slot_id
+
+                elif d.decision == "overwrite":
+                    try:
+                        t_id = int(d.target_id)
+                    except (ValueError, TypeError):
+                        t_id = -1
+                    if t_id == -1 or not getattr(d, 'overwrite_anchor', None):
+                        self.malformed_count += 1
+                        decision_info["status"] = "malformed_overwrite"
+                    else:
+                        t_tag = d.tag if (getattr(self.config, 'tagging_enabled', False) and d.tag in getattr(self.config, 'tag_vocabulary', [])) else None
+                        t_perm = d.permanence if (getattr(self.config, 'permanence_enabled', False) and d.permanence in ["core", "working"]) else None
+                        
+                        success = self.memory.overwrite(
+                            slot_id=t_id,
+                            anchor=d.overwrite_anchor,
+                            content=fact.text,
+                            step=self._state.step_count,
+                            tag=t_tag,
+                            permanence=t_perm
+                        )
+                        if not success:
+                            self.malformed_count += 1
+                            decision_info["status"] = "malformed_overwrite_failed"
+                        else:
+                            decision_info["status"] = "overwritten"
+                            decision_info["slot_id"] = t_id
                 self._state.storage_decisions.append(decision_info)
             self.phase = "query"
             if not self.queries:
@@ -250,7 +352,8 @@ class RecallEnvironment(Environment):
             return 0.0
             
         elif action.mode == "retrieve":
-            self.last_retrieval_results = self.memory.retrieve(action.query, self.config.retrieval_k)
+            tag_filter = getattr(action, "retrieve_tag_filter", None)
+            self.last_retrieval_results = self.memory.retrieve(action.query, self.config.retrieval_k, tag_filter=tag_filter)
             return 0.0
             
         elif action.mode == "answer":
@@ -266,7 +369,13 @@ class RecallEnvironment(Environment):
                                     decision["was_later_retrieved_and_correct"] = True
             
             # Failure attribution (optional logger)
-            self._state.failure_attribution.append({"query_id": query.query_id, "correct": is_correct})
+            failure_attrib = {"query_id": query.query_id, "correct": is_correct}
+            if action.mode == "retrieve" or self.last_retrieval_results is not None:
+                 failure_attrib["retrieval_tag_used"] = getattr(action, "retrieve_tag_filter", None) is not None
+                 # simple heuristic for was_correct: if correct, the tag filter was correct
+                 failure_attrib["retrieval_tag_was_correct"] = failure_attrib.get("retrieval_tag_used") and is_correct
+
+            self._state.failure_attribution.append(failure_attrib)
             
             self.current_query_idx += 1
             if self.current_query_idx >= len(self.queries):

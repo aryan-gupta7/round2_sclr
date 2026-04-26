@@ -4,6 +4,10 @@ Trains Qwen2.5-7B-Instruct with LoRA across 5 difficulty levels.
 """
 
 import os
+
+# Fix CUDA illegal memory access in vLLM sleep() on A10G
+os.environ["VLLM_ENFORCE_EAGER"] = "1"  # disable CUDA graphs
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 import re
 import json
 import time
@@ -38,8 +42,8 @@ USERNAME = "s1nn3rx69"
 
 LEVEL_SCHEDULE = [
     # (level, num_steps, difficulty, hub_repo, max_completion_length)
-    (1, 80, 1, f"{USERNAME}/recall-policy-l1", 512),
-    (2, 120, 2, f"{USERNAME}/recall-policy-l2", 512),
+    (1, 200, 1, f"{USERNAME}/recall-policy-l1", 256),  # L1 output is ~100 tokens
+    (2, 150, 2, f"{USERNAME}/recall-policy-l2", 512),
     (3, 200, 3, f"{USERNAME}/recall-policy-l3", 768),
     (4, 200, 4, f"{USERNAME}/recall-policy-l4", 768),
     (5, 200, 5, f"{USERNAME}/recall-policy-l5", 768),
@@ -65,14 +69,14 @@ def build_ingestion_prompt(obs):
     facts_text = "\n".join(facts_lines)
     user_msg = (
         f"You have {budget} memory slots for {n} facts. "
-        f"You MUST skip at least {skip_count} facts (decision=\"skip\"). "
-        f"Choose the {budget} most important facts to store.\n\n"
-        f"For stored facts, write an anchor that matches how the fact will be queried. "
-        f"Use FULL names (e.g. 'validation accuracy for Vision transformer large' not 'val_acc ViT-L'). "
-        f"Include the key numeric result in the anchor.\n\n"
+        f"You MUST skip exactly {skip_count} facts (decision=\"skip\"). "
+        f"Store the {budget} facts most likely to be queried later.\n\n"
+        f"HINT: Facts tagged [IMPORTANT] are very likely to be queried. "
+        f"Prioritize storing [IMPORTANT] facts.\n\n"
+        f"You do NOT need to write anchors — just decide store or skip.\n\n"
         f"Facts:\n{facts_text}\n\n"
-        f"Output exactly {n} decisions as a JSON array. "
-        f'Format: [{{"fact_id":0,"decision":"store","anchor":"full name metric result"}},{{"fact_id":1,"decision":"skip"}},...]'
+        f"Output exactly {n} decisions as a JSON array.\n"
+        f'Format: [{{"fact_id":0,"decision":"store"}},{{"fact_id":1,"decision":"skip"}},...]'
         f"\nJSON output:\n["
     )
     return [
@@ -337,7 +341,8 @@ def train_one_level(level: int, num_steps: int, difficulty: int, prev_adapter: O
         per_device_train_batch_size=1,
         gradient_accumulation_steps=8,
         learning_rate=5e-6,
-        num_generations=8,
+        max_grad_norm=1.0,  # prevent gradient explosion (step 45 had grad_norm=6179)
+        num_generations=4,  # reduced from 8 to fit A10G 24GB VRAM
         max_prompt_length=4096,
         max_completion_length=max_completion_length,
         warmup_steps=10,
@@ -345,9 +350,7 @@ def train_one_level(level: int, num_steps: int, difficulty: int, prev_adapter: O
         save_steps=50,
         bf16=True,
         fp16=False,
-        use_vllm=True,
-        vllm_mode="colocate",
-        vllm_gpu_memory_utilization=0.3,
+        use_vllm=False,
         report_to="none",
         push_to_hub=True,
         hub_model_id=hub_repo.split("/")[-1],

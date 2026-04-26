@@ -1,0 +1,7 @@
+[
+  {"text": "ablation study", "category": "task"},
+  {"text": "hyperparameter sweep", "category": "task"},
+  {"text": "evaluation run", "category": "task"},
+  {"text": "data prep", "category": "task"},
+  {"text": "model training", "category": "task"}
+]
