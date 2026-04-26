@@ -38,12 +38,16 @@ USERNAME = "s1nn3rx69"
 
 LEVEL_SCHEDULE = [
     # (level, num_steps, difficulty, hub_repo, max_completion_length)
-    (1, 250, 1, f"{USERNAME}/recall-policy-l1", 512),
-    (2, 200, 2, f"{USERNAME}/recall-policy-l2", 512),
-    (3, 250, 3, f"{USERNAME}/recall-policy-l3", 768),
+    (1, 80, 1, f"{USERNAME}/recall-policy-l1", 512),
+    (2, 120, 2, f"{USERNAME}/recall-policy-l2", 512),
+    (3, 200, 3, f"{USERNAME}/recall-policy-l3", 768),
     (4, 200, 4, f"{USERNAME}/recall-policy-l4", 768),
     (5, 200, 5, f"{USERNAME}/recall-policy-l5", 768),
 ]
+
+# Early promotion: stop training when accuracy exceeds this for PROMO_WINDOW evals
+PROMO_THRESHOLD = 0.70  # 70% agent accuracy
+PROMO_WINDOW = 5        # must sustain for 5 consecutive eval checks
 
 ENV_URL = ""
 
@@ -55,14 +59,20 @@ SYSTEM_MSG = "Output ONLY a JSON array. No text before or after."
 
 def build_ingestion_prompt(obs):
     n = len(obs.all_facts)
+    budget = obs.memory_budget
+    skip_count = n - budget
     facts_lines = [f"{f['fact_id']}: {f['text']}" for f in obs.all_facts]
     facts_text = "\n".join(facts_lines)
     user_msg = (
-        f"Budget: {obs.memory_budget}/{n} slots. Facts:\n"
-        f"{facts_text}\n\n"
-        f"Output exactly {n} decisions, one per fact_id 0 to {n-1}. "
-        f"Do not write anything before or after the JSON array.\n"
-        f'Format: [{{"fact_id":0,"decision":"store","anchor":"key"}},{{"fact_id":1,"decision":"skip"}},...]'
+        f"You have {budget} memory slots for {n} facts. "
+        f"You MUST skip at least {skip_count} facts (decision=\"skip\"). "
+        f"Choose the {budget} most important facts to store.\n\n"
+        f"For stored facts, write an anchor that matches how the fact will be queried. "
+        f"Use FULL names (e.g. 'validation accuracy for Vision transformer large' not 'val_acc ViT-L'). "
+        f"Include the key numeric result in the anchor.\n\n"
+        f"Facts:\n{facts_text}\n\n"
+        f"Output exactly {n} decisions as a JSON array. "
+        f'Format: [{{"fact_id":0,"decision":"store","anchor":"full name metric result"}},{{"fact_id":1,"decision":"skip"}},...]'
         f"\nJSON output:\n["
     )
     return [
@@ -250,18 +260,33 @@ def recall_reward(completions, prompts, difficulty, seed, **kwargs):
     return rewards
 
 class EvalCallback(TrainerCallback):
+    def __init__(self):
+        super().__init__()
+        self.promo_streak = 0  # consecutive evals above threshold
+
     def on_log(self, args, state, control, logs=None, **kwargs):
         step = state.global_step
-        if step == 0 or step % 25 != 0:
+        if step == 0 or step % 10 != 0:
             return
         reward_mean = logs.get("reward", "N/A") if logs else "N/A"
         print(f"\n  EVAL @ step {step}: reward_mean={reward_mean}")
         
         # Print a moving average comparison
         if len(global_eval_stats["agent_accs"]) > 0:
-            a_mean = np.mean(global_eval_stats["agent_accs"][-25:]) * 100
-            b_mean = np.mean(global_eval_stats["baseline_accs"][-25:]) * 100
-            print(f"  [MOVING AVG LAST 25 STEPS] Agent Acc: {a_mean:.1f}% | Baseline Acc: {b_mean:.1f}%")
+            recent_accs = global_eval_stats["agent_accs"][-10:]
+            a_mean = np.mean(recent_accs) * 100
+            b_mean = np.mean(global_eval_stats["baseline_accs"][-10:]) * 100
+            print(f"  [MOVING AVG LAST 10 STEPS] Agent Acc: {a_mean:.1f}% | Baseline Acc: {b_mean:.1f}%")
+
+            # Early promotion check
+            if np.mean(recent_accs) >= PROMO_THRESHOLD:
+                self.promo_streak += 1
+                print(f"  🎯 PROMOTION STREAK: {self.promo_streak}/{PROMO_WINDOW} (acc={a_mean:.1f}% >= {PROMO_THRESHOLD*100:.0f}%)")
+                if self.promo_streak >= PROMO_WINDOW:
+                    print(f"  ✅ EARLY PROMOTION! Accuracy sustained above {PROMO_THRESHOLD*100:.0f}% for {PROMO_WINDOW} evals. Stopping level early.")
+                    control.should_training_stop = True
+            else:
+                self.promo_streak = 0
 
 # ============================================================
 # Train one level

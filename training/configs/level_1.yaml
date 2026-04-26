@@ -1,11 +1,12 @@
 difficulty: 1
 facts_total: 10
 queries_total: 3
-memory_budget: 8
+memory_budget: 5
 batch_size: 8
 retrieval_k: 5
 embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
-embedding_dim: 128
+embedding_dim: null # use native 384-dim; 128-dim projection destroys cosine similarity
+retrieval_mode: "bm25" # keyword matching works for templated data at L1
 prefilled_memory_count: 0
 distractor_rate: 0.0
 contradiction_rate: 0.0

@@ -35,6 +35,7 @@ class LevelConfig:
     reward_shaping: Dict[str, float] = field(default_factory=dict)
     system_prompt_hints: List[str] = field(default_factory=list)
     bootstrap_steps: int = 0
+    retrieval_mode: str = "hybrid"  # "bm25", "embedding", or "hybrid"
 
 @dataclass
 class Fact:
@@ -270,9 +271,13 @@ class DataGenerator:
         # Distribute remainder to experiment
         cat_counts["experiment"] += max(0, remaining)
 
+        # At L1/L2, use full names in facts (no abbreviation mismatch).
+        # At L3+, use abbreviations (facts say "val_acc" but queries say "validation accuracy").
+        use_full_names = config.difficulty <= 2
+
         # --- Generate real facts ---
         for _ in range(cat_counts.get("experiment", 0)):
-            f = self._gen_experiment_fact(fact_id, rng)
+            f = self._gen_experiment_fact(fact_id, rng, use_full_names=use_full_names)
             facts.append(f)
             fact_id += 1
 
@@ -349,7 +354,7 @@ class DataGenerator:
     # Fact generators
     # ------------------------------------------------------------------
 
-    def _gen_experiment_fact(self, fact_id: int, rng: np.random.Generator) -> Fact:
+    def _gen_experiment_fact(self, fact_id: int, rng: np.random.Generator, use_full_names: bool = False) -> Fact:
         arch = rng.choice(self.vocab["architectures"])
         hp = rng.choice(self.vocab["hyperparameters"])
         metric = rng.choice(self.vocab["metrics"])
@@ -358,12 +363,18 @@ class DataGenerator:
         steps = int(rng.integers(1, 100))
         result_baseline = _sample_metric_value(metric, rng)
 
+        # At L1/L2: use full names so embeddings can match queries.
+        # At L3+: use abbreviations (the mismatch IS the challenge).
+        arch_name = arch["full"] if use_full_names else arch["abbrev"]
+        hp_name = hp["full"] if use_full_names else hp["abbrev"]
+        metric_name = metric["full"] if use_full_names else metric["abbrev"]
+
         template = rng.choice(EXPERIMENT_TEMPLATES)
         text = template.format(
-            arch_abbrev=arch["abbrev"],
-            hp_abbrev=hp["abbrev"],
+            arch_abbrev=arch_name,
+            hp_abbrev=hp_name,
             value=value,
-            metric_abbrev=metric["abbrev"],
+            metric_abbrev=metric_name,
             result=result,
             steps=steps,
             result_baseline=result_baseline,
