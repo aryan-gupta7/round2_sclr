@@ -200,6 +200,8 @@ def normalize(text: str) -> str:
 
 
 def grade(predicted: str, expected: str) -> bool:
+    if not predicted:
+        return expected.strip().upper() == "UNKNOWN" if expected else False
     if expected == "UNKNOWN":
         return predicted.strip().upper() == "UNKNOWN"
     norm_pred = normalize(predicted)
